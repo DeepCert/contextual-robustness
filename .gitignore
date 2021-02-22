@@ -1,6 +1,7 @@
 # Datasets
-/data/*
-!/data/*.zip
+/data
+!/data/**/*.zip
+!/data/**/*.tar.gz
 
 # Marabou
 /Marabou
