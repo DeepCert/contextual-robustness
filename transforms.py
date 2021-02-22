@@ -13,7 +13,7 @@ Arguments:
     image   (np.array)       - the image to transform
     epsilon (float)          - amount of transform to apply to image
     output  (integer)        - output index to solve for
-    ...                      - optional arguments passed by 'transform_args'
+    ...                      - optional keyword args passed by 'transform_args'
 
 Returns:
     (MarabouNetwork) - the network with encoded image transformation
