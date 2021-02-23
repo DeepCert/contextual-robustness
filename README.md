@@ -52,6 +52,7 @@ model1_haze.analyze(
 ### Formal Verification Technique
 
 The formal verification technique uses the [Marabou neural network verification framework](https://github.com/NeuralNetworkVerification/Marabou) to evaluate the model's robustness to a transform encoded as a Marabou input query.
+You can download and compile Marabou by running `./scripts/setup.sh` or following the instruction in the [Marabou repo](https://github.com/NeuralNetworkVerification/Marabou).
 
 #### Model Preparation
 
@@ -70,7 +71,7 @@ model.save('./modelX-verification')
 import sys
 from contextual_robustness import ContextualRobustnessFormal, ContextualRobustnessReporting
 from transforms import encode_haze
-sys.path.append('../Marabou/')
+sys.path.append('./Marabou/')
 from maraboupy import Marabou
 
 # Load model as a MarabouNetwork object

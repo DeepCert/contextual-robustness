@@ -442,7 +442,7 @@ class ContextualRobustnessFormal(metaclass=BaseContextualRobustness):
                 if actual_label == output:
                     continue
                 network = self.transform_image(x, guess, output)
-                result, code = network.solve(options=Marabou.createOptions(solveWithMILP=True))
+                result, code = network.solve(options=Marabou.createOptions(verbosity=0))
                 if code == 'SAT':
                     self._counterexamples.append({
                         'x_index': index,
