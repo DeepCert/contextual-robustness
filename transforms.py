@@ -72,7 +72,16 @@ Returns:
     (MarabouNetwork) - the network with encoded image transformation
 '''
 
-def encode_haze(self, network, image, epsilon, output_index):
+def encode_haze(network, image, epsilon, output_index):
+    '''
+    Encodes a haze transformation as a Marabou input query
+
+    Parameters:
+        network      (MarabouNetwork) - the network object
+        image        (np.array)       - the image
+        epsilon      (np.array)       - amount of haze
+        output_index (integer)        - target output node
+    '''
     n_inputs = network.inputVars[0].flatten().shape[0]
     n_outputs = network.outputVars[0].flatten().shape[0]
     flattened_image = image.flatten()
@@ -86,9 +95,18 @@ def encode_haze(self, network, image, epsilon, output_index):
     for i in range(n_outputs):
         if i != output_index:
             network.addInequality([network.outputVars[0][i], network.outputVars[0][output_index]], [1, - 1], 0)
-    return network,eps
+    return network
 
-def encode_linf(self, network, image, epsilon, output_index):
+def encode_linf(network, image, epsilon, output_index):
+    '''
+    Encodes a linear perturbation as a Marabou input query
+
+    Parameters:
+        network      (MarabouNetwork) - the network object
+        image        (np.array)       - the image
+        epsilon      (np.array)       - amount of perturbation
+        output_index (integer)        - target output node
+    '''
     n_inputs = network.inputVars[0].flatten().shape[0]
     n_outputs = network.outputVars[0].flatten().shape[0]
     flattened_image = image.flatten()
