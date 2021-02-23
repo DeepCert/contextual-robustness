@@ -3,11 +3,12 @@ import os
 from contextual_robustness import ContextualRobustnessTest
 from transforms import test_transforms as transforms
 from load_data import load_cifar
+from utils import parse_indexes
 
 # reduce tensorflow log level
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-def main(outdir):
+def main(outdir, sample_indexes):
     # load dataset
     _, _, X_test, Y_test, _ = load_cifar()
 
@@ -28,7 +29,8 @@ def main(outdir):
                 Y=Y_test,
                 transform_fn=transforms[transform]['fn'],
                 transform_args=transforms[transform]['args'],
-                transform_name=transform_name
+                transform_name=transform_name,
+                sample_indexes=sample_indexes
                 )
             cr.analyze(
                 epsilons_outpath=os.path.join(outdir, f'model{m}-{transform}.csv'),
@@ -42,6 +44,10 @@ if __name__ == '__main__':
     parser.add_argument('-o', '--outdir',
         default='./results/cifar/test/data',
         help='output directory')
+    parser.add_argument('-s', '--sampleindexes',
+        nargs='*',
+        default=[],
+        help='list of indexes and/or ranges of samples to test (e.g. 1 2 10-20 100-110)')
     args = parser.parse_args()
     
-    main(args.outdir)
+    main(args.outdir, parse_indexes(args.sampleindexes))
