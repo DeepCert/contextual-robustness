@@ -33,6 +33,7 @@ def remove_softmax_activation(model_path, save_path=''):
 
     Arguments:
         model_path (string) - path to the original tensorflow model
+        save_path  (string) - path where new model is saved
     
     Returns:
         tensorflow model
