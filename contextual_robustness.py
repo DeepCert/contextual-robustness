@@ -1,10 +1,10 @@
-import sys, enum, copy
+import sys, enum, copy, pickle
 import numpy as np
 import pandas as pd
 import tensorflow as tf
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import ImageGrid
-from utils import create_output_path, softargmax
+from utils import create_output_path, softargmax, get_file_extension
 from abc import ABCMeta, abstractmethod
 
 # TODO: remove sys.path.append after maraboupy pip package is available.
@@ -18,7 +18,9 @@ class Techniques(enum.Enum):
 defaults = dict(
     eps_lower=0.0,
     eps_upper=1.0,
-    eps_interval=0.002
+    eps_interval=0.002,
+    verbosity=0,
+    marabou_verbosity=0
     )
 
 # ======================================================================
@@ -28,47 +30,54 @@ class BaseContextualRobustness(metaclass=ABCMeta):
     '''
     Base-class for ContextualRobustness subclasses; Implements common functionality, 
     properties, and defines abstract methods.
-
-    Properties:
     '''
     def __init__(
         self,
-        model='',
+        model_path='',
         model_name='',
         transform_fn=lambda x, epsilon: x,
         transform_args=dict(),
         transform_name='',
         X=np.array([]),
         Y=np.array([]),
+        sample_indexes=[],
         eps_lower=defaults['eps_lower'],
         eps_upper=defaults['eps_upper'],
-        eps_interval=defaults['eps_interval']
+        eps_interval=defaults['eps_interval'],
+        verbosity=defaults['verbosity'],
         ):
-        assert len(model) > 0, 'model is required'
+        assert bool(model_path), 'model_path is required'
         assert X.shape[0] == Y.shape[0], 'X and Y must have equal number of items'
         assert callable(transform_fn), 'transform_fn must be callable (e.g. a function)'
         
-        self._model = self._load_model(model)
+        self._verbosity = verbosity
+        self._model_path = model_path
         self._model_name = model_name
         self._transform_fn = transform_fn
         self._transform_args = transform_args
         self._transform_name = transform_name
         self._X, self._Y = X, Y
+        self._sample_indexes = sample_indexes if len(sample_indexes) > 0 else range(X.shape[0])
         self._eps_lower = eps_lower
         self._eps_upper = eps_upper
         self._eps_interval = eps_interval
 
+        self._model = self._load_model(model_path)
         # find indexes of correctly predicted samples
         self._correct_sample_indexes = self._find_correct_sample_indexes(X, Y)
-        print(f'filtered {len(X) - len(self._correct_sample_indexes)} incorrectly predicted samples')
-        
-        # compute model accuracy
-        self._accuracy = len(self._correct_sample_indexes) / len(X)
-        print(f'model accuracy is {self.accuracy}')
+        print(f'filtered {len(self._sample_indexes) - len(self._correct_sample_indexes)} incorrectly predicted samples')
+        # self._accuracy = len(self._correct_sample_indexes) / len(X)
+        self._accuracy = len(self._correct_sample_indexes) / len(self._sample_indexes)
+        print(f'accuracy is {self.accuracy}')
+        # examples of images @ epsilon where network's prediction changed
+        self._counterexamples = dict()
 
     @property
     @abstractmethod
     def technique(self):
+        '''
+        Returns a property from Techniques Enum. Abstract method implemented by subclasses.
+        '''
         return None
 
     @property
@@ -89,6 +98,16 @@ class BaseContextualRobustness(metaclass=ABCMeta):
         ''' returns tuple containing the dataset (X, Y) '''
         return self._X, self._Y
     
+    @property
+    def counterexamples(self):
+        return self._counterexamples
+
+    def get_counterexample(self, x_index):
+        return self.counterexamples.get(f'image{x_index}')
+    
+    def save_counterexample(self, x_index, counterexample):
+        self._counterexamples[f'image{x_index}'] = counterexample
+    
     def get_num_samples(self, class_index=None):
         '''
         returns number of samples in dataset (optionally for a single class).
@@ -100,8 +119,8 @@ class BaseContextualRobustness(metaclass=ABCMeta):
             integer
         '''
         if class_index is not None:
-            return len([y for y in self.dataset[1] if np.argmax(y) == class_index])
-        return self.dataset[0].shape[0]
+            return len([si for si in self._sample_indexes if np.argmax(self.dataset[1][si]) == class_index])
+        return len(self._sample_indexes)
     num_samples = property(get_num_samples)
 
     def get_accuracy(self, class_index=None):
@@ -115,7 +134,7 @@ class BaseContextualRobustness(metaclass=ABCMeta):
             float
         '''
         if class_index is not None:
-            sample_indexes = [i for i in range(self._Y.shape[0]) if np.argmax(self._Y[i]) == class_index]
+            sample_indexes = [si for si in self._sample_indexes if np.argmax(self._Y[si]) == class_index]
             correct_sample_indexes = [i for i in self._correct_sample_indexes if np.argmax(self._Y[i]) == class_index]
             return len(correct_sample_indexes) / len(sample_indexes)
         return self._accuracy
@@ -141,60 +160,47 @@ class BaseContextualRobustness(metaclass=ABCMeta):
     results = property(get_results)
 
     @abstractmethod
-    def _load_model(self, model):
-        '''
-        Called by constructor to load a model (or MarabouNetwork). Abstract method which must 
-        be implemented by subclasses.
-
-        Arguments:
-            model (any) - the model
-        '''
-        return model
-
-    @abstractmethod
     def _find_epsilon(self, x, y, index=None):
         '''
-        Finds epsilon for a given image. Abstract method which must be implemented by subclasses.
+        Finds epsilon for a given image; Abstract method which must be implemented by subclasses.
 
         Arguments:
             x     (np.array) - (*required) the image
             y     (np.array) - (*required) label for image (x)
             index (integer)  - index of image (x)
+        
+        Returns:
+            (tuple) - lower, upper, epsilon, predicted_label, counterexample
+
+            lower           : last lower epsilon from binary search
+            upper           : last upper epsilon from binary search
+            epsilon         : last upper epsilon from binary search
+            predicted_label : upper epsilon from binary search
+            counterexample  : image at epsilon where prediction changed
         '''
         pass
 
     @abstractmethod
     def _find_correct_sample_indexes(self, X, Y):
         '''
-        Finds the indexes of all correctly predicted samples in X. Abstract method which must be 
-        implemented by subclasses.
-
-        Arguments:
-            X     (np.array) - (*required) images
-            Y     (np.array) - (*required) labels for images (X)
+        Returns list of indexes of correctly predicted samples; Abstract method implemented by subclasses
         '''
         pass
     
     @abstractmethod
-    def transform_image(self, x, epsilon):
+    def _load_model(self, model_path):
         '''
-        Transforms images. Abstract method which must be 
-        implemented by subclasses.
-
-        Arguments:
-            X     (np.array) - (*required) images
-            Y     (np.array) - (*required) labels for images (X)
+        Loads a model; Abstract method implemented by subclasses
         '''
         pass
-
-    def analyze(self, outfile='./epsilons.csv', save_csv=True, verbose=0):
+    
+    def analyze(self, epsilons_outpath='./epsilons.csv', counterexamples_outpath='./counterexamples.p'):
         '''
-        tests all correctly predicted samples, and optionally stores the results in a csv
+        Tests all correctly predicted samples, and optionally stores the results in a csv
         
         Parameters:
-            outfile (string)  - output csv file path
-            save_csv (bool)   - enables/disables writing to csv (default=True)
-            verbose (integer) - increases verbosity of console output (0 or 1)
+            epsilons_outpath        (string)  - epsilons output csv file path
+            counterexamples_outpath (string)  - counterexamples pickle path
         
         Returns:
             ContextualRobustness object
@@ -204,7 +210,7 @@ class BaseContextualRobustness(metaclass=ABCMeta):
         for i in self._correct_sample_indexes:
             x, y = self._X[i], self._Y[i]
             actual_label = np.argmax(y)
-            lower, upper, epsilon, predicted_label = self._find_epsilon(x, y, index=i)
+            lower, upper, epsilon, predicted_label, counterexample = self._find_epsilon(x, y, index=i)
             data.append({
                 'image': i,
                 'class': actual_label,
@@ -213,27 +219,37 @@ class BaseContextualRobustness(metaclass=ABCMeta):
                 'lower': lower,
                 'upper': upper
                 })
-            if verbose:
+            self.save_counterexample(i, counterexample)
+            if self._verbosity > 0:
                 print(f'image:{i}, class:{actual_label}, predcited:{predicted_label}, epsilon:{epsilon}')
         
         # generate dataframe and optionally save results to csv
         self._results = pd.DataFrame(data, columns=('image','class','predicted','epsilon', 'lower', 'upper'))
-        if save_csv:
-            create_output_path(outfile)
-            self._results.to_csv(outfile)
+        if epsilons_outpath:
+            create_output_path(epsilons_outpath)
+            self._results.to_csv(epsilons_outpath)
+        if counterexamples_outpath:
+            create_output_path(counterexamples_outpath)
+            with open(counterexamples_outpath, 'wb') as f:
+                pickle.dump(self.counterexamples, f)
         return self
     
-    def load_results(self, csv_path):
+    def load_results(self, epsilons_path='', counterexamples_path=''):
         '''
-        loads saved results from csv file
+        Loads saved results from csv file
         
         Parameters:
-            csv_path (string) - (*required) path to the csv containing results
-        
+            epsilons_path        (string) - path to the csv containing epsilons
+            counterexamples_path (string) - path to the pickle containing counterexamples
+
         Returns:
             ContextualRobustness object
         '''
-        self._results = pd.read_csv(csv_path)
+        if epsilons_path:
+            self._results = pd.read_csv(epsilons_path)
+        if counterexamples_path:
+            with open(counterexamples_path, 'rb') as f:
+                self._counterexamples = pickle.load(f)
         return self
 
 # ======================================================================
@@ -242,49 +258,66 @@ class BaseContextualRobustness(metaclass=ABCMeta):
 class ContextualRobustnessTest(BaseContextualRobustness):
     '''
     ContextualRobustness class for test-based technique
+
+    Parameters:
+        model_path     (path)     - (*required) path to saved model
+        model_name     (string)   - name of model
+        X              (np.array) - (*required) images
+        Y              (np.array) - (*required) labels for images
+        sample_indexes ([int])    - indexes of samples to test
+        transform_fn   (function) - (*required) transform function
+        transform_args (dict)     - extra args for transform function
+        transform_name (string)   - name of transform
+        eps_lower      (float)    - lower bound for epsilon
+        eps_upper      (float)    - upper bound for epsilon
+        eps_interval   (float)    - interval between epsilons
+        verbosity       (int)     - amount of logging (0-4)
     '''
     def __init__(
         self,
-        model = '',
+        model_path = '',
         model_name='',
         X=np.array([]),
         Y=np.array([]),
+        sample_indexes=[],
         transform_fn=lambda x, epsilon: x,
         transform_args=dict(),
         transform_name='',
         eps_lower=defaults['eps_lower'],
         eps_upper=defaults['eps_upper'],
-        eps_interval=defaults['eps_interval']
+        eps_interval=defaults['eps_interval'],
+        verbosity=defaults['verbosity']
         ):
-        assert bool(model), 'model is required'
-        assert X.shape[0] == Y.shape[0], 'X and Y must have equal number of items'
-        assert callable(transform_fn), 'transform_fn must be callable (e.g. a function)'
-
         super().__init__(
-            model=model,
+            model_path=model_path,
             model_name=model_name,
             X=X,
             Y=Y,
+            sample_indexes=sample_indexes,
             transform_fn=transform_fn,
             transform_args=transform_args,
             transform_name=transform_name,
             eps_lower=eps_lower,
-            eps_upper=eps_upper
-            )
+            eps_upper=eps_upper,
+            eps_interval=eps_interval,
+            verbosity=verbosity)
     
     @property
     def technique(self):
         return Techniques.TEST
-
-    def _load_model(self, model):
+    
+    def _load_model(self, model_path):
         '''
         loads a tensorflow model
-
+        
         Parameters:
-            model (string) - (*required) path to tensorflow model
+            model_path (string) - path to tensorflow model
+        
+        Returns:
+            tensorflow model
         '''
-        return tf.keras.models.load_model(model)
-
+        return tf.keras.models.load_model(model_path)
+    
     def _find_correct_sample_indexes(self, X, Y):
         '''
         returns list of indexes of correctly predicted samples
@@ -296,8 +329,8 @@ class ContextualRobustnessTest(BaseContextualRobustness):
         Returns:
             list
         '''
-        Y_p = self._model.predict(X)
-        return [i for i in range(len(X)) if np.argmax(Y_p[i]) == np.argmax(Y[i])]
+        Y_p = self._model.predict([X[si] for si in self._sample_indexes])
+        return [si for i,si in enumerate(self._sample_indexes) if np.argmax(Y_p[i]) == np.argmax(Y[si])]
     
     def _find_epsilon(self, x, y, index=None):
         '''
@@ -306,7 +339,7 @@ class ContextualRobustnessTest(BaseContextualRobustness):
         Parameters:
             x     (np.array) - (*required) input image
             y     (np.array) - (*required) label for x
-            index (integer)  - index of image (x)
+            index (integer)  - index of image (just for logging)
         
         Returns:
             tuple (lower, upper, epsilon, predicted_label)
@@ -317,9 +350,12 @@ class ContextualRobustnessTest(BaseContextualRobustness):
         actual_label = np.argmax(y)
         predicted_label = actual_label
         epsilon = upper
+        counterexample = None
         while ((upper - lower) > interval):
             guess = lower + (upper - lower) / 2.0
-            x_trans = self.transform_image(x, guess)
+            if self._verbosity > 2:
+                print(f'image:{index} - evaluating epsilon:{guess}')
+            x_trans = self._transform_fn(x, epsilon=epsilon, **self._transform_args)
             pred = np.argmax(self._model.predict(x_trans.reshape((1,) + x_trans.shape)))
             if pred == actual_label:
                 # correct prediction
@@ -329,82 +365,95 @@ class ContextualRobustnessTest(BaseContextualRobustness):
                 upper = guess
                 predicted_label = pred
                 epsilon = guess
-        return lower, upper, epsilon, predicted_label
-    
-    def transform_image(self, x, epsilon):
-        '''
-        applies transform_fn to x with value of epsilon
-        
-        Parameters:
-            x       (np.array) - (*required) input image
-            epsilon (float)    - (*required) amount of transform to apply to x
-        
-        Returns:
-            np.array - transformed image
-        '''
-        return self._transform_fn(x, epsilon=epsilon, **self._transform_args)
+                counterexample = x_trans
+        return lower, upper, epsilon, predicted_label, counterexample
 
 # ======================================================================
 # ContextualRobustnessFormal
 # ======================================================================
-class ContextualRobustnessFormal(metaclass=BaseContextualRobustness):
+class ContextualRobustnessFormal(BaseContextualRobustness):
     '''
     ContextualRobustness class for formal verification technique
+
+    Parameters:
+        model_path      (string)   - (*required) path to the model loaded as MarabouNetwork
+        model_name      (string)   - name of model
+        model_args      (dict)     - args passed to Marabou.read_* when loading network (https://neuralnetworkverification.github.io/Marabou/API/0_Marabou.html)
+        X               (np.array) - (*required) images
+        Y               (np.array) - (*required) labels for images
+        sample_indexes  ([int])    - list of specific sample indexes to test
+        transform_fn    (function) - (*required) transform encoding function
+        transform_args  (dict)     - extra args for transform function
+        transform_name  (dict)     - name of the transform
+        eps_lower       (float)    - lower bound for epsilon
+        eps_upper       (float)    - upper bound for epsilon
+        eps_interval    (float)    - interval between epsilons
+        marabou_options (dict)     - options passed to Marabou's 'solve' function
+        verbosity       (int)      - amount of logging (0-4)
     '''
     def __init__(
         self,
-        model=None,
+        model_path='',
         model_name='',
+        model_args=dict(),
         transform_fn=lambda x, epsilon, output_index: x,
         transform_args=dict(),
         transform_name='',
         X=np.array([]),
         Y=np.array([]),
+        sample_indexes=[],
         eps_lower=defaults['eps_lower'],
         eps_upper=defaults['eps_upper'],
-        eps_interval=defaults['eps_interval']
+        eps_interval=defaults['eps_interval'],
+        marabou_options=dict(verbosity=defaults['marabou_verbosity']),
+        verbosity=defaults['verbosity']
         ):
+        self._model_args = model_args
+        self._marabou_options = marabou_options
         super().__init__(
-            model=model,
+            model_path=model_path,
             model_name=model_name,
-            X=X,
-            Y=Y,
             transform_fn=transform_fn,
             transform_args=transform_args,
             transform_name=transform_name,
+            X=X,
+            Y=Y,
+            sample_indexes=sample_indexes,
             eps_lower=eps_lower,
-            eps_upper=eps_upper
+            eps_upper=eps_upper,
+            eps_interval=eps_interval,
+            verbosity=verbosity
             )
-        self._counterexamples = {}
     
     @property
     def technique(self):
         return Techniques.FORMAL
-
-    def _load_model(self, model):
+    
+    def _load_model(self, model_path):
         '''
-        Loads a MarabouNetwork object. Saves a copy of the object.
+        Loads model as a MarabouNetwork object
 
         Parameters:
-            model (MarabouNetwork) - the marabou network.
+            model_path (string) - model to load (NNet, Tensorflow (pb), HDF5, or ONNX)
         
         Returns:
-            model (MarabouNetwork)
+            (MarabouNetwork) - the MarabouNetwork object
         '''
-        return copy.deepcopy(model)
-    
-    def _copy_model(self):
-        '''
-        Makes a copy of the original saved model.
+        valid_exts = ('.nnet', '', '.pb', '.h5', '.hdf5', '.onnx')
 
-        Returns:
-            model (MarbouNetwork)
-        '''
-        return copy.deepcopy(self._model)
+        ext = get_file_extension(model_path)
+        assert ext in valid_exts, 'Model must be .nnet, .pb, .h5, or .onnx'
+        if ext == '.nnet':
+            return Marabou.read_nnet(model_path, **self._model_args)
+        elif ext in ('', '.pb', '.h5', '.hdf5'):
+            return Marabou.read_tf(model_path, **self._model_args)
+        elif ext == '.onnx':
+            return Marabou.read_onnx(model_path, **self._model_args)
+        return None
     
     def _find_correct_sample_indexes(self, X, Y):
         '''
-        Returns list of indexes of correctly predicted samples
+        returns list of indexes of correctly predicted samples
         
         Parameters:
             X (np.array) - (*required) input images
@@ -413,8 +462,7 @@ class ContextualRobustnessFormal(metaclass=BaseContextualRobustness):
         Returns:
             list
         '''
-        Y_p = np.array([softargmax(self._model.evaluate(x)) for x in X])
-        return [i for i in range(len(X)) if np.argmax(Y_p[i]) == np.argmax(Y[i])]
+        return [i for i in self._sample_indexes if np.argmax(softargmax(self._model.evaluate(X[i])[0])) == np.argmax(Y[i])]
     
     def _find_epsilon(self, x, y, index=None):
         '''
@@ -432,35 +480,14 @@ class ContextualRobustnessFormal(metaclass=BaseContextualRobustness):
         lower = self._eps_lower
         upper = self._eps_upper
         interval = self._eps_interval
-        actual_label = np.argmax(y)
-        predicted_label = actual_label
+        predicted_label = np.argmax(y)
         epsilon = upper
+        counterexample = None
         while ((upper - lower) > interval):
             guess = lower + (upper - lower) / 2.0
-            verified = True
-            for output in range(len(self.classes)):
-                if actual_label == output:
-                    continue
-                network = self.transform_image(x, guess, output)
-                result, code = network.solve(options=Marabou.createOptions(solveWithMILP=True))
-                if code == 'SAT':
-                    self._counterexamples.append({
-                        'x_index': index,
-                        'predicted_label':output,
-                        'epsilon': guess,
-                        'result':result,
-                        'query': network.getMarabouQuery()
-                        })
-                    pred = output
-                    verified = False
-                    break
-                elif code == 'UNSAT':
-                    continue
-                else:
-                    # handle error
-                    verified = False
-                    print(code)
-                    assert(False)
+            if self._verbosity > 2:
+                print(f'image:{index} - evaluating epsilon:{guess}')
+            verified, pred, cex = self._find_counterexample(x, y, guess, x_index=index)
             if verified:
                 # correct prediction
                 lower = guess
@@ -469,26 +496,35 @@ class ContextualRobustnessFormal(metaclass=BaseContextualRobustness):
                 upper = guess
                 predicted_label = pred
                 epsilon = guess
-        return lower, upper, epsilon, predicted_label
+                counterexample = cex
+        return lower, upper, epsilon, predicted_label, counterexample
     
-    def transform_image(self, x, epsilon, output_index):
-        '''
-        applies transform_fn to the network to encode the image transform for an, 
-        image, epsilon, and output_index as a marabou query.
-        
-        Parameters:
-            x            (np.array) - (*required) input image
-            epsilon      (float)    - (*required) amount of transform to apply to x
-            output_index (integer)  - (*required) amount of transform to apply to x
-        
-        Returns:
-            (MarabouNetwork) - the network with image encoded as a Marabou input query
-        '''
-        # create a copy of the original model
-        network = self._copy_model()
-        # encode the transform as a marabou input query using the transform_fn
-        network = self._transform_fn(network, x, epsilon, output_index, **self._transform_args)
-        return network
+    def _find_counterexample(self, x, y, epsilon, x_index=None):
+        actual_label = np.argmax(y)
+        predicted_label = actual_label
+        verified = True
+        counterexample = None
+        for output_index in range(y.shape[0]):
+            if actual_label == output_index:
+                continue
+            # load model, encode the transform as a marabou input query, and solve query
+            network = self._load_model(self._model_path)
+            network = self._transform_fn(network, x, epsilon, output_index, **self._transform_args)
+            vals, stats = network.solve(options=Marabou.createOptions(**self._marabou_options))
+            # check results
+            if stats.hasTimedOut():
+                verified = False
+                assert False, f'Timeout occurred ({f"x_index={x_index}" if x_index is not None else ""}, output_index={output_index}, epsilon={epsilon})'
+            elif any(vals):
+                # SAT (counterexample found)
+                counterexample = vals
+                predicted_label = output_index
+                verified = False
+                break
+            else:
+                # UNSAT
+                continue
+        return verified, predicted_label, counterexample
 
 # ======================================================================
 # ContextualRobustnessReporting
@@ -581,13 +617,9 @@ class ContextualRobustnessReporting:
             # upper = upper_df['upper'].iloc[0]
             epsilon = upper_df['epsilon'].iloc[0]
             gridImage[c].imshow(X[idx])
-            # get the transformed image to display
-            if cr.technique == Techniques.FORMAL:
-                # TODO: get transformed image from formal verification counterexamples
-                transformed_image = None
-            else:
-                transformed_image = cr.transform_image(X[idx], epsilon=epsilon)
-            gridImage[c + ncols].imshow(transformed_image)
+            counterexample = cr.get_counterexample(idx)
+            counterexample = counterexample if counterexample is not None else X[idx]
+            gridImage[c + ncols].imshow(counterexample)
         plt.axis('off')
         create_output_path(outfile)
         fig.savefig(outfile, bbox_inches='tight')

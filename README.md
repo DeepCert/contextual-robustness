@@ -27,26 +27,24 @@ The test based technique uses the model's built-in 'predict' function to analyze
 #### Analyzing Model/Transform Using Test Technique
 
 ```python
-import tensorflow as tf
 from contextual_robustness import ContextualRobustnessTest, ContextualRobustnessReporting
 from transforms import haze
 
-# Load model as a MarabouNetwork object
-model = tf.keras.models.load_model('./models/model1.h5')
-
 # instantiate ContextualRobustness object for model1/haze
-model1_haze = ContextualRobustnessTest(
-    model=model,              # (*required) model
-    model_name='Model1',      # name of model
-    transform_fn=encode_haze, # (*required) transform function
-    transform_name='Haze',    # name of transform
-    X=X_test,                 # (*required) np.array of images
-    Y=Y_test)                 # (*required) np.array of labels
-
+model1_haze_test = ContextualRobustnessTest(
+    model_name='./models/model1.h5', # (*required) model
+    model_name='Model1',             # name of model
+    transform_fn=haze,               # (*required) transform function
+    transform_name='Haze',           # name of transform
+    X=X_test,                        # (*required) np.array of images
+    Y=Y_test,                        # (*required) np.array of labels
+    verbosity=0                      # amount of logging
+    )
 # run analysis and save to CSV
-model1_haze.analyze(
-    outfile='./results/model1_haze/epsilons.csv',
-    verbose=0)
+model1_haze_test.analyze(
+    epsilons_outpath='./results/model1_haze/epsilons.csv',
+    counterexamples_outpath='./results/model1_haze/counterexamples.p'
+    )
 ```
 
 ### Formal Verification Technique
@@ -55,13 +53,13 @@ The formal verification technique uses the [Marabou neural network verification 
 
 #### Model Preparation
 
-Marabou relies on the output of the network's logits layer, so if the network has a softmax output layer, the activation function will need to be removed from that layer. The `prepare_classifier` function is supplied to do this for Tensorflow v2 models. The example below shows how to use `prepare_classifier` to save a copy of the model without the softmax activation function on the output layer.
+Marabou relies on the output of the network's logits layer, so if the network has a softmax output layer, the activation function will need to be removed from that layer. The `remove_softmax_activation` function is supplied to do this for Tensorflow v2 models. The example below shows how to use `remove_softmax_activation` to save a copy of the model without the softmax activation function on the output layer.
 
 ```python
-from utils import prepare_classifier
+from utils import remove_softmax_activation
 
-model = prepare_classifier('./modelX.h5')
-model.save('./modelX-verification')
+# save a copy the model without softmax activation function
+remove_softmax_activation('./modelX.h5', save_path='./modelX-verification')
 ```
 
 #### Analyzing Model/Transform Using Formal Technique
@@ -73,25 +71,23 @@ from transforms import encode_haze
 sys.path.append('../Marabou/')
 from maraboupy import Marabou
 
-# Load model as a MarabouNetwork object
-model = Marabou.read_tf('./models/model1-verification', modelType='savedModel_v2')
-
-# Formal verification is CPU intensive, so choose a subset of samples
-X, Y = X_test[0:10], Y_test[0:10]
-
 # instantiate ContextualRobustness object for model1/haze
 model1_haze_formal = ContextualRobustnessFormal(
-    model=model,              # (*required) MarabouNetwork model
-    model_name='Model1',      # name of model
-    transform_fn=encode_haze, # (*required) transform encoder function
-    transform_name='Haze',    # name of transform
-    X=X,                      # (*required) np.array of images
-    Y=Y)                      # (*required) np.array of labels
-
+    model_path='modelX-verification',           # (*required) path to model
+    model_name='ModelX',                        # name of model
+    model_args=dict(modelType='savedModel_v2'), # specify model type for marabou
+    transform_fn=encode_haze,                   # (*required) transform encoder function
+    transform_name='Haze',                      # name of transform
+    X=X,                                        # (*required) np.array of images
+    Y=Y,                                        # (*required) np.array of labels
+    sample_indexes=list(range(0,10)),           # indexes of subset of samples to test
+    verbosity=0                                 # amount of logging
+    )
 # run analysis and save to CSV
 model1_haze_formal.analyze(
-    outfile='./results/model1_haze_formal/epsilons.csv',
-    verbose=0)
+    epsilons_outpath='./results/model1_haze_formal/epsilons.csv',
+    counterexamples_outpath='./results/model1_haze_formal/counterexamples.p'
+    )
 ```
 
 ### Load & Visualize Results
@@ -108,7 +104,10 @@ model1_haze = ContextualRobustnessTest(
     Y=Y,
     transform_fn=haze,
     transform_name='Haze'
-    ).load_results('./results/model1_haze/epsilons.csv')
+    ).load_results(
+        epsilons_path='./results/model1_haze/epsilons.csv',
+        counterexamples_path='./results/model1_haze/counterexamples.p'
+        )
 model1_haze = ContextualRobustnessTest(
     model_path='./models/model2.h5',
     model_name='Model2',
@@ -116,7 +115,10 @@ model1_haze = ContextualRobustnessTest(
     Y=Y,
     transform_fn=haze,
     transform_name='Haze'
-    ).load_results('./results/model2_haze/epsilons.csv')
+    ).load_results(
+        epsilons_path='./results/model2_haze/epsilons.csv',
+        counterexamples_path='./results/model2_haze/counterexamples.p'
+        )
 
 # Generate individual 'epsilon' boxplots for each model
 ContextualRobustnessReporting.generate_epsilons_plot(
@@ -145,9 +147,14 @@ ContextualRobustnessReporting.generate_class_accuracy_plot(
 # Generate haze accuracy report comparing the transform on multiple models
 ContextualRobustnessReporting.generate_accuracy_report_plot(
     cr_objects=[model1_haze, model2_haze],
-    outfile='./results/haze-accuracy-report.png'
-    )
+    outfile='./results/haze-accuracy-report.png')
 ```
+
+## Full Examples
+
+* Analyze models 4a-6b on haze, blur, and contrast with test-based technique: [./examples/cifar_test_analysis.py](./examples/cifar_test_analysis.py)
+* Generate plots from analysis of models 4a-6b on haze, blur, and contrast: [./examples/cifar_test_reporting.py](./examples/cifar_test_analysis.py)
+* Analyze models 4a-6b on haze, blur, and contrast with formal verification technique: [./examples/cifar_formal_analysis.py](./examples/cifar_formal_analysis.py)
 
 ## Resources
 
