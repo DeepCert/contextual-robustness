@@ -27,22 +27,18 @@ The test based technique uses the model's built-in 'predict' function to analyze
 #### Analyzing Model/Transform Using Test Technique
 
 ```python
-import tensorflow as tf
 from contextual_robustness import ContextualRobustnessTest, ContextualRobustnessReporting
 from transforms import haze
 
-# Load model as a MarabouNetwork object
-model = tf.keras.models.load_model('./models/model1.h5')
-
 # instantiate ContextualRobustness object for model1/haze
 model1_haze_test = ContextualRobustnessTest(
-    model=model,              # (*required) model
-    model_name='Model1',      # name of model
-    transform_fn=encode_haze, # (*required) transform function
-    transform_name='Haze',    # name of transform
-    X=X_test,                 # (*required) np.array of images
-    Y=Y_test,                 # (*required) np.array of labels
-    verbosity=0               # amount of logging
+    model_name='./models/model1.h5', # (*required) model
+    model_name='Model1',             # name of model
+    transform_fn=haze,               # (*required) transform function
+    transform_name='Haze',           # name of transform
+    X=X_test,                        # (*required) np.array of images
+    Y=Y_test,                        # (*required) np.array of labels
+    verbosity=0                      # amount of logging
     )
 # run analysis and save to CSV
 model1_haze_test.analyze(outfile='./results/model1_haze/epsilons.csv')
@@ -141,6 +137,12 @@ ContextualRobustnessReporting.generate_accuracy_report_plot(
     cr_objects=[model1_haze, model2_haze],
     outfile='./results/haze-accuracy-report.png')
 ```
+
+## Full Examples
+
+* Analyze models 4a-6b on haze, blur, and contrast with test-based technique: [./examples/cifar_test_analysis.py](./examples/cifar_test_analysis.py)
+* Generate plots from analysis of models 4a-6b on haze, blur, and contrast: [./examples/cifar_test_reporting.py](./examples/cifar_test_analysis.py)
+* Analyze models 4a-6b on haze, blur, and contrast with formal verification technique: [./examples/cifar_formal_analysis.py](./examples/cifar_formal_analysis.py)
 
 ## Resources
 
