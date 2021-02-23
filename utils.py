@@ -26,10 +26,10 @@ def get_file_extension(filepath):
     '''
     return Path(filepath).suffix
 
-def prepare_classifier(model_path):
+def remove_softmax_activation(model_path, save_path=''):
     '''
     prepares a classifier network with softmax activation for verification by
-    removing the softmax activation function from the last layer.
+    removing the softmax activation function from the output layer.
 
     Arguments:
         model_path (string) - path to the original tensorflow model
@@ -42,6 +42,8 @@ def prepare_classifier(model_path):
     model.pop()
     model.add(tf.keras.layers.Dense(weights[-1].shape[0], name='dense_output'))
     model.set_weights(weights)
+    if save_path:
+        tf.saved_model.save(model, save_path)
     return model
 
 def softargmax(y):
@@ -55,6 +57,28 @@ def softargmax(y):
         (np.array) - onehot encoded prediction (e.g. [0,0,1,0])
     '''
     out = np.zeros(y.shape[0], dtype=int)
-    y = softmax(y)
-    out[np.argmax(y)] = 1
+    out[np.argmax(softmax(y))] = 1
     return out
+
+def parse_indexes(indexes_list=[]):
+    '''
+    parses list of mixed integers and ranges of integers and returns a list of unique integers
+
+    Arguments:
+        indexes_list ([str]) - list of strings of integers or ranges (e.g. 1, 2, 5-7, 10-15)
+    
+    Returns:
+        list of integers
+    '''
+    indexes = []
+    for item in indexes_list:
+        pieces = item.split('-')
+        assert len(pieces) >= 1, 'each index must be an integer or range (e.g. 1 or 1-5)'
+        assert len(pieces) <= 2, 'range of integers must be in format START-END (e.g. 1-10)'
+        if len(pieces) == 1:
+            start = end = pieces[0]
+        elif len(pieces) == 2:
+            start, end = pieces
+        start, end = int(start), int(end)
+        indexes += list(range(start, end + 1))
+    return set(indexes)
