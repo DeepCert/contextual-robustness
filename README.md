@@ -41,7 +41,10 @@ model1_haze_test = ContextualRobustnessTest(
     verbosity=0                      # amount of logging
     )
 # run analysis and save to CSV
-model1_haze_test.analyze(outfile='./results/model1_haze/epsilons.csv')
+model1_haze_test.analyze(
+    epsilons_outpath='./results/model1_haze/epsilons.csv',
+    counterexamples_outpath='./results/model1_haze/counterexamples.p'
+    )
 ```
 
 ### Formal Verification Technique
@@ -81,7 +84,10 @@ model1_haze_formal = ContextualRobustnessFormal(
     verbosity=0                                 # amount of logging
     )
 # run analysis and save to CSV
-model1_haze_formal.analyze(outfile='./results/model1_haze_formal/epsilons.csv')
+model1_haze_formal.analyze(
+    epsilons_outpath='./results/model1_haze_formal/epsilons.csv',
+    counterexamples_outpath='./results/model1_haze_formal/counterexamples.p'
+    )
 ```
 
 ### Load & Visualize Results
@@ -98,7 +104,10 @@ model1_haze = ContextualRobustnessTest(
     Y=Y,
     transform_fn=haze,
     transform_name='Haze'
-    ).load_results('./results/model1_haze/epsilons.csv')
+    ).load_results(
+        epsilons_path='./results/model1_haze/epsilons.csv',
+        counterexamples_path='./results/model1_haze/counterexamples.p'
+        )
 model1_haze = ContextualRobustnessTest(
     model_path='./models/model2.h5',
     model_name='Model2',
@@ -106,7 +115,10 @@ model1_haze = ContextualRobustnessTest(
     Y=Y,
     transform_fn=haze,
     transform_name='Haze'
-    ).load_results('./results/model2_haze/epsilons.csv')
+    ).load_results(
+        epsilons_path='./results/model2_haze/epsilons.csv',
+        counterexamples_path='./results/model2_haze/counterexamples.p'
+        )
 
 # Generate individual 'epsilon' boxplots for each model
 ContextualRobustnessReporting.generate_epsilons_plot(
