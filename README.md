@@ -35,18 +35,17 @@ from transforms import haze
 model = tf.keras.models.load_model('./models/model1.h5')
 
 # instantiate ContextualRobustness object for model1/haze
-model1_haze = ContextualRobustnessTest(
+model1_haze_test = ContextualRobustnessTest(
     model=model,              # (*required) model
     model_name='Model1',      # name of model
     transform_fn=encode_haze, # (*required) transform function
     transform_name='Haze',    # name of transform
     X=X_test,                 # (*required) np.array of images
-    Y=Y_test)                 # (*required) np.array of labels
-
+    Y=Y_test,                 # (*required) np.array of labels
+    verbosity=0               # amount of logging
+    )
 # run analysis and save to CSV
-model1_haze.analyze(
-    outfile='./results/model1_haze/epsilons.csv',
-    verbose=0)
+model1_haze_test.analyze(outfile='./results/model1_haze/epsilons.csv')
 ```
 
 ### Formal Verification Technique
@@ -55,13 +54,13 @@ The formal verification technique uses the [Marabou neural network verification 
 
 #### Model Preparation
 
-Marabou relies on the output of the network's logits layer, so if the network has a softmax output layer, the activation function will need to be removed from that layer. The `prepare_classifier` function is supplied to do this for Tensorflow v2 models. The example below shows how to use `prepare_classifier` to save a copy of the model without the softmax activation function on the output layer.
+Marabou relies on the output of the network's logits layer, so if the network has a softmax output layer, the activation function will need to be removed from that layer. The `remove_softmax_activation` function is supplied to do this for Tensorflow v2 models. The example below shows how to use `remove_softmax_activation` to save a copy of the model without the softmax activation function on the output layer.
 
 ```python
-from utils import prepare_classifier
+from utils import remove_softmax_activation
 
-model = prepare_classifier('./modelX.h5')
-model.save('./modelX-verification')
+# save a copy the model without softmax activation function
+remove_softmax_activation('./modelX.h5', save_path='./modelX-verification')
 ```
 
 #### Analyzing Model/Transform Using Formal Technique
@@ -73,25 +72,20 @@ from transforms import encode_haze
 sys.path.append('../Marabou/')
 from maraboupy import Marabou
 
-# Load model as a MarabouNetwork object
-model = Marabou.read_tf('./models/model1-verification', modelType='savedModel_v2')
-
-# Formal verification is CPU intensive, so choose a subset of samples
-X, Y = X_test[0:10], Y_test[0:10]
-
 # instantiate ContextualRobustness object for model1/haze
 model1_haze_formal = ContextualRobustnessFormal(
-    model=model,              # (*required) MarabouNetwork model
-    model_name='Model1',      # name of model
-    transform_fn=encode_haze, # (*required) transform encoder function
-    transform_name='Haze',    # name of transform
-    X=X,                      # (*required) np.array of images
-    Y=Y)                      # (*required) np.array of labels
-
+    model_path='modelX-verification',           # (*required) path to model
+    model_name='ModelX',                        # name of model
+    model_args=dict(modelType='savedModel_v2'), # specify model type for marabou
+    transform_fn=encode_haze,                   # (*required) transform encoder function
+    transform_name='Haze',                      # name of transform
+    X=X,                                        # (*required) np.array of images
+    Y=Y,                                        # (*required) np.array of labels
+    sample_indexes=list(range(0,10)),           # indexes of subset of samples to test
+    verbosity=0                                 # amount of logging
+    )
 # run analysis and save to CSV
-model1_haze_formal.analyze(
-    outfile='./results/model1_haze_formal/epsilons.csv',
-    verbose=0)
+model1_haze_formal.analyze(outfile='./results/model1_haze_formal/epsilons.csv')
 ```
 
 ### Load & Visualize Results
@@ -145,8 +139,7 @@ ContextualRobustnessReporting.generate_class_accuracy_plot(
 # Generate haze accuracy report comparing the transform on multiple models
 ContextualRobustnessReporting.generate_accuracy_report_plot(
     cr_objects=[model1_haze, model2_haze],
-    outfile='./results/haze-accuracy-report.png'
-    )
+    outfile='./results/haze-accuracy-report.png')
 ```
 
 ## Resources
