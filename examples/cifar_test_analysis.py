@@ -13,7 +13,6 @@ def main(outdir):
 
     # define transforms & models
     models = ('4a', '4b', '5a', '5b', '6a', '6b')
-    models = ('4a',)
 
     # analyze each model on each transform
     for transform in transforms.keys():
