@@ -43,8 +43,10 @@ def main(outdir, sample_indexes):
                 Y=Y_test,
                 sample_indexes=sample_indexes
                 )
-            outfile = os.path.join(outdir, f'model{m}-{transform}.csv')
-            cr.analyze(outfile=outfile)
+            cr.analyze(
+                epsilons_outpath=os.path.join(outdir, f'model{m}-{transform}.csv'),
+                counterexamples_outpath=os.path.join(outdir, f'model{m}-{transform}-counterexamples.p')
+                )
 
 if __name__ == '__main__':
     from argparse import ArgumentParser

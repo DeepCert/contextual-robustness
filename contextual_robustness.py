@@ -1,4 +1,4 @@
-import sys, enum, copy
+import sys, enum, copy, pickle
 import numpy as np
 import pandas as pd
 import tensorflow as tf
@@ -194,13 +194,13 @@ class BaseContextualRobustness(metaclass=ABCMeta):
         '''
         pass
     
-    def analyze(self, outfile='./epsilons.csv', save_csv=True, save_counterexamples=True):
+    def analyze(self, epsilons_outpath='./epsilons.csv', counterexamples_outpath='./counterexamples.p'):
         '''
         Tests all correctly predicted samples, and optionally stores the results in a csv
         
         Parameters:
-            outfile (string)  - output csv file path
-            save_csv (bool)   - enables/disables writing to csv (default=True)
+            epsilons_outpath        (string)  - epsilons output csv file path
+            counterexamples_outpath (string)  - counterexamples pickle path
         
         Returns:
             ContextualRobustness object
@@ -225,35 +225,31 @@ class BaseContextualRobustness(metaclass=ABCMeta):
         
         # generate dataframe and optionally save results to csv
         self._results = pd.DataFrame(data, columns=('image','class','predicted','epsilon', 'lower', 'upper'))
-        if save_csv:
-            create_output_path(outfile)
-            self._results.to_csv(outfile)
+        if epsilons_outpath:
+            create_output_path(epsilons_outpath)
+            self._results.to_csv(epsilons_outpath)
+        if counterexamples_outpath:
+            create_output_path(counterexamples_outpath)
+            with open(counterexamples_outpath, 'wb') as f:
+                pickle.dump(self.counterexamples, f)
         return self
     
-    def load_results(self, csv_path):
+    def load_results(self, epsilons_path='', counterexamples_path=''):
         '''
         Loads saved results from csv file
         
         Parameters:
-            csv_path (string) - (*required) path to the csv containing results
-        
+            epsilons_path        (string) - path to the csv containing epsilons
+            counterexamples_path (string) - path to the pickle containing counterexamples
+
         Returns:
             ContextualRobustness object
         '''
-        self._results = pd.read_csv(csv_path)
-        return self
-    
-    def load_counterexamples(self, csv_path):
-        '''
-        Loads saved results from csv file
-        
-        Parameters:
-            csv_path (string) - (*required) path to the csv containing results
-        
-        Returns:
-            ContextualRobustness object
-        '''
-        self._results = pd.read_csv(csv_path)
+        if epsilons_path:
+            self._results = pd.read_csv(epsilons_path)
+        if counterexamples_path:
+            with open(counterexamples_path, 'rb') as f:
+                self._counterexamples = pickle.load(f)
         return self
 
 # ======================================================================
