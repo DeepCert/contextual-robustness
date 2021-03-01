@@ -1,4 +1,4 @@
-import os
+import os, json
 import tensorflow as tf
 import numpy as np
 from pathlib import Path
@@ -83,3 +83,8 @@ def parse_indexes(indexes_list=[]):
         start, end = int(start), int(end)
         indexes += list(range(start, end + 1))
     return set(indexes)
+
+def set_df_dtypes(df, dtypes):
+    for k,v in dtypes.items():
+        df[k] = df[k].astype(v)
+    return df
