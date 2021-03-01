@@ -4,7 +4,7 @@ import pandas as pd
 import tensorflow as tf
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import ImageGrid
-from utils import create_output_path, softargmax, get_file_extension
+from utils import set_df_dtypes, create_output_path, softargmax, get_file_extension
 from abc import ABCMeta, abstractmethod
 
 # TODO: remove sys.path.append after maraboupy pip package is available.
@@ -22,6 +22,15 @@ defaults = dict(
     verbosity=0,
     marabou_verbosity=0
     )
+
+results_dtypes = {
+    'image': np.int64,
+    'class': np.int64,
+    'predicted': np.int64,
+    'epsilon': np.float64,
+    'upper': np.float64,
+    'lower': np.float64
+    }
 
 # ======================================================================
 # BaseContextualRobustness
@@ -99,6 +108,11 @@ class BaseContextualRobustness(metaclass=ABCMeta):
         return self._X, self._Y
     
     @property
+    def image_shape(self):
+        ''' returns shape of images '''
+        return self.dataset[0].shape[1:]
+
+    @property
     def counterexamples(self):
         return self._counterexamples
 
@@ -136,7 +150,7 @@ class BaseContextualRobustness(metaclass=ABCMeta):
         if class_index is not None:
             sample_indexes = [si for si in self._sample_indexes if np.argmax(self._Y[si]) == class_index]
             correct_sample_indexes = [i for i in self._correct_sample_indexes if np.argmax(self._Y[i]) == class_index]
-            return len(correct_sample_indexes) / len(sample_indexes)
+            return len(correct_sample_indexes) / len(sample_indexes) if len(sample_indexes) > 0 else 0
         return self._accuracy
     accuracy = property(get_accuracy)
 
@@ -224,7 +238,8 @@ class BaseContextualRobustness(metaclass=ABCMeta):
                 print(f'image:{i}, class:{actual_label}, predcited:{predicted_label}, epsilon:{epsilon}')
         
         # generate dataframe and optionally save results to csv
-        self._results = pd.DataFrame(data, columns=('image','class','predicted','epsilon', 'lower', 'upper'))
+        df = pd.DataFrame(data, columns=('image', 'class', 'predicted', 'epsilon', 'lower', 'upper'))
+        self._results = set_df_dtypes(df, results_dtypes)
         if epsilons_outpath:
             create_output_path(epsilons_outpath)
             self._results.to_csv(epsilons_outpath)
@@ -246,7 +261,8 @@ class BaseContextualRobustness(metaclass=ABCMeta):
             ContextualRobustness object
         '''
         if epsilons_path:
-            self._results = pd.read_csv(epsilons_path)
+            self._results = set_df_dtypes(pd.read_csv(epsilons_path, index_col=0), results_dtypes)
+
         if counterexamples_path:
             with open(counterexamples_path, 'rb') as f:
                 self._counterexamples = pickle.load(f)
@@ -329,7 +345,7 @@ class ContextualRobustnessTest(BaseContextualRobustness):
         Returns:
             list
         '''
-        Y_p = self._model.predict([X[si] for si in self._sample_indexes])
+        Y_p = self._model.predict(np.array([X[si] for si in self._sample_indexes]))
         return [si for i,si in enumerate(self._sample_indexes) if np.argmax(Y_p[i]) == np.argmax(Y[si])]
     
     def _find_epsilon(self, x, y, index=None):
@@ -350,13 +366,13 @@ class ContextualRobustnessTest(BaseContextualRobustness):
         actual_label = np.argmax(y)
         predicted_label = actual_label
         epsilon = upper
-        counterexample = None
+        counterexample = self.transform_image(x, epsilon)
         while ((upper - lower) > interval):
             guess = lower + (upper - lower) / 2.0
-            if self._verbosity > 2:
-                print(f'image:{index} - evaluating epsilon:{guess}')
-            x_trans = self._transform_fn(x, epsilon=epsilon, **self._transform_args)
+            x_trans = self.transform_image(x, guess)
             pred = np.argmax(self._model.predict(x_trans.reshape((1,) + x_trans.shape)))
+            if self._verbosity > 1:
+                print(f'evaluating image:{index}@epsilon:{guess}, label:{actual_label}, pred:{pred}')
             if pred == actual_label:
                 # correct prediction
                 lower = guess
@@ -367,6 +383,9 @@ class ContextualRobustnessTest(BaseContextualRobustness):
                 epsilon = guess
                 counterexample = x_trans
         return lower, upper, epsilon, predicted_label, counterexample
+    
+    def transform_image(self, x, epsilon):
+        return self._transform_fn(x, epsilon=epsilon, **self._transform_args)
 
 # ======================================================================
 # ContextualRobustnessFormal
@@ -462,7 +481,16 @@ class ContextualRobustnessFormal(BaseContextualRobustness):
         Returns:
             list
         '''
-        return [i for i in self._sample_indexes if np.argmax(softargmax(self._model.evaluate(X[i])[0])) == np.argmax(Y[i])]
+        ext = get_file_extension(self._model_path)
+        if ext == '.nnet' or ext == '.onnx':
+            # For NNet & ONNX models, use Marabou's 'evaluate' to make predictions
+            return [i for i in self._sample_indexes if np.argmax(softargmax(self._model.evaluate(X[i])[0])) == np.argmax(Y[i])]
+        elif ext in ('', '.pb', '.h5', '.hdf5'):
+            # For Tensorflow models, use Tensorflow's 'predict' to make predictions (much faster)
+            model = tf.keras.models.load_model(self._model_path)
+            Y_p = model.predict(np.array([X[si] for si in self._sample_indexes]))
+            return [si for i,si in enumerate(self._sample_indexes) if np.argmax(softargmax(Y_p[i])) == np.argmax(Y[si])]
+        return None
     
     def _find_epsilon(self, x, y, index=None):
         '''
@@ -480,14 +508,15 @@ class ContextualRobustnessFormal(BaseContextualRobustness):
         lower = self._eps_lower
         upper = self._eps_upper
         interval = self._eps_interval
-        predicted_label = np.argmax(y)
+        actual_label = np.argmax(y)
+        predicted_label = actual_label
         epsilon = upper
         counterexample = None
         while ((upper - lower) > interval):
             guess = lower + (upper - lower) / 2.0
-            if self._verbosity > 2:
-                print(f'image:{index} - evaluating epsilon:{guess}')
             verified, pred, cex = self._find_counterexample(x, y, guess, x_index=index)
+            if self._verbosity > 1:
+                print(f'evaluating image:{index}@epsilon:{guess}, label:{actual_label}, pred:{pred}')
             if verified:
                 # correct prediction
                 lower = guess
@@ -510,19 +539,23 @@ class ContextualRobustnessFormal(BaseContextualRobustness):
             # load model, encode the transform as a marabou input query, and solve query
             network = self._load_model(self._model_path)
             network = self._transform_fn(network, x, epsilon, output_index, **self._transform_args)
-            vals, stats = network.solve(options=Marabou.createOptions(**self._marabou_options))
+            vals, stats = network.solve(options=Marabou.createOptions(**self._marabou_options), verbose=(self._verbosity > 3))
             # check results
             if stats.hasTimedOut():
                 verified = False
-                assert False, f'Timeout occurred ({f"x_index={x_index}" if x_index is not None else ""}, output_index={output_index}, epsilon={epsilon})'
+                assert False, f'Timeout occurred ({f"x_index={x_index}" if x_index is not None else ""};output={output_index}@epsilon={epsilon})'
             elif any(vals):
                 # SAT (counterexample found)
+                if self._verbosity > 2:
+                    print(f'image:{x_index};output:{output_index}@epsilon:{epsilon} (SAT)')
                 counterexample = vals
                 predicted_label = output_index
                 verified = False
                 break
             else:
                 # UNSAT
+                if self._verbosity > 2:
+                    print(f'image:{x_index};output:{output_index}@epsilon:{epsilon} (UNSAT)')
                 continue
         return verified, predicted_label, counterexample
 
@@ -609,17 +642,26 @@ class ContextualRobustnessReporting:
         gridImage[0].get_xaxis().set_ticks([])
         X, _ = cr.dataset
         for c in cr.classes:
-            upper = 100
+            # Placeholder (black square) used for classes where no results are present, 
+            # or where no counterexample was found.
+            x_orig, x_cex = np.zeros(cr.image_shape), np.zeros(cr.image_shape)
             sorted_df = cr.get_results(class_index=c, sort_by=['epsilon'])
-            mean_epsilon = np.mean(sorted_df.epsilon)
-            upper_df = sorted_df[sorted_df.epsilon >= mean_epsilon]
-            idx = upper_df['image'].iloc[0]
-            # upper = upper_df['upper'].iloc[0]
-            epsilon = upper_df['epsilon'].iloc[0]
-            gridImage[c].imshow(X[idx])
-            counterexample = cr.get_counterexample(idx)
-            counterexample = counterexample if counterexample is not None else X[idx]
-            gridImage[c + ncols].imshow(counterexample)
+            if sorted_df.shape[0] > 1:    
+                # The 'test-based technique will always have a counterexample, however 
+                # the formal technique may not. Find first sample with a counterexample 
+                # nearest to the mean, and show placeholders for classes where no sample 
+                # with a counterexample was found.
+                mean_epsilon = np.mean(sorted_df.epsilon)
+                upper_df = sorted_df[sorted_df.epsilon >= mean_epsilon]
+                for idx in upper_df['image']:
+                    if cr.get_counterexample(idx) is not None:
+                        x_orig = X[idx]
+                        x_cex = cr.get_counterexample(idx)
+                        gridImage[c + ncols].imshow(x_cex)
+                        break
+            gridImage[c].imshow(x_orig)
+            gridImage[c + ncols].imshow(x_cex)
+
         plt.axis('off')
         create_output_path(outfile)
         fig.savefig(outfile, bbox_inches='tight')
@@ -654,6 +696,10 @@ class ContextualRobustnessReporting:
         plt.rc('font', family=fontfamily, weight=fontweight)
         # for each class, plot accuracy at different values of epsilon
         for c in cr.classes:
+            class_total = cr.get_num_samples(class_index=c)
+            # if no samples for the class
+            if class_total == 0:
+                continue
             class_accuracy = cr.get_accuracy(class_index=c)
             accuracy_report = [{
                 'epsilon': 0,
@@ -661,7 +707,6 @@ class ContextualRobustnessReporting:
                 'model': cr.model_name,
                 'class': c
                 }]
-            class_total = cr.get_num_samples(class_index=c)
             sorted_class_df = cr.get_results(class_index=c, sort_by=['epsilon'])
             xSpace = np.linspace(1, 1000, 1000) / 1000
             for x in xSpace:

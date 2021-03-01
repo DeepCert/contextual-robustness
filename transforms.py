@@ -26,11 +26,10 @@ def haze(image, epsilon):
     fog[:, :, 2] *= 1.0  # blue
     return (1-epsilon) * image[:, :, :] + epsilon * fog[:, :, :]
 
-def increaseContrast(image, epsilon):
-    # This is the scaling we would prefer
-    tg_min = 0.0
-    tg_max = 1.0
-
+def increaseContrast(image, epsilon, tg_min=0.0, tg_max=1.0):
+    # this is a hack to prevent div by zero
+    if epsilon >= 1.0:
+        epsilon = 0.99999
     # This is the max and minimum value in the picture originally
     sc_min = 0.5*epsilon
     sc_max = 1 - sc_min
