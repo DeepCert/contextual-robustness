@@ -35,8 +35,8 @@ def main(outdir, sample_indexes, image_formats):
                 )
             # load results from csv
             cr.load_results(
-                epsilons_path=os.path.join('./results-TEMP/cifar/test/data', f'model{m}-{transform}.csv'),
-                counterexamples_path=os.path.join('./results-TEMP/cifar/test/data', f'model{m}-{transform}-counterexamples.p')
+                epsilons_path=os.path.join('./results/cifar/test/data', f'model{m}-{transform}.csv'),
+                counterexamples_path=os.path.join('./results/cifar/test/data', f'model{m}-{transform}-counterexamples.p')
                 )
             cr_objects.append(cr)
             
