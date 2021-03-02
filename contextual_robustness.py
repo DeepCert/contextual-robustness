@@ -1,4 +1,4 @@
-import sys, enum, copy, pickle
+import sys, enum, copy, pickle, typing
 import numpy as np
 import pandas as pd
 import tensorflow as tf
@@ -32,6 +32,8 @@ results_dtypes = {
     'lower': np.float64
     }
 
+ContextualRobustness = typing.TypeVar('ContextualRobustness')
+
 # ======================================================================
 # BaseContextualRobustness
 # ======================================================================
@@ -54,7 +56,7 @@ class BaseContextualRobustness(metaclass=ABCMeta):
         eps_upper=defaults['eps_upper'],
         eps_interval=defaults['eps_interval'],
         verbosity=defaults['verbosity'],
-        ):
+        ) -> ContextualRobustness:
         assert bool(model_path), 'model_path is required'
         assert X.shape[0] == Y.shape[0], 'X and Y must have equal number of items'
         assert callable(transform_fn), 'transform_fn must be callable (e.g. a function)'
@@ -75,45 +77,45 @@ class BaseContextualRobustness(metaclass=ABCMeta):
         # find indexes of correctly predicted samples
         self._correct_sample_indexes = self._find_correct_sample_indexes(X, Y)
         print(f'filtered {len(self._sample_indexes) - len(self._correct_sample_indexes)} incorrectly predicted samples')
-        # self._accuracy = len(self._correct_sample_indexes) / len(X)
+        # measure accuracy 
         self._accuracy = len(self._correct_sample_indexes) / len(self._sample_indexes)
-        print(f'accuracy is {self.accuracy}')
+        print(f'accuracy on {len(self._sample_indexes)} samples is {self.accuracy * 100}%')
         # examples of images @ epsilon where network's prediction changed
         self._counterexamples = dict()
 
     @property
     @abstractmethod
-    def technique(self):
+    def technique(self) -> Techniques:
         '''
         Returns a property from Techniques Enum. Abstract method implemented by subclasses.
         '''
         return None
 
     @property
-    def model_name(self):
+    def model_name(self) -> str:
         return self._model_name
     
     @property
-    def transform_name(self):
+    def transform_name(self) -> str:
         return self._transform_name
     
     @property
-    def classes(self):
+    def classes(self) -> list:
         ''' returns list of classes '''
         return sorted(np.unique([np.argmax(self._Y[i]) for i in range(self._Y.shape[0])]))
     
     @property
-    def dataset(self):
+    def dataset(self) -> tuple:
         ''' returns tuple containing the dataset (X, Y) '''
         return self._X, self._Y
     
     @property
-    def image_shape(self):
+    def image_shape(self) -> tuple:
         ''' returns shape of images '''
         return self.dataset[0].shape[1:]
     
     @property
-    def n_pixels(self):
+    def n_pixels(self) -> int:
         ''' returns shape of images '''
         prod = 1
         for dim in self.image_shape:
@@ -121,16 +123,16 @@ class BaseContextualRobustness(metaclass=ABCMeta):
         return prod
 
     @property
-    def counterexamples(self):
+    def counterexamples(self) -> dict:
         return self._counterexamples
 
-    def get_counterexample(self, x_index):
+    def get_counterexample(self, x_index) -> np.array:
         return self.counterexamples.get(f'image{x_index}')
     
     def save_counterexample(self, x_index, counterexample):
         self._counterexamples[f'image{x_index}'] = counterexample
     
-    def get_num_samples(self, class_index=None):
+    def get_num_samples(self, class_index=None) -> int:
         '''
         returns number of samples in dataset (optionally for a single class).
         
@@ -145,7 +147,7 @@ class BaseContextualRobustness(metaclass=ABCMeta):
         return len(self._sample_indexes)
     num_samples = property(get_num_samples)
 
-    def get_accuracy(self, class_index=None):
+    def get_accuracy(self, class_index=None) -> float:
         '''
         returns accuracy of model (optionally for a single class)
         
@@ -162,7 +164,7 @@ class BaseContextualRobustness(metaclass=ABCMeta):
         return self._accuracy
     accuracy = property(get_accuracy)
 
-    def get_results(self, class_index=None, sort_by=[]):
+    def get_results(self, class_index=None, sort_by=[]) -> pd.DataFrame:
         '''
         returns a dataframe containing the analysis results (optionally for a single class and/or sorted)
         
@@ -182,7 +184,7 @@ class BaseContextualRobustness(metaclass=ABCMeta):
     results = property(get_results)
 
     @abstractmethod
-    def _find_epsilon(self, x, y, index=None):
+    def _find_epsilon(self, x, y, index=None) -> tuple:
         '''
         Finds epsilon for a given image; Abstract method which must be implemented by subclasses.
 
@@ -203,7 +205,7 @@ class BaseContextualRobustness(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def _find_correct_sample_indexes(self, X, Y):
+    def _find_correct_sample_indexes(self, X, Y) -> list:
         '''
         Returns list of indexes of correctly predicted samples; Abstract method implemented by subclasses
         '''
@@ -216,7 +218,7 @@ class BaseContextualRobustness(metaclass=ABCMeta):
         '''
         pass
     
-    def analyze(self, epsilons_outpath='./epsilons.csv', counterexamples_outpath='./counterexamples.p'):
+    def analyze(self, epsilons_outpath='./epsilons.csv', counterexamples_outpath='./counterexamples.p') -> ContextualRobustness:
         '''
         Tests all correctly predicted samples, and optionally stores the results in a csv
         
@@ -257,7 +259,7 @@ class BaseContextualRobustness(metaclass=ABCMeta):
                 pickle.dump(self.counterexamples, f)
         return self
     
-    def load_results(self, epsilons_path='', counterexamples_path=''):
+    def load_results(self, epsilons_path='', counterexamples_path='') -> ContextualRobustness:
         '''
         Loads saved results from csv file
         
@@ -311,7 +313,7 @@ class ContextualRobustnessTest(BaseContextualRobustness):
         eps_upper=defaults['eps_upper'],
         eps_interval=defaults['eps_interval'],
         verbosity=defaults['verbosity']
-        ):
+        ) -> ContextualRobustness:
         super().__init__(
             model_path=model_path,
             model_name=model_name,
@@ -327,10 +329,10 @@ class ContextualRobustnessTest(BaseContextualRobustness):
             verbosity=verbosity)
     
     @property
-    def technique(self):
+    def technique(self) -> Techniques:
         return Techniques.TEST
     
-    def _load_model(self, model_path):
+    def _load_model(self, model_path) -> tf.keras.Model:
         '''
         loads a tensorflow model
         
@@ -342,7 +344,7 @@ class ContextualRobustnessTest(BaseContextualRobustness):
         '''
         return tf.keras.models.load_model(model_path)
     
-    def _find_correct_sample_indexes(self, X, Y):
+    def _find_correct_sample_indexes(self, X, Y) -> list:
         '''
         returns list of indexes of correctly predicted samples
         
@@ -356,7 +358,7 @@ class ContextualRobustnessTest(BaseContextualRobustness):
         Y_p = self._model.predict(np.array([X[si] for si in self._sample_indexes]))
         return [si for i,si in enumerate(self._sample_indexes) if np.argmax(Y_p[i]) == np.argmax(Y[si])]
     
-    def _find_epsilon(self, x, y, index=None):
+    def _find_epsilon(self, x, y, index=None) -> tuple:
         '''
         finds the epsilon value of the transform_fn applied to x
         
@@ -392,7 +394,7 @@ class ContextualRobustnessTest(BaseContextualRobustness):
                 counterexample = x_trans
         return lower, upper, epsilon, predicted_label, counterexample
     
-    def transform_image(self, x, epsilon):
+    def transform_image(self, x, epsilon) -> np.array:
         return self._transform_fn(x, epsilon=epsilon, **self._transform_args)
 
 # ======================================================================
@@ -434,7 +436,7 @@ class ContextualRobustnessFormal(BaseContextualRobustness):
         eps_interval=defaults['eps_interval'],
         marabou_options=dict(verbosity=defaults['marabou_verbosity']),
         verbosity=defaults['verbosity']
-        ):
+        ) -> ContextualRobustness:
         self._model_args = model_args
         self._marabou_options = marabou_options
         super().__init__(
@@ -453,10 +455,10 @@ class ContextualRobustnessFormal(BaseContextualRobustness):
             )
     
     @property
-    def technique(self):
+    def technique(self) -> Techniques:
         return Techniques.FORMAL
     
-    def _load_model(self, model_path):
+    def _load_model(self, model_path) -> Marabou.MarabouNetwork:
         '''
         Loads model as a MarabouNetwork object
 
@@ -478,7 +480,7 @@ class ContextualRobustnessFormal(BaseContextualRobustness):
             return Marabou.read_onnx(model_path, **self._model_args)
         return None
     
-    def _find_correct_sample_indexes(self, X, Y):
+    def _find_correct_sample_indexes(self, X, Y) -> list:
         '''
         returns list of indexes of correctly predicted samples
         
@@ -500,7 +502,7 @@ class ContextualRobustnessFormal(BaseContextualRobustness):
             return [si for i,si in enumerate(self._sample_indexes) if np.argmax(softargmax(Y_p[i])) == np.argmax(Y[si])]
         return None
     
-    def _find_epsilon(self, x, y, index=None):
+    def _find_epsilon(self, x, y, index=None) -> tuple:
         '''
         Finds the epsilon value of the transform_fn applied to x using formal verification,
         and saves counterexamples returned by Marabou.
@@ -536,7 +538,20 @@ class ContextualRobustnessFormal(BaseContextualRobustness):
                 counterexample = cex
         return lower, upper, epsilon, predicted_label, counterexample
     
-    def _find_counterexample(self, x, y, epsilon, x_index=None):
+    def _find_counterexample(self, x, y, epsilon, x_index=None) -> tuple:
+        '''
+        Finds counterexample by generating and solving a marabou input query for a given 
+        image, epsilon, and transform_fn.
+
+        Parameters:
+            x       (np.array) - the image
+            y       (np.array) - label for image (x)
+            epsilon (float)    - amount of transform
+            x_index (int)      - index of x
+        
+        Returns:
+            tuple (verified, predicted_label, counterexample)
+        '''
         actual_label = np.argmax(y)
         predicted_label = actual_label
         verified = True
@@ -583,7 +598,7 @@ class ContextualRobustnessReporting:
     '''
     @staticmethod
     def generate_epsilons_plot(
-            cr,
+            cr: ContextualRobustness,
             outfile='epsilons.png',
             xlabel='',
             ylabel='epsilon',
@@ -622,7 +637,7 @@ class ContextualRobustnessReporting:
     
     @staticmethod
     def generate_counterexamples_plot(
-            cr,
+            cr: ContextualRobustness,
             outfile='./counterexamples.png',
             nrows=2,
             ncols='auto',
@@ -662,13 +677,11 @@ class ContextualRobustnessReporting:
                 # with a counterexample was found.
                 mean_epsilon = np.mean(sorted_df.epsilon)
                 upper_df = sorted_df[sorted_df.epsilon >= mean_epsilon]
+                x_orig = X[upper_df['image'].iloc[0]]
                 for idx in upper_df['image']:
                     if cr.get_counterexample(idx) is not None:
                         x_orig = X[idx]
                         x_cex = cr.get_counterexample(idx)
-                        print('XORIG:', x_orig)
-                        print('XCEX:', x_cex)
-                        gridImage[c + ncols].imshow(x_cex)
                         break
             gridImage[c].imshow(x_orig)
             gridImage[c + ncols].imshow(x_cex)
@@ -681,7 +694,7 @@ class ContextualRobustnessReporting:
     
     @staticmethod
     def generate_class_accuracy_plot(
-            cr,
+            cr: ContextualRobustness,
             outfile='./class-accuracy.png',
             axis_fontsize=12,
             legend_fontsize=14,
@@ -746,7 +759,7 @@ class ContextualRobustnessReporting:
     
     @staticmethod
     def generate_accuracy_report_plot(
-            cr_objects,
+            cr_objects: typing.Sequence[ContextualRobustness],
             outfile='./accuracy-report.png',
             linestyles=(),
             axis_fontsize=12,
