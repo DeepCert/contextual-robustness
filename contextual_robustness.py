@@ -111,6 +111,14 @@ class BaseContextualRobustness(metaclass=ABCMeta):
     def image_shape(self):
         ''' returns shape of images '''
         return self.dataset[0].shape[1:]
+    
+    @property
+    def n_pixels(self):
+        ''' returns shape of images '''
+        prod = 1
+        for dim in self.image_shape:
+            prod *= dim
+        return prod
 
     @property
     def counterexamples(self):
@@ -542,21 +550,22 @@ class ContextualRobustnessFormal(BaseContextualRobustness):
             vals, stats = network.solve(options=Marabou.createOptions(**self._marabou_options), verbose=(self._verbosity > 3))
             # check results
             if stats.hasTimedOut():
+                # TIMEOUT
                 verified = False
                 assert False, f'Timeout occurred ({f"x_index={x_index}" if x_index is not None else ""};output={output_index}@epsilon={epsilon})'
-            elif any(vals):
-                # SAT (counterexample found)
-                if self._verbosity > 2:
-                    print(f'image:{x_index};output:{output_index}@epsilon:{epsilon} (SAT)')
-                counterexample = vals
-                predicted_label = output_index
-                verified = False
-                break
-            else:
+            elif len(vals) == 0:
                 # UNSAT
                 if self._verbosity > 2:
                     print(f'image:{x_index};output:{output_index}@epsilon:{epsilon} (UNSAT)')
                 continue
+            else:
+                # SAT (counterexample found)
+                if self._verbosity > 2:
+                    print(f'image:{x_index};output:{output_index}@epsilon:{epsilon} (SAT)')
+                counterexample = np.array([vals[i] for i in range(self.n_pixels)]).reshape(self.image_shape)
+                predicted_label = output_index
+                verified = False
+                break
         return verified, predicted_label, counterexample
 
 # ======================================================================
@@ -657,6 +666,8 @@ class ContextualRobustnessReporting:
                     if cr.get_counterexample(idx) is not None:
                         x_orig = X[idx]
                         x_cex = cr.get_counterexample(idx)
+                        print('XORIG:', x_orig)
+                        print('XCEX:', x_cex)
                         gridImage[c + ncols].imshow(x_cex)
                         break
             gridImage[c].imshow(x_orig)
