@@ -2,7 +2,7 @@
 import os
 from contextual_robustness import ContextualRobustnessTest
 from transforms import test_transforms as transforms
-from load_data import load_cifar
+from load_data import loadTraffic
 from utils import parse_indexes
 
 # reduce tensorflow log level
@@ -10,17 +10,17 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 def main(outdir, sample_indexes):
     # load dataset
-    _, _, X_test, Y_test, _ = load_cifar()
+    _, _, X_test, Y_test, _ = loadTraffic()
 
     # define models
-    models = ('4a', '4b', '5a', '5b', '6a', '6b')
+    models = ('1a', '1b', '2a', '2b', '3a', '3b')
 
     # analyze each model on each transform
     for transform in transforms.keys():
         transform_name = transform.capitalize()
         for m in models:
             model_name = f'Model{m}'
-            model_path = f'./models/cifar/model{m}.h5'
+            model_path = f'./models/gtsb/model{m}.h5'
             print(f'{("-"*80)}\nAnalyzing {model_name} {transform_name}\n{("-"*80)}')
             cr = ContextualRobustnessTest(
                 model_path=model_path,
@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
     parser = ArgumentParser()
     parser.add_argument('-o', '--outdir',
-        default='./results/cifar/test/data',
+        default='./results/gtsb/test/data',
         help='output directory')
     parser.add_argument('-s', '--sampleindexes',
         nargs='*',
