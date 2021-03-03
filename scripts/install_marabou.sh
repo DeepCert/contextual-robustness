@@ -18,4 +18,11 @@ export PYTHONPATH="${PYTHONPATH}:$MARABOU_PATH"
 export JUPYTER_PATH="${JUPYTER_PATH}:$MARABOU_PATH"
 alias marabou="$MARABOU_PATH/build/Marabou"
 
+cat << EOF
+To permantly add Marabou to your path variables, add the following lines to your .bashrc or .zshrc file.
 
+MARABOU_PATH="$(pwd)/Marabou"
+export PYTHONPATH="\$PYTHONPATH:\$MARABOU_PATH"
+export JUPYTER_PATH="\$JUPYTER_PATH:\$MARABOU_PATH"
+alias marabou="\$MARABOU_PATH/build/Marabou"
+EOF
