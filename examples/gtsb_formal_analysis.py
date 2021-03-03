@@ -39,7 +39,8 @@ def main(outdir, sample_indexes):
                 transform_name=transform_name,
                 X=X_test,
                 Y=Y_test,
-                sample_indexes=sample_indexes
+                sample_indexes=sample_indexes,
+                verbosity=1
                 )
             cr.analyze(
                 epsilons_outpath=os.path.join(outdir, f'model{m}-{transform}.csv'),
