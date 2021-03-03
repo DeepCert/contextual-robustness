@@ -1,5 +1,5 @@
 # Datasets
-/data
+/data/**/*.p
 !/data/**/*.zip
 !/data/**/*.tar.gz
 

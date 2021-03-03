@@ -15,16 +15,16 @@ def fix_labels(labels):
     return labels
 
 def loadTraffic():
-    with open('german-traffic-signs/train.p', 'rb') as f:
+    with open('data/gtsb/train.p', 'rb') as f:
         train_data = pickle.load(f)
 
-    with open('german-traffic-signs/test.p', 'rb') as f:
+    with open('data/gtsb/test.p', 'rb') as f:
         test_data = pickle.load(f)
 
     X_train, y_train = train_data['features'], train_data['labels']
     X_test,  y_test  = test_data['features'], test_data['labels']
 
-    data = pd.read_csv('german-traffic-signs/signnames.csv')
+    data = pd.read_csv('data/gtsb/signnames.csv')
 
     X_train = normalize(X_train)
     X_test = normalize(X_test)
