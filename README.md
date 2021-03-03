@@ -26,7 +26,7 @@ By default, the plotting functions in `ContextualRobustnessReporting` use [LaTeX
 
 ### Prepare Datasets
 
-The examples rely on test samples from the GTSB and CIFAR datasets. Run `./scripts/setup_datasets.sh` to prepare the datasets.
+The examples rely on test samples from the GTSRB and CIFAR datasets. Run `./scripts/setup_datasets.sh` to prepare the datasets.
 
 ## Usage Examples
 
@@ -35,6 +35,8 @@ The examples rely on test samples from the GTSB and CIFAR datasets. Run `./scrip
 The test based technique uses the model's built-in 'predict' function to analyze the model's robustness to a transform. This technique can be used to get an overall picture of the model's robustness by testing a large number of samples from the dataset. It is faster than the formal verification technique, but may not always discover the real "epsilon" for all samples.
 
 #### Test-Based Technique: Analyzing a Model/Transform
+
+The sample code below shows how to analyze a model on a particular image transformation (e.g. haze). The analysis will generate a csv containing the epsilon for each image, and a pickle containing counterexamples showing examples where the change in prediction occured.
 
 ```python
 from contextual_robustness import ContextualRobustnessTest, ContextualRobustnessReporting
@@ -127,7 +129,7 @@ Marabou relies on the output of the network's logits layer, so if the network ha
 from utils import remove_softmax_activation
 
 # save a copy the model without softmax activation function
-remove_softmax_activation('./modelA.h5', save_path='./modelA-verification')
+remove_softmax_activation('./models/modelA.h5', save_path='./models/modelA-verification')
 ```
 
 #### Formal Verification Technique: Analyzing a Model/Transform
@@ -142,7 +144,7 @@ from maraboupy import Marabou
 
 # Instantiate ContextualRobustness object for modelA/haze
 modelA_haze_formal = ContextualRobustnessFormal(
-    model_path='modelA-verification',           # (*required) path to model
+    model_path='./models/modelA-verification',           # (*required) path to model
     model_name='ModelA',                        # name of model
     model_args=dict(modelType='savedModel_v2'), # specify model type for marabou
     transform_fn=encode_haze,                   # (*required) transform encoder function
@@ -150,7 +152,7 @@ modelA_haze_formal = ContextualRobustnessFormal(
     X=X,                                        # (*required) np.array of images
     Y=Y,                                        # (*required) np.array of labels
     sample_indexes=list(range(0,10)),           # list of indexes of samples to test
-    verbosity=0                                 # amount of logging
+    verbosity=1                                 # amount of logging
     )
 # run analysis and save to CSV
 modelA_haze_formal.analyze(
@@ -169,7 +171,7 @@ from maraboupy import Marabou
 
 # Load saved CSV results from 'Haze' analysis on 'ModelA'
 modelA_haze_formal = ContextualRobustnessFormal(
-    model_path='modelA-verification',           # (*required) path to model
+    model_path='./models/modelA-verification',  # (*required) path to model
     model_name='ModelA',                        # name of model
     model_args=dict(modelType='savedModel_v2'), # specify model type for marabou
     transform_fn=encode_haze,                   # (*required) transform encoder function
@@ -196,11 +198,11 @@ ContextualRobustnessReporting.generate_counterexamples_plot(
 
 ## Full Examples
 
-Example code used to analyze and generate reports for the GTSB models (1a, 1b, 2a, 2b, 3a, 3b) and CIFAR models (4a, 4b, 5a, 5b, 6a, 6b) from the DeepCert paper. The models can be found in the [./models](./models) folder, and the code can be found in the [./examples](./examples) folder.
+Example code used to analyze and generate reports for the [GTSRB models](./models#gtsrb-models) (1a, 1b, 2a, 2b, 3a, 3b) and [CIFAR models](./models#cifar-models) (4a, 4b, 5a, 5b, 6a, 6b) from the DeepCert paper. The models and their descriptions can be found in the [models folder](./models), and the example analysis code can be found in the [examples folder](./examples) folder.
 
 ### Test-Based Examples
 
-* GTSB
+* GTSRB
   * Analyze models on haze, blur, and contrast with test-based technique: [./examples/gtsb_test_analysis.py](./examples/gtsb_test_analysis.py)
   * Generate plots from analysis of models on haze, blur, and contrast: [./examples/gtsb_test_reporting.py](./examples/gtsb_test_reporting.py)
 * CIFAR
@@ -209,7 +211,7 @@ Example code used to analyze and generate reports for the GTSB models (1a, 1b, 2
 
 ### Formal Verification Examples
 
-* GTSB
+* GTSRB
   * Analyze models 1a & 1b on haze & l-inf with formal verification technique: [./examples/gtsb_formal_analysis.py](./examples/gtsb_formal_analysis.py)
   * Generate plots from analysis of models 1a & 1b on haze & l-inf with formal verification technique: [./examples/gtsb_formal_reporting.py](./examples/gtsb_formal_reporting.py)
 * CIFAR
