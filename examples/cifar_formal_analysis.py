@@ -19,21 +19,20 @@ def main(outdir, sample_indexes):
     models = ('4a', '4b')
 
     # analyze each model on each transform
-    for transform in transforms.keys():
+    # for transform in transforms.keys():
+    for transform in ['encode_haze']:
         transform_name = transform.capitalize()
         for m in models:
             model_name = f'Model{m}'
             print(f'{("-"*80)}\nAnalyzing {model_name} {transform_name}\n{("-"*80)}')
             
-            # create a copy of the h5 model without softmax activation
-            remove_softmax_activation(
-                f'./models/cifar/model{m}.h5',
-                save_path=f'./models/cifar/model{m}-verification'
-                )
+            # create a copy of the h5 model without softmax activation and save in pb format
+            model_path = f'./models/cifar/model{m}-verification'
+            remove_softmax_activation(f'./models/cifar/model{m}.h5', save_path=model_path)
             
             # run analysis on modified model
             cr = ContextualRobustnessFormal(
-                model_path=f'./models/cifar/model{m}-verification',
+                model_path=model_path,
                 model_name=model_name,
                 model_args=dict(modelType='savedModel_v2'),
                 transform_fn=transforms[transform]['fn'],
@@ -41,7 +40,8 @@ def main(outdir, sample_indexes):
                 transform_name=transform_name,
                 X=X_test,
                 Y=Y_test,
-                sample_indexes=sample_indexes
+                sample_indexes=sample_indexes,
+                verbosity=1
                 )
             cr.analyze(
                 epsilons_outpath=os.path.join(outdir, f'model{m}-{transform}.csv'),

@@ -16,7 +16,7 @@ def main(outdir, sample_indexes):
     _, _, X_test, Y_test, _ = loadTraffic()
 
     # define transforms & models
-    models = ('4a', '4b')
+    models = ('1a', '1b')
 
     # analyze each model on each transform
     for transform in transforms.keys():
@@ -26,14 +26,12 @@ def main(outdir, sample_indexes):
             print(f'{("-"*80)}\nAnalyzing {model_name} {transform_name}\n{("-"*80)}')
             
             # create a copy of the h5 model without softmax activation
-            remove_softmax_activation(
-                f'./models/gtsb/model{m}.h5',
-                save_path=f'./models/gtsb/model{m}-verification'
-                )
+            model_path = f'./models/gtsb/model{m}-verification'
+            remove_softmax_activation(f'./models/gtsb/model{m}.h5', save_path=model_path)
             
             # run analysis on modified model
             cr = ContextualRobustnessFormal(
-                model_path=f'./models/gtsb/model{m}-verification',
+                model_path=model_path,
                 model_name=model_name,
                 model_args=dict(modelType='savedModel_v2'),
                 transform_fn=transforms[transform]['fn'],
