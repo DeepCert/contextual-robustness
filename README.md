@@ -4,6 +4,11 @@ Contextual robustness verification source code
 
 ## Install & Setup
 
+### Prerequisites
+
+* python 3.5.0 <= 3.8.7
+* cmake >= 3.12 (for compiling Marabou)
+
 ### Setup Environment & Install Python Deps
 
 ```sh
@@ -139,7 +144,7 @@ import sys
 from contextual_robustness import ContextualRobustnessFormal, ContextualRobustnessReporting
 from transforms import encode_haze
 
-sys.path.append('../Marabou/')
+sys.path.append('./marabou')
 from maraboupy import Marabou
 
 # Instantiate ContextualRobustness object for modelA/haze
@@ -166,7 +171,7 @@ modelA_haze_formal.analyze(
 from contextual_robustness import ContextualRobustnessFormal, ContextualRobustnessReporting
 from transforms import encode_haze
 
-sys.path.append('../Marabou/')
+sys.path.append('./marabou')
 from maraboupy import Marabou
 
 # Load saved CSV results from 'Haze' analysis on 'ModelA'

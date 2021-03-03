@@ -1,3 +1,4 @@
+#!./venv/bin/python
 import os, sys
 import tensorflow as tf
 from contextual_robustness import ContextualRobustnessFormal
@@ -5,7 +6,7 @@ from transforms import formal_transforms as transforms
 from load_data import loadTraffic
 from utils import remove_softmax_activation, parse_indexes
 
-sys.path.append('../Marabou/')
+sys.path.append('./marabou')
 from maraboupy import Marabou
 
 # reduce tensorflow log level

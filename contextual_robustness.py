@@ -8,7 +8,7 @@ from utils import set_df_dtypes, create_output_path, softargmax, get_file_extens
 from abc import ABCMeta, abstractmethod
 
 # TODO: remove sys.path.append after maraboupy pip package is available.
-sys.path.append('../Marabou/')
+sys.path.append('./marabou')
 from maraboupy import Marabou
 
 class Techniques(enum.Enum):

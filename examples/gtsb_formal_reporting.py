@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!./venv/bin/python
 import os
 from contextual_robustness import ContextualRobustnessFormal, ContextualRobustnessReporting
 from transforms import formal_transforms as transforms

@@ -1,3 +1,4 @@
+#!./venv/bin/python
 import os, sys
 import tensorflow as tf
 from contextual_robustness import ContextualRobustnessFormal
@@ -5,7 +6,7 @@ from transforms import formal_transforms as transforms
 from load_data import load_cifar
 from utils import remove_softmax_activation, parse_indexes
 
-sys.path.append('../Marabou/')
+sys.path.append('./marabou')
 from maraboupy import Marabou
 
 # reduce tensorflow log level
@@ -19,8 +20,7 @@ def main(outdir, sample_indexes):
     models = ('4a', '4b')
 
     # analyze each model on each transform
-    # for transform in transforms.keys():
-    for transform in ['encode_haze']:
+    for transform in transforms.keys():
         transform_name = transform.capitalize()
         for m in models:
             model_name = f'Model{m}'
