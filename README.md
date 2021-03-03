@@ -4,6 +4,8 @@ Contextual robustness verification source code
 
 ## Install & Setup
 
+### Setup Environment & Install Python Deps
+
 ```sh
 git clone <GITHUB_REPO_URL>
 cd contextual-robustness
@@ -12,11 +14,19 @@ python3 -m venv venv
 source venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
-
-./scripts/setup.sh
 ```
 
+### Install Marabou
+
+You can download and compile Marabou by running `./scripts/install_marabou.sh` or following the instruction in the [Marabou repo](https://github.com/NeuralNetworkVerification/Marabou).
+
+### Install LaTeX
+
 By default, the plotting functions in `ContextualRobustnessReporting` use [LaTeX](https://www.latex-project.org/get/) for rendering text. To use this feature, you'll need to [install LaTeX](https://www.latex-project.org/get/) and add it to your `PATH`. If you don't need/want to use the latex rendering, simply pass `usetex=False` to the relevant plotting functions.
+
+### Prepare Datasets
+
+The examples rely on test samples from the GTSB and CIFAR datasets. Run `./scripts/setup_datasets.sh` to prepare the datasets.
 
 ## Usage Examples
 

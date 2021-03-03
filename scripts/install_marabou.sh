@@ -1,12 +1,6 @@
 #!/bin/bash
 
-# Usage: ./scripts/setup.sh
-
-# unzip GTSB dataset
-if [ ! -f ./models/gtsb/train.p ]; then
-    echo "Unzipping GTSB dataset"
-    cd ./data/gtsb && tar -xzf ./test.p.tar.gz && cd -
-fi
+# Usage: ./scripts/install_marabou.sh
 
 if [ ! -d "./Marabou" ]; then
     echo "Downloading Marabou"
@@ -23,3 +17,5 @@ MARABOU_PATH="$(pwd)/Marabou"
 export PYTHONPATH="${PYTHONPATH}:$MARABOU_PATH"
 export JUPYTER_PATH="${JUPYTER_PATH}:$MARABOU_PATH"
 alias marabou="$MARABOU_PATH/build/Marabou"
+
+
