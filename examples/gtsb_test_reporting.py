@@ -2,7 +2,7 @@
 import os
 from contextual_robustness import ContextualRobustnessTest, ContextualRobustnessReporting
 from transforms import test_transforms as transforms
-from load_data import load_cifar
+from load_data import loadTraffic
 from utils import parse_indexes
 
 # reduce tensorflow log level
@@ -10,10 +10,10 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 def main(outdir, sample_indexes, image_formats):
     # load dataset
-    _, _, X_test, Y_test, _ = load_cifar()
+    _, _, X_test, Y_test, _ = loadTraffic()
 
     # define models
-    models = ('4a', '4b', '5a', '5b', '6a', '6b')
+    models = ('1a', '1b', '2a', '2b', '3a', '3b')
 
     # generate plots for each model/transform combo
     cr_objects = []
@@ -24,7 +24,7 @@ def main(outdir, sample_indexes, image_formats):
             print(f'{("-"*80)}\nGenerating plots for {model_name} {transform_name}\n{("-"*80)}')
             # instantiate ContextualRobustness object
             cr = ContextualRobustnessTest(
-                model_path=f'./models/cifar/model{m}.h5',
+                model_path=f'./models/gtsb/model{m}.h5',
                 model_name=model_name,
                 X=X_test,
                 Y=Y_test,
@@ -35,8 +35,8 @@ def main(outdir, sample_indexes, image_formats):
                 )
             # load results from csv
             cr.load_results(
-                epsilons_path=os.path.join('./results/cifar/test/data', f'model{m}-{transform}.csv'),
-                counterexamples_path=os.path.join('./results/cifar/test/data', f'model{m}-{transform}-counterexamples.p')
+                epsilons_path=os.path.join('./results/gtsb/test/data', f'model{m}-{transform}.csv'),
+                counterexamples_path=os.path.join('./results/gtsb/test/data', f'model{m}-{transform}-counterexamples.p')
                 )
             cr_objects.append(cr)
             
@@ -69,7 +69,7 @@ def main(outdir, sample_indexes, image_formats):
             out_dir = os.path.join(outdir, f'{image_format}')
             ContextualRobustnessReporting.generate_accuracy_report_plot(
                 transform_cr_objects,
-                outfile=os.path.join(out_dir, f'cifar-{transform}_accuracy.{image_format}'),
+                outfile=os.path.join(out_dir, f'gtsb-{transform}_accuracy.{image_format}'),
                 linestyles=linestyles,
                 legend_fontsize=16,
                 axis_fontsize=20
@@ -80,7 +80,7 @@ if __name__ == '__main__':
 
     parser = ArgumentParser()
     parser.add_argument('-o', '--outdir',
-        default='./results/cifar/test/images',
+        default='./results/gtsb/test/images',
         help='output directory')
     parser.add_argument('-s', '--sampleindexes',
         nargs='*',
