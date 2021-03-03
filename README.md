@@ -43,8 +43,7 @@ modelA_haze_test = ContextualRobustnessTest(
 # run analysis and save to CSV
 modelA_haze_test.analyze(
     epsilons_outpath='./results/modelA_haze/epsilons.csv',
-    counterexamples_outpath='./results/modelA_haze/counterexamples.p'
-    )
+    counterexamples_outpath='./results/modelA_haze/counterexamples.p')
 ```
 
 #### Test-Based Technique: Load & Visualize Results
@@ -60,12 +59,10 @@ modelA_haze = ContextualRobustnessTest(
     X=X,
     Y=Y,
     transform_fn=haze,
-    transform_name='Haze'
-    )
+    transform_name='Haze')
 modelA_haze.load_results(
     epsilons_path='./results/modelA_haze/epsilons.csv',
-    counterexamples_path='./results/modelA_haze/counterexamples.p'
-    )
+    counterexamples_path='./results/modelA_haze/counterexamples.p')
 # Load saved CSV results from 'Haze' analysis on 'ModelB'
 modelB_haze = ContextualRobustnessTest(
     model_path='./models/modelB.h5',
@@ -73,12 +70,10 @@ modelB_haze = ContextualRobustnessTest(
     X=X,
     Y=Y,
     transform_fn=haze,
-    transform_name='Haze'
-    )
+    transform_name='Haze')
 modelB_haze.load_results(
     epsilons_path='./results/modelB_haze/epsilons.csv',
-    counterexamples_path='./results/modelB_haze/counterexamples.p'
-    )
+    counterexamples_path='./results/modelB_haze/counterexamples.p')
 
 # Generate individual 'epsilon' boxplots for each model
 ContextualRobustnessReporting.generate_epsilons_plot(
@@ -150,8 +145,7 @@ modelA_haze_formal = ContextualRobustnessFormal(
 # run analysis and save to CSV
 modelA_haze_formal.analyze(
     epsilons_outpath='./results/modelA_haze_formal/epsilons.csv',
-    counterexamples_outpath='./results/modelA_haze_formal/counterexamples.p'
-    )
+    counterexamples_outpath='./results/modelA_haze_formal/counterexamples.p')
 ```
 
 #### Formal Verification Technique: Load & Visualize Results
@@ -177,30 +171,42 @@ modelA_haze_formal = ContextualRobustnessFormal(
     )
 modelA_haze_formal.load_results(
     epsilons_path='./results/modelA_haze/epsilons.csv',
-    counterexamples_path='./results/modelA_haze_formal/counterexamples.p'
-    )
+    counterexamples_path='./results/modelA_haze_formal/counterexamples.p')
 
 # Generate individual 'epsilon' boxplots for each model
 ContextualRobustnessReporting.generate_epsilons_plot(
     modelA_haze_formal,
-    outfile='./results/modelA_haze_formal/epsilons.png'
-    )
+    outfile='./results/modelA_haze_formal/epsilons.png')
 
 # Generate individual 'counterexample' plots for each model
 ContextualRobustnessReporting.generate_counterexamples_plot(
     modelA_haze_formal,
-    outfile='./results/modelA_haze_formal/counterexamples.png'
-    )
+    outfile='./results/modelA_haze_formal/counterexamples.png')
 ```
 
 ## Full Examples
 
 Example code used to analyze and generate reports for the GTSB models (1a, 1b, 2a, 2b, 3a, 3b) and CIFAR models (4a, 4b, 5a, 5b, 6a, 6b) from the DeepCert paper. The models can be found in the [./models](./models) folder, and the code can be found in the [./examples](./examples) folder.
 
-* Analyze models 4a-6b on haze, blur, and contrast with test-based technique: [./examples/cifar_test_analysis.py](./examples/cifar_test_analysis.py)
-* Generate plots from analysis of models 4a-6b on haze, blur, and contrast: [./examples/cifar_test_reporting.py](./examples/cifar_test_analysis.py)
-* Analyze models 4a-6b on haze, blur, and contrast with formal verification technique: [./examples/cifar_formal_analysis.py](./examples/cifar_formal_analysis.py)
+### Test-Based Examples
+
+* GTSB
+  * Analyze models on haze, blur, and contrast with test-based technique: [./examples/gtsb_test_analysis.py](./examples/gtsb_test_analysis.py)
+  * Generate plots from analysis of models on haze, blur, and contrast: [./examples/gtsb_test_reporting.py](./examples/gtsb_test_reporting.py)
+* CIFAR
+  * Analyze models on haze, blur, and contrast with test-based technique: [./examples/cifar_test_analysis.py](./examples/cifar_test_analysis.py)
+  * Generate plots from analysis of models on haze, blur, and contrast: [./examples/cifar_test_reporting.py](./examples/cifar_test_reporting.py)
+
+### Formal Verification Examples
+
+* GTSB
+  * Analyze models 1a & 1b on haze & l-inf with formal verification technique: [./examples/gtsb_formal_analysis.py](./examples/gtsb_formal_analysis.py)
+  * Generate plots from analysis of models 1a & 1b on haze & l-inf with formal verification technique: [./examples/gtsb_formal_reporting.py](./examples/gtsb_formal_reporting.py)
+* CIFAR
+  * Analyze models 4a & 4b on haze & l-inf with formal verification technique: [./examples/cifar_formal_analysis.py](./examples/cifar_formal_analysis.py)
+  * Generate plots from analysis of models 4a & 4b on haze & l-inf with formal verification technique: [./examples/cifar_formal_reporting.py](./examples/cifar_formal_reporting.py)
 
 ## Resources
 
+* [DeepCert Website](https://deepcert.github.io)
 * [Marabou Documentation](https://neuralnetworkverification.github.io/Marabou/)
