@@ -1,3 +1,4 @@
+#!./venv/bin/python
 import os, sys
 import tensorflow as tf
 from contextual_robustness import ContextualRobustnessFormal
@@ -5,7 +6,7 @@ from transforms import formal_transforms as transforms
 from load_data import loadTraffic
 from utils import remove_softmax_activation, parse_indexes
 
-sys.path.append('../Marabou/')
+sys.path.append('./marabou')
 from maraboupy import Marabou
 
 # reduce tensorflow log level
@@ -39,7 +40,8 @@ def main(outdir, sample_indexes):
                 transform_name=transform_name,
                 X=X_test,
                 Y=Y_test,
-                sample_indexes=sample_indexes
+                sample_indexes=sample_indexes,
+                verbosity=1
                 )
             cr.analyze(
                 epsilons_outpath=os.path.join(outdir, f'model{m}-{transform}.csv'),

@@ -8,7 +8,7 @@ from utils import set_df_dtypes, create_output_path, softargmax, get_file_extens
 from abc import ABCMeta, abstractmethod
 
 # TODO: remove sys.path.append after maraboupy pip package is available.
-sys.path.append('../Marabou/')
+sys.path.append('./marabou')
 from maraboupy import Marabou
 
 class Techniques(enum.Enum):
@@ -611,7 +611,7 @@ class ContextualRobustnessReporting:
         plots epsilons by class for a model/transform and saves as png
 
         Parameters:
-            cr            (ContextualRobustness*) - (*required) ContextualRobustness object
+            cr            (ContextualRobustness) - (*required) ContextualRobustness object
             outfile       (string)                - output file path
             xlabel        (string)                - x axis label
             ylabel        (string)                - y axis label
@@ -647,7 +647,7 @@ class ContextualRobustnessReporting:
         plots counterexamples for a model/transform and saves as png
 
         Parameters:
-            cr      (ContextualRobustness*) - (*required) ContextualRobustness object
+            cr      (ContextualRobustness) - (*required) ContextualRobustness object
             outfile (string)                - output file path
             nrows   (integer)               - number of rows
             ncols   (integer)               - number of columns (default='auto')
@@ -707,7 +707,7 @@ class ContextualRobustnessReporting:
         plots accuracy of each class at various epsilons for a model/transform and saves as png
 
         Parameters:
-            cr              (ContextualRobustness*) - (*required) ContextualRobustness object
+            cr              (ContextualRobustness) - (*required) ContextualRobustness object
             outfile         (string)                - output file path
             axis_fontsize   (integer)               - fontsize for axis text
             legend_fontsize (integer)               - fontsize for legend text
@@ -773,7 +773,7 @@ class ContextualRobustnessReporting:
         plots epsilon/accuracy for a given transform on multiple models and saves as png
 
         Parameters:
-            cr_objects      ([ContextualRobustness*]) - (*required) list of ContextualRobustness objects
+            cr_objects      ([ContextualRobustness]) - (*required) list of ContextualRobustness objects
             outfile         (string)                  - output file path
             axis_fontsize   (integer)                 - fontsize for axis text
             legend_fontsize (integer)                 - fontsize for legend text

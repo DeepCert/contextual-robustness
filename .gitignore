@@ -34,3 +34,6 @@ sandbox*.py
 .vscode
 .atom
 .idea
+
+# Other
+.DS_Store
