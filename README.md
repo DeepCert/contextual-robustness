@@ -149,7 +149,7 @@ from maraboupy import Marabou
 
 # Instantiate ContextualRobustness object for modelA/haze
 modelA_haze_formal = ContextualRobustnessFormal(
-    model_path='./models/modelA-verification',           # (*required) path to model
+    model_path='./models/modelA-verification',  # (*required) path to model
     model_name='ModelA',                        # name of model
     model_args=dict(modelType='savedModel_v2'), # specify model type for marabou
     transform_fn=encode_haze,                   # (*required) transform encoder function
