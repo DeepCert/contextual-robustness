@@ -79,7 +79,7 @@ class BaseContextualRobustness(metaclass=ABCMeta):
         print(f'filtered {len(self._sample_indexes) - len(self._correct_sample_indexes)} incorrectly predicted samples')
         # measure accuracy 
         self._accuracy = len(self._correct_sample_indexes) / len(self._sample_indexes)
-        print(f'accuracy on {len(self._sample_indexes)} samples is {self.accuracy * 100}%')
+        print(f'accuracy on {len(self._sample_indexes)} samples is {round(self.accuracy * 100, 2)}%')
         # examples of images @ epsilon where network's prediction changed
         self._counterexamples = dict()
 
