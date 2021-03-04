@@ -45,7 +45,7 @@ The sample code below shows how to analyze a model on a particular image transfo
 
 ```python
 from contextual_robustness import ContextualRobustnessTest, ContextualRobustnessReporting
-from transforms import haze
+from contextual_robustness.transforms import haze
 
 # instantiate ContextualRobustness object for modelA/haze
 modelA_haze_test = ContextualRobustnessTest(
@@ -67,7 +67,7 @@ modelA_haze_test.analyze(
 
 ```python
 from contextual_robustness import ContextualRobustnessTest, ContextualRobustnessReporting
-from transforms import haze
+from contextual_robustness.transforms import haze
 
 # Load saved CSV results from 'Haze' analysis on 'ModelA'
 modelA_haze = ContextualRobustnessTest(
@@ -131,7 +131,7 @@ The formal verification technique uses the [Marabou neural network verification 
 Marabou relies on the output of the network's logits layer, so if the network has a softmax output layer, the activation function will need to be removed from that layer. The `remove_softmax_activation` function is supplied to do this for Tensorflow v2 models. The example below shows how to use `remove_softmax_activation` to save a copy of the model without the softmax activation function on the output layer.
 
 ```python
-from utils import remove_softmax_activation
+from contextual_robustness.utils import remove_softmax_activation
 
 # save a copy the model without softmax activation function
 remove_softmax_activation('./models/modelA.h5', save_path='./models/modelA-verification')
@@ -142,10 +142,7 @@ remove_softmax_activation('./models/modelA.h5', save_path='./models/modelA-verif
 ```python
 import sys
 from contextual_robustness import ContextualRobustnessFormal, ContextualRobustnessReporting
-from transforms import encode_haze
-
-sys.path.append('./marabou')
-from maraboupy import Marabou
+from contextual_robustness.transforms import encode_haze
 
 # Instantiate ContextualRobustness object for modelA/haze
 modelA_haze_formal = ContextualRobustnessFormal(
@@ -169,10 +166,7 @@ modelA_haze_formal.analyze(
 
 ```python
 from contextual_robustness import ContextualRobustnessFormal, ContextualRobustnessReporting
-from transforms import encode_haze
-
-sys.path.append('./marabou')
-from maraboupy import Marabou
+from contextual_robustness.transforms import encode_haze
 
 # Load saved CSV results from 'Haze' analysis on 'ModelA'
 modelA_haze_formal = ContextualRobustnessFormal(
