@@ -1,6 +1,6 @@
-# Contextual-Robustness
+# Contextual Robustness
 
-Contextual robustness verification source code
+A toolset for contextually-relevant verification of image classification Neural Networks as described by [DeepCert](https://deepcert.github.io).
 
 ## Install & Setup
 
@@ -197,27 +197,11 @@ ContextualRobustnessReporting.generate_counterexamples_plot(
 
 ## Full Examples
 
-Example code used to analyze and generate reports for the [GTSRB models](./models#gtsrb-models) (1a, 1b, 2a, 2b, 3a, 3b) and [CIFAR models](./models#cifar-models) (4a, 4b, 5a, 5b, 6a, 6b) from the DeepCert paper. The models and their descriptions can be found in the [models folder](./models), and the example analysis code can be found in the [examples folder](./examples) folder.
-
-### Test-Based Examples
-
-* GTSRB
-  * Analyze models on haze, blur, and contrast with test-based technique: [./examples/gtsb_test_analysis.py](./examples/gtsb_test_analysis.py)
-  * Generate plots from analysis of models on haze, blur, and contrast: [./examples/gtsb_test_reporting.py](./examples/gtsb_test_reporting.py)
-* CIFAR
-  * Analyze models on haze, blur, and contrast with test-based technique: [./examples/cifar_test_analysis.py](./examples/cifar_test_analysis.py)
-  * Generate plots from analysis of models on haze, blur, and contrast: [./examples/cifar_test_reporting.py](./examples/cifar_test_reporting.py)
-
-### Formal Verification Examples
-
-* GTSRB
-  * Analyze models 1a & 1b on haze & l-inf with formal verification technique: [./examples/gtsb_formal_analysis.py](./examples/gtsb_formal_analysis.py)
-  * Generate plots from analysis of models 1a & 1b on haze & l-inf with formal verification technique: [./examples/gtsb_formal_reporting.py](./examples/gtsb_formal_reporting.py)
-* CIFAR
-  * Analyze models 4a & 4b on haze & l-inf with formal verification technique: [./examples/cifar_formal_analysis.py](./examples/cifar_formal_analysis.py)
-  * Generate plots from analysis of models 4a & 4b on haze & l-inf with formal verification technique: [./examples/cifar_formal_reporting.py](./examples/cifar_formal_reporting.py)
+Example code used to analyze and generate reports for the [GTSRB models](https://github.com/DeepCert/contextual-robustness/tree/main/models#gtsrb-models) (1a, 1b, 2a, 2b, 3a, 3b) and [CIFAR models](https://github.com/DeepCert/contextual-robustness/tree/main/models#cifar-models) (4a, 4b, 5a, 5b, 6a, 6b) from the DeepCert paper. The models and their descriptions can be found in the [models](https://github.com/DeepCert/contextual-robustness/tree/main/models) folder, and the example analysis code can be found in the [examples](https://github.com/DeepCert/contextual-robustness/tree/main/examples) folder.
 
 ## Resources
 
 * [DeepCert Website](https://deepcert.github.io)
+* [Contextual Robustness Documentation](https://contextual-robustness.readthedocs.io)
+* [Contextual Robustness Examples](https://github.com/DeepCert/contextual-robustness/tree/main/examples)
 * [Marabou Documentation](https://neuralnetworkverification.github.io/Marabou/)
