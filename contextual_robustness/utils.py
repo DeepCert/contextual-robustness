@@ -45,6 +45,17 @@ def remove_softmax_activation(model_path:str, save_path:str='') -> tf.keras.Mode
         tf.saved_model.save(model, save_path)
     return model
 
+def normalize(X:np.array) -> np.array:
+    '''normalizes image values between 0.0 and 1.0
+
+    Args:
+        X (np.array): array of images
+
+    Returns:
+        np.array: normalized images
+    '''
+    return X / 255.0
+
 def softargmax(y:np.array) -> np.array:
     '''Applies softmax & argmax to emulate the softmax output layer of a tensorflow model
 

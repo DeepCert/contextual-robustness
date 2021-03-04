@@ -3,20 +3,10 @@ import pandas as pd
 import numpy as np
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.datasets import cifar10
+from contextual_robustness.utils import normalize
 
 DATA_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '../data'))
 GTSRB_PATH = os.path.join(DATA_PATH, 'gtsb')
-
-def normalize(X:np.array) -> np.array:
-    '''normalizes image values between 0.0 and 1.0
-
-    Args:
-        X (np.array): array of images
-
-    Returns:
-        np.array: normalized images
-    '''
-    return X / 255.0
 
 def _fix_gtsrb_labels(labels:list) -> list:
     '''fixes the GTRSB labels after eliminating a subset of classes
