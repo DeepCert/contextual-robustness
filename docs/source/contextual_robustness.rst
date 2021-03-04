@@ -1,4 +1,4 @@
-contextual\_robustness package
+contextual\_robustness
 ==============================
 
 Submodules
@@ -62,10 +62,10 @@ contextual\_robustness.utils module
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
+.. Module contents
+.. ---------------
 
-.. automodule:: contextual_robustness
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. .. automodule:: contextual_robustness
+..    :members:
+..    :undoc-members:
+..    :show-inheritance:

@@ -2,7 +2,7 @@
 import os
 from contextual_robustness import ContextualRobustnessTest
 from contextual_robustness.transforms import test_transforms as transforms
-from contextual_robustness.load_data import load_gtsrb
+from contextual_robustness.datasets import load_gtsrb
 from contextual_robustness.utils import parse_indexes
 
 # reduce tensorflow log level

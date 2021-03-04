@@ -1,0 +1,446 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Contextual Robustness &mdash; contextual-robustness 0.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Examples" href="EXAMPLES.html" />
+    <link rel="prev" title="Welcome to Contextual-Robustness’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> contextual-robustness
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Contextual Robustness</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#install-setup">Install &amp; Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setup-environment-install-python-deps">Setup Environment &amp; Install Python Deps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-marabou">Install Marabou</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-latex">Install LaTeX</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prepare-datasets">Prepare Datasets</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#usage-examples">Usage Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#test-based-technique">Test-Based Technique</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#test-based-technique-analyzing-a-model-transform">Test-Based Technique: Analyzing a Model/Transform</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-based-technique-load-visualize-results">Test-Based Technique: Load &amp; Visualize Results</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#formal-verification-technique">Formal Verification Technique</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#formal-verification-technique-model-preparation">Formal Verification Technique: Model Preparation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#formal-verification-technique-analyzing-a-model-transform">Formal Verification Technique: Analyzing a Model/Transform</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#formal-verification-technique-load-visualize-results">Formal Verification Technique: Load &amp; Visualize Results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#full-examples">Full Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#resources">Resources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="EXAMPLES.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">API Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">contextual-robustness</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Contextual Robustness</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/README.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="contextual-robustness">
+<h1>Contextual Robustness<a class="headerlink" href="#contextual-robustness" title="Permalink to this headline">¶</a></h1>
+<p>A toolset for contextually-relevant verification of image classification Neural Networks as described by <a class="reference external" href="https://deepcert.github.io">DeepCert</a>.</p>
+<div class="section" id="install-setup">
+<h2>Install &amp; Setup<a class="headerlink" href="#install-setup" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>python 3.5.0 &lt;= 3.8.7</p></li>
+<li><p>cmake &gt;= 3.12 (for compiling Marabou)</p></li>
+</ul>
+</div>
+<div class="section" id="setup-environment-install-python-deps">
+<h3>Setup Environment &amp; Install Python Deps<a class="headerlink" href="#setup-environment-install-python-deps" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git clone &lt;GITHUB_REPO_URL&gt;
+<span class="nb">cd</span> contextual-robustness
+
+python3 -m venv venv
+<span class="nb">source</span> venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
+</pre></div>
+</div>
+</div>
+<div class="section" id="install-marabou">
+<h3>Install Marabou<a class="headerlink" href="#install-marabou" title="Permalink to this headline">¶</a></h3>
+<p>You can download and compile Marabou by running <code class="docutils literal notranslate"><span class="pre">./scripts/install_marabou.sh</span></code> or following the instruction in the <a class="reference external" href="https://github.com/NeuralNetworkVerification/Marabou">Marabou repo</a>.</p>
+</div>
+<div class="section" id="install-latex">
+<h3>Install LaTeX<a class="headerlink" href="#install-latex" title="Permalink to this headline">¶</a></h3>
+<p>By default, the plotting functions in <code class="docutils literal notranslate"><span class="pre">ContextualRobustnessReporting</span></code> use <a class="reference external" href="https://www.latex-project.org/get/">LaTeX</a> for rendering text. To use this feature, you’ll need to <a class="reference external" href="https://www.latex-project.org/get/">install LaTeX</a> and add it to your <code class="docutils literal notranslate"><span class="pre">PATH</span></code>. If you don’t need/want to use the latex rendering, simply pass <code class="docutils literal notranslate"><span class="pre">usetex=False</span></code> to the relevant plotting functions.</p>
+</div>
+<div class="section" id="prepare-datasets">
+<h3>Prepare Datasets<a class="headerlink" href="#prepare-datasets" title="Permalink to this headline">¶</a></h3>
+<p>The examples rely on test samples from the GTSRB and CIFAR datasets. Run <code class="docutils literal notranslate"><span class="pre">./scripts/setup_datasets.sh</span></code> to prepare the datasets.</p>
+</div>
+</div>
+<div class="section" id="usage-examples">
+<h2>Usage Examples<a class="headerlink" href="#usage-examples" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="test-based-technique">
+<h3>Test-Based Technique<a class="headerlink" href="#test-based-technique" title="Permalink to this headline">¶</a></h3>
+<p>The test based technique uses the model’s built-in ‘predict’ function to analyze the model’s robustness to a transform. This technique can be used to get an overall picture of the model’s robustness by testing a large number of samples from the dataset. It is faster than the formal verification technique, but may not always discover the real “epsilon” for all samples.</p>
+<div class="section" id="test-based-technique-analyzing-a-model-transform">
+<h4>Test-Based Technique: Analyzing a Model/Transform<a class="headerlink" href="#test-based-technique-analyzing-a-model-transform" title="Permalink to this headline">¶</a></h4>
+<p>The sample code below shows how to analyze a model on a particular image transformation (e.g. haze). The analysis will generate a csv containing the epsilon for each image, and a pickle containing counterexamples showing examples where the change in prediction occured.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">contextual_robustness</span> <span class="kn">import</span> <span class="n">ContextualRobustnessTest</span><span class="p">,</span> <span class="n">ContextualRobustnessReporting</span>
+<span class="kn">from</span> <span class="nn">contextual_robustness.transforms</span> <span class="kn">import</span> <span class="n">haze</span>
+
+<span class="c1"># instantiate ContextualRobustness object for modelA/haze</span>
+<span class="n">modelA_haze_test</span> <span class="o">=</span> <span class="n">ContextualRobustnessTest</span><span class="p">(</span>
+    <span class="n">model_name</span><span class="o">=</span><span class="s1">&#39;./models/modelA.h5&#39;</span><span class="p">,</span> <span class="c1"># (*required) model</span>
+    <span class="n">model_name</span><span class="o">=</span><span class="s1">&#39;ModelA&#39;</span><span class="p">,</span>             <span class="c1"># name of model</span>
+    <span class="n">transform_fn</span><span class="o">=</span><span class="n">haze</span><span class="p">,</span>               <span class="c1"># (*required) transform function</span>
+    <span class="n">transform_name</span><span class="o">=</span><span class="s1">&#39;Haze&#39;</span><span class="p">,</span>           <span class="c1"># name of transform</span>
+    <span class="n">X</span><span class="o">=</span><span class="n">X_test</span><span class="p">,</span>                        <span class="c1"># (*required) np.array of images</span>
+    <span class="n">Y</span><span class="o">=</span><span class="n">Y_test</span><span class="p">,</span>                        <span class="c1"># (*required) np.array of labels</span>
+    <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span>                      <span class="c1"># amount of logging</span>
+    <span class="p">)</span>
+<span class="c1"># run analysis and save to CSV</span>
+<span class="n">modelA_haze_test</span><span class="o">.</span><span class="n">analyze</span><span class="p">(</span>
+    <span class="n">epsilons_outpath</span><span class="o">=</span><span class="s1">&#39;./results/modelA_haze/epsilons.csv&#39;</span><span class="p">,</span>
+    <span class="n">counterexamples_outpath</span><span class="o">=</span><span class="s1">&#39;./results/modelA_haze/counterexamples.p&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="test-based-technique-load-visualize-results">
+<h4>Test-Based Technique: Load &amp; Visualize Results<a class="headerlink" href="#test-based-technique-load-visualize-results" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">contextual_robustness</span> <span class="kn">import</span> <span class="n">ContextualRobustnessTest</span><span class="p">,</span> <span class="n">ContextualRobustnessReporting</span>
+<span class="kn">from</span> <span class="nn">contextual_robustness.transforms</span> <span class="kn">import</span> <span class="n">haze</span>
+
+<span class="c1"># Load saved CSV results from &#39;Haze&#39; analysis on &#39;ModelA&#39;</span>
+<span class="n">modelA_haze</span> <span class="o">=</span> <span class="n">ContextualRobustnessTest</span><span class="p">(</span>
+    <span class="n">model_path</span><span class="o">=</span><span class="s1">&#39;./models/modelA.h5&#39;</span><span class="p">,</span>
+    <span class="n">model_name</span><span class="o">=</span><span class="s1">&#39;ModelA&#39;</span><span class="p">,</span>
+    <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>
+    <span class="n">Y</span><span class="o">=</span><span class="n">Y</span><span class="p">,</span>
+    <span class="n">transform_fn</span><span class="o">=</span><span class="n">haze</span><span class="p">,</span>
+    <span class="n">transform_name</span><span class="o">=</span><span class="s1">&#39;Haze&#39;</span><span class="p">)</span>
+<span class="n">modelA_haze</span><span class="o">.</span><span class="n">load_results</span><span class="p">(</span>
+    <span class="n">epsilons_path</span><span class="o">=</span><span class="s1">&#39;./results/modelA_haze/epsilons.csv&#39;</span><span class="p">,</span>
+    <span class="n">counterexamples_path</span><span class="o">=</span><span class="s1">&#39;./results/modelA_haze/counterexamples.p&#39;</span><span class="p">)</span>
+<span class="c1"># Load saved CSV results from &#39;Haze&#39; analysis on &#39;ModelB&#39;</span>
+<span class="n">modelB_haze</span> <span class="o">=</span> <span class="n">ContextualRobustnessTest</span><span class="p">(</span>
+    <span class="n">model_path</span><span class="o">=</span><span class="s1">&#39;./models/modelB.h5&#39;</span><span class="p">,</span>
+    <span class="n">model_name</span><span class="o">=</span><span class="s1">&#39;ModelB&#39;</span><span class="p">,</span>
+    <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>
+    <span class="n">Y</span><span class="o">=</span><span class="n">Y</span><span class="p">,</span>
+    <span class="n">transform_fn</span><span class="o">=</span><span class="n">haze</span><span class="p">,</span>
+    <span class="n">transform_name</span><span class="o">=</span><span class="s1">&#39;Haze&#39;</span><span class="p">)</span>
+<span class="n">modelB_haze</span><span class="o">.</span><span class="n">load_results</span><span class="p">(</span>
+    <span class="n">epsilons_path</span><span class="o">=</span><span class="s1">&#39;./results/modelB_haze/epsilons.csv&#39;</span><span class="p">,</span>
+    <span class="n">counterexamples_path</span><span class="o">=</span><span class="s1">&#39;./results/modelB_haze/counterexamples.p&#39;</span><span class="p">)</span>
+
+<span class="c1"># Generate individual &#39;epsilon&#39; boxplots for each model</span>
+<span class="n">ContextualRobustnessReporting</span><span class="o">.</span><span class="n">generate_epsilons_plot</span><span class="p">(</span>
+    <span class="n">modelA_haze</span><span class="p">,</span>
+    <span class="n">outfile</span><span class="o">=</span><span class="s1">&#39;./results/modelA_haze/epsilons.png&#39;</span><span class="p">)</span>
+<span class="n">ContextualRobustnessReporting</span><span class="o">.</span><span class="n">generate_epsilons_plot</span><span class="p">(</span>
+    <span class="n">modelB_haze</span><span class="p">,</span>
+    <span class="n">outfile</span><span class="o">=</span><span class="s1">&#39;./results/modelB_haze/epsilons.png&#39;</span><span class="p">)</span>
+
+<span class="c1"># Generate individual &#39;counterexample&#39; plots for each model</span>
+<span class="n">ContextualRobustnessReporting</span><span class="o">.</span><span class="n">generate_counterexamples_plot</span><span class="p">(</span>
+    <span class="n">modelA_haze</span><span class="p">,</span>
+    <span class="n">outfile</span><span class="o">=</span><span class="s1">&#39;./results/modelA_haze/counterexamples.png&#39;</span><span class="p">)</span>
+<span class="n">ContextualRobustnessReporting</span><span class="o">.</span><span class="n">generate_counterexamples_plot</span><span class="p">(</span>
+    <span class="n">modelB_haze</span><span class="p">,</span>
+    <span class="n">outfile</span><span class="o">=</span><span class="s1">&#39;./results/modelB_haze/counterexamples.png&#39;</span><span class="p">)</span>
+
+<span class="c1"># Generate individual &#39;class accuracy&#39; line charts for each model</span>
+<span class="n">ContextualRobustnessReporting</span><span class="o">.</span><span class="n">generate_class_accuracy_plot</span><span class="p">(</span>
+    <span class="n">modelA_haze</span><span class="p">,</span>
+    <span class="n">outfile</span><span class="o">=</span><span class="s1">&#39;./results/modelA_haze/class-accuracy.png&#39;</span><span class="p">)</span>
+<span class="n">ContextualRobustnessReporting</span><span class="o">.</span><span class="n">generate_class_accuracy_plot</span><span class="p">(</span>
+    <span class="n">modelB_haze</span><span class="p">,</span>
+    <span class="n">outfile</span><span class="o">=</span><span class="s1">&#39;./results/modelB_haze/class-accuracy.png&#39;</span><span class="p">)</span>
+
+<span class="c1"># Generate haze accuracy report comparing the transform on multiple models</span>
+<span class="n">ContextualRobustnessReporting</span><span class="o">.</span><span class="n">generate_accuracy_report_plot</span><span class="p">(</span>
+    <span class="n">cr_objects</span><span class="o">=</span><span class="p">[</span><span class="n">modelA_haze</span><span class="p">,</span> <span class="n">modelB_haze</span><span class="p">],</span>
+    <span class="n">outfile</span><span class="o">=</span><span class="s1">&#39;./results/haze-accuracy-report.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="formal-verification-technique">
+<h3>Formal Verification Technique<a class="headerlink" href="#formal-verification-technique" title="Permalink to this headline">¶</a></h3>
+<p>The formal verification technique uses the <a class="reference external" href="https://github.com/NeuralNetworkVerification/Marabou">Marabou neural network verification framework</a> to evaluate the model’s robustness to a transform encoded as a Marabou input query. This method provides the true “epsilon” and formal guarantees about the model’s robustness to the transform, however it takes significantly longer than the test-based method. Using the <code class="docutils literal notranslate"><span class="pre">sample_indexes</span></code> option to select a subset of samples to test is recommended.</p>
+<div class="section" id="formal-verification-technique-model-preparation">
+<h4>Formal Verification Technique: Model Preparation<a class="headerlink" href="#formal-verification-technique-model-preparation" title="Permalink to this headline">¶</a></h4>
+<p>Marabou relies on the output of the network’s logits layer, so if the network has a softmax output layer, the activation function will need to be removed from that layer. The <code class="docutils literal notranslate"><span class="pre">remove_softmax_activation</span></code> function is supplied to do this for Tensorflow v2 models. The example below shows how to use <code class="docutils literal notranslate"><span class="pre">remove_softmax_activation</span></code> to save a copy of the model without the softmax activation function on the output layer.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">contextual_robustness.utils</span> <span class="kn">import</span> <span class="n">remove_softmax_activation</span>
+
+<span class="c1"># save a copy the model without softmax activation function</span>
+<span class="n">remove_softmax_activation</span><span class="p">(</span><span class="s1">&#39;./models/modelA.h5&#39;</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="s1">&#39;./models/modelA-verification&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="formal-verification-technique-analyzing-a-model-transform">
+<h4>Formal Verification Technique: Analyzing a Model/Transform<a class="headerlink" href="#formal-verification-technique-analyzing-a-model-transform" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">contextual_robustness</span> <span class="kn">import</span> <span class="n">ContextualRobustnessFormal</span><span class="p">,</span> <span class="n">ContextualRobustnessReporting</span>
+<span class="kn">from</span> <span class="nn">contextual_robustness.transforms</span> <span class="kn">import</span> <span class="n">encode_haze</span>
+
+<span class="c1"># Instantiate ContextualRobustness object for modelA/haze</span>
+<span class="n">modelA_haze_formal</span> <span class="o">=</span> <span class="n">ContextualRobustnessFormal</span><span class="p">(</span>
+    <span class="n">model_path</span><span class="o">=</span><span class="s1">&#39;./models/modelA-verification&#39;</span><span class="p">,</span>  <span class="c1"># (*required) path to model</span>
+    <span class="n">model_name</span><span class="o">=</span><span class="s1">&#39;ModelA&#39;</span><span class="p">,</span>                        <span class="c1"># name of model</span>
+    <span class="n">model_args</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">modelType</span><span class="o">=</span><span class="s1">&#39;savedModel_v2&#39;</span><span class="p">),</span> <span class="c1"># specify model type for marabou</span>
+    <span class="n">transform_fn</span><span class="o">=</span><span class="n">encode_haze</span><span class="p">,</span>                   <span class="c1"># (*required) transform encoder function</span>
+    <span class="n">transform_name</span><span class="o">=</span><span class="s1">&#39;Haze&#39;</span><span class="p">,</span>                      <span class="c1"># name of transform</span>
+    <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>                                        <span class="c1"># (*required) np.array of images</span>
+    <span class="n">Y</span><span class="o">=</span><span class="n">Y</span><span class="p">,</span>                                        <span class="c1"># (*required) np.array of labels</span>
+    <span class="n">sample_indexes</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">)),</span>           <span class="c1"># list of indexes of samples to test</span>
+    <span class="n">verbosity</span><span class="o">=</span><span class="mi">1</span>                                 <span class="c1"># amount of logging</span>
+    <span class="p">)</span>
+<span class="c1"># run analysis and save to CSV</span>
+<span class="n">modelA_haze_formal</span><span class="o">.</span><span class="n">analyze</span><span class="p">(</span>
+    <span class="n">epsilons_outpath</span><span class="o">=</span><span class="s1">&#39;./results/modelA_haze_formal/epsilons.csv&#39;</span><span class="p">,</span>
+    <span class="n">counterexamples_outpath</span><span class="o">=</span><span class="s1">&#39;./results/modelA_haze_formal/counterexamples.p&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="formal-verification-technique-load-visualize-results">
+<h4>Formal Verification Technique: Load &amp; Visualize Results<a class="headerlink" href="#formal-verification-technique-load-visualize-results" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">contextual_robustness</span> <span class="kn">import</span> <span class="n">ContextualRobustnessFormal</span><span class="p">,</span> <span class="n">ContextualRobustnessReporting</span>
+<span class="kn">from</span> <span class="nn">contextual_robustness.transforms</span> <span class="kn">import</span> <span class="n">encode_haze</span>
+
+<span class="c1"># Load saved CSV results from &#39;Haze&#39; analysis on &#39;ModelA&#39;</span>
+<span class="n">modelA_haze_formal</span> <span class="o">=</span> <span class="n">ContextualRobustnessFormal</span><span class="p">(</span>
+    <span class="n">model_path</span><span class="o">=</span><span class="s1">&#39;./models/modelA-verification&#39;</span><span class="p">,</span>  <span class="c1"># (*required) path to model</span>
+    <span class="n">model_name</span><span class="o">=</span><span class="s1">&#39;ModelA&#39;</span><span class="p">,</span>                        <span class="c1"># name of model</span>
+    <span class="n">model_args</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">modelType</span><span class="o">=</span><span class="s1">&#39;savedModel_v2&#39;</span><span class="p">),</span> <span class="c1"># specify model type for marabou</span>
+    <span class="n">transform_fn</span><span class="o">=</span><span class="n">encode_haze</span><span class="p">,</span>                   <span class="c1"># (*required) transform encoder function</span>
+    <span class="n">transform_name</span><span class="o">=</span><span class="s1">&#39;Haze&#39;</span><span class="p">,</span>                      <span class="c1"># name of transform</span>
+    <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>                                        <span class="c1"># (*required) np.array of images</span>
+    <span class="n">Y</span><span class="o">=</span><span class="n">Y</span><span class="p">,</span>                                        <span class="c1"># (*required) np.array of labels</span>
+    <span class="n">sample_indexes</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">)),</span>           <span class="c1"># list of indexes of samples to test</span>
+    <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span>                                 <span class="c1"># amount of logging</span>
+    <span class="p">)</span>
+<span class="n">modelA_haze_formal</span><span class="o">.</span><span class="n">load_results</span><span class="p">(</span>
+    <span class="n">epsilons_path</span><span class="o">=</span><span class="s1">&#39;./results/modelA_haze/epsilons.csv&#39;</span><span class="p">,</span>
+    <span class="n">counterexamples_path</span><span class="o">=</span><span class="s1">&#39;./results/modelA_haze_formal/counterexamples.p&#39;</span><span class="p">)</span>
+
+<span class="c1"># Generate individual &#39;epsilon&#39; boxplots for each model</span>
+<span class="n">ContextualRobustnessReporting</span><span class="o">.</span><span class="n">generate_epsilons_plot</span><span class="p">(</span>
+    <span class="n">modelA_haze_formal</span><span class="p">,</span>
+    <span class="n">outfile</span><span class="o">=</span><span class="s1">&#39;./results/modelA_haze_formal/epsilons.png&#39;</span><span class="p">)</span>
+
+<span class="c1"># Generate individual &#39;counterexample&#39; plots for each model</span>
+<span class="n">ContextualRobustnessReporting</span><span class="o">.</span><span class="n">generate_counterexamples_plot</span><span class="p">(</span>
+    <span class="n">modelA_haze_formal</span><span class="p">,</span>
+    <span class="n">outfile</span><span class="o">=</span><span class="s1">&#39;./results/modelA_haze_formal/counterexamples.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="full-examples">
+<h2>Full Examples<a class="headerlink" href="#full-examples" title="Permalink to this headline">¶</a></h2>
+<p>Example code used to analyze and generate reports for the <a class="reference external" href="https://github.com/DeepCert/contextual-robustness/tree/main/models#gtsrb-models">GTSRB models</a> (1a, 1b, 2a, 2b, 3a, 3b) and <a class="reference external" href="https://github.com/DeepCert/contextual-robustness/tree/main/models#cifar-models">CIFAR models</a> (4a, 4b, 5a, 5b, 6a, 6b) from the DeepCert paper. The models and their descriptions can be found in the <a class="reference external" href="https://github.com/DeepCert/contextual-robustness/tree/main/models">models</a> folder, and the example analysis code can be found in the <a class="reference external" href="https://github.com/DeepCert/contextual-robustness/tree/main/examples">examples</a> folder.</p>
+</div>
+<div class="section" id="resources">
+<h2>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://deepcert.github.io">DeepCert Website</a></p></li>
+<li><p><a class="reference external" href="https://contextual-robustness.readthedocs.io">Contextual Robustness Documentation</a></p></li>
+<li><p><a class="reference external" href="https://github.com/DeepCert/contextual-robustness/tree/main/examples">Contextual Robustness Examples</a></p></li>
+<li><p><a class="reference external" href="https://neuralnetworkverification.github.io/Marabou/">Marabou Documentation</a></p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="EXAMPLES.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Contextual-Robustness’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, DeepCert.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
