@@ -1,0 +1,971 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>contextual_robustness module &mdash; contextual-robustness 0.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> contextual-robustness
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">contextual_robustness module</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">contextual-robustness</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>contextual_robustness module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/contextual_robustness.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-contextual_robustness">
+<span id="contextual-robustness-module"></span><h1>contextual_robustness module<a class="headerlink" href="#module-contextual_robustness" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="contextual_robustness.ContextualRobustnessFormal">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">contextual_robustness.</span></code><code class="sig-name descname"><span class="pre">ContextualRobustnessFormal</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">model_path=''</span></em>, <em class="sig-param"><span class="pre">model_name=''</span></em>, <em class="sig-param"><span class="pre">model_args={}</span></em>, <em class="sig-param"><span class="pre">transform_fn=&lt;function</span> <span class="pre">ContextualRobustnessFormal.&lt;lambda&gt;&gt;</span></em>, <em class="sig-param"><span class="pre">transform_args={}</span></em>, <em class="sig-param"><span class="pre">transform_name=''</span></em>, <em class="sig-param"><span class="pre">X=array([]</span></em>, <em class="sig-param"><span class="pre">dtype=float64)</span></em>, <em class="sig-param"><span class="pre">Y=array([]</span></em>, <em class="sig-param"><span class="pre">dtype=float64)</span></em>, <em class="sig-param"><span class="pre">sample_indexes=[]</span></em>, <em class="sig-param"><span class="pre">eps_lower=0.0</span></em>, <em class="sig-param"><span class="pre">eps_upper=1.0</span></em>, <em class="sig-param"><span class="pre">eps_interval=0.002</span></em>, <em class="sig-param"><span class="pre">marabou_options={'verbosity':</span> <span class="pre">0}</span></em>, <em class="sig-param"><span class="pre">verbosity=0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/contextual_robustness.html#ContextualRobustnessFormal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#contextual_robustness.ContextualRobustnessFormal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">contextual_robustness._BaseContextualRobustness</span></code></p>
+<p>Class for ContextualRobustness ‘Formal Verification’ analysis</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to saved tensorflow model. Defaults to ‘’.</p></li>
+<li><p><strong>model_name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of model. Defaults to ‘’.</p></li>
+<li><p><strong>model_args</strong> (<em>dict</em><em>, </em><em>optional</em>) – Args passed to Marabou to load network. Defaults to dict().</p></li>
+<li><p><strong>X</strong> (<em>np.array</em><em>, </em><em>optional</em>) – The images. Defaults to np.array([]).</p></li>
+<li><p><strong>Y</strong> (<em>np.array</em><em>, </em><em>optional</em>) – Labels for images (onehot encoded). Defaults to np.array([]).</p></li>
+<li><p><strong>sample_indexes</strong> (<em>list</em><em>[</em><em>int</em><em>]</em><em>, </em><em>optional</em>) – List of indexes to test from X. Defaults to [].</p></li>
+<li><p><strong>transform_fn</strong> (<em>callable</em><em>, </em><em>optional</em>) – The image transform function (required args: x, epsilon). Defaults to lambda x:x.</p></li>
+<li><p><strong>transform_args</strong> (<em>dict</em><em>, </em><em>optional</em>) – Additional arguments passed to transform_fn. Defaults to dict().</p></li>
+<li><p><strong>transform_name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of transform. Defaults to ‘’.</p></li>
+<li><p><strong>eps_lower</strong> (<em>float</em><em>, </em><em>optional</em>) – Min possible epsilon. Defaults to 0.0.</p></li>
+<li><p><strong>eps_upper</strong> (<em>float</em><em>, </em><em>optional</em>) – Max possible epsilon. Defaults to 1.0.</p></li>
+<li><p><strong>eps_interval</strong> (<em>float</em><em>, </em><em>optional</em>) – Step size between possible epsilons. Defaults to 0.002.</p></li>
+<li><p><strong>marabou_options</strong> (<em>dict</em><em>, </em><em>optional</em>) – Additional MarabouOptions. Defaults to dict(verbosity=0).</p></li>
+<li><p><strong>verbosity</strong> (<em>int</em><em>, </em><em>optional</em>) – Amount of logging (0-4). Defaults to 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the ContextualRobustnessFormal object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ContextualRobustness</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessFormal.accuracy">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">accuracy</span></code><a class="headerlink" href="#contextual_robustness.ContextualRobustnessFormal.accuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the accuracy (optionally for a single class using “get_accuracy”)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>class_index</strong> (<em>int</em><em>, </em><em>optional</em>) – Index of class to get accuracy for. Defaults to None.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Accuracy of model on the samples (for a particular class if class_index is supplied)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessFormal.analyze">
+<code class="sig-name descname"><span class="pre">analyze</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epsilons_outpath</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'./epsilons.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counterexamples_outpath</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'./counterexamples.p'</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">ContextualRobustness</span><a class="headerlink" href="#contextual_robustness.ContextualRobustnessFormal.analyze" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run analysis on the model &amp; transform; Generates results csv and counterexamples pickle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>epsilons_outpath</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to csv file containing results. Defaults to ‘./epsilons.csv’.</p></li>
+<li><p><strong>counterexamples_outpath</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to pickle containing counterexamples. Defaults to ‘./counterexamples.p’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the object (self)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ContextualRobustness</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessFormal.classes">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">classes</span></code><a class="headerlink" href="#contextual_robustness.ContextualRobustnessFormal.classes" title="Permalink to this definition">¶</a></dt>
+<dd><p>classes property</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of integers representing classes in dataset</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessFormal.counterexamples">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">counterexamples</span></code><a class="headerlink" href="#contextual_robustness.ContextualRobustnessFormal.counterexamples" title="Permalink to this definition">¶</a></dt>
+<dd><p>counterexamples property</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>np.array]: counterexamples for each image (e.g. {‘image1’: np.array([…]), …})</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict[str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessFormal.dataset">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">dataset</span></code><a class="headerlink" href="#contextual_robustness.ContextualRobustnessFormal.dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>dataset property</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>tuple containing X and Y</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple[np.array, np.array]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessFormal.get_accuracy">
+<code class="sig-name descname"><span class="pre">get_accuracy</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_index</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">float</span><a class="headerlink" href="#contextual_robustness.ContextualRobustnessFormal.get_accuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the accuracy (optionally for a single class using “get_accuracy”)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>class_index</strong> (<em>int</em><em>, </em><em>optional</em>) – Index of class to get accuracy for. Defaults to None.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Accuracy of model on the samples (for a particular class if class_index is supplied)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessFormal.get_counterexample">
+<code class="sig-name descname"><span class="pre">get_counterexample</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_index</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">numpy.array</span><a class="headerlink" href="#contextual_robustness.ContextualRobustnessFormal.get_counterexample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets counterexample for an image by index</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x_index</strong> (<em>[</em><em>int</em><em>]</em>) – index of image in X</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the counterexample (or ‘None’ if does not exist)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessFormal.get_num_samples">
+<code class="sig-name descname"><span class="pre">get_num_samples</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_index</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">int</span><a class="headerlink" href="#contextual_robustness.ContextualRobustnessFormal.get_num_samples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the number of samples under analysis (optionally for a single class using “get_num_samples”).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>class_index</strong> (<em>int</em><em>, </em><em>optional</em>) – Index of class to get samples for. Defaults to None.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Number of samples (for a particular class if class_index is supplied)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessFormal.get_results">
+<code class="sig-name descname"><span class="pre">get_results</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_index</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_by</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#contextual_robustness.ContextualRobustnessFormal.get_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets result data (optionally for a single class, and optionally sorted by column using “get_results”)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>class_index</strong> (<em>int</em><em>, </em><em>optional</em>) – Index of class to get results for. Defaults to None.</p></li>
+<li><p><strong>sort_by</strong> (<em>list</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Sorts results by one or more columns. Defaults to [].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The results (for a single class if class_index is supplied, and sorted by sort_by)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessFormal.image_shape">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">image_shape</span></code><a class="headerlink" href="#contextual_robustness.ContextualRobustnessFormal.image_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>image_shape property</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>shape of images in X</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessFormal.load_results">
+<code class="sig-name descname"><span class="pre">load_results</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epsilons_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counterexamples_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">ContextualRobustness</span><a class="headerlink" href="#contextual_robustness.ContextualRobustnessFormal.load_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load previously saved results</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>epsilons_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to results csv file. Defaults to ‘’.</p></li>
+<li><p><strong>counterexamples_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to counterexamples pickle. Defaults to ‘’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the object (self)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ContextualRobustness</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessFormal.model_name">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">model_name</span></code><a class="headerlink" href="#contextual_robustness.ContextualRobustnessFormal.model_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>model_name property</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>name of model</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessFormal.n_pixels">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">n_pixels</span></code><a class="headerlink" href="#contextual_robustness.ContextualRobustnessFormal.n_pixels" title="Permalink to this definition">¶</a></dt>
+<dd><p>n_pixels property</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>number of pixels in each image.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessFormal.num_samples">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">num_samples</span></code><a class="headerlink" href="#contextual_robustness.ContextualRobustnessFormal.num_samples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the number of samples under analysis (optionally for a single class using “get_num_samples”).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>class_index</strong> (<em>int</em><em>, </em><em>optional</em>) – Index of class to get samples for. Defaults to None.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Number of samples (for a particular class if class_index is supplied)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessFormal.results">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">results</span></code><a class="headerlink" href="#contextual_robustness.ContextualRobustnessFormal.results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets result data (optionally for a single class, and optionally sorted by column using “get_results”)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>class_index</strong> (<em>int</em><em>, </em><em>optional</em>) – Index of class to get results for. Defaults to None.</p></li>
+<li><p><strong>sort_by</strong> (<em>list</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Sorts results by one or more columns. Defaults to [].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The results (for a single class if class_index is supplied, and sorted by sort_by)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessFormal.save_counterexample">
+<code class="sig-name descname"><span class="pre">save_counterexample</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_index</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counterexample</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.array</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#contextual_robustness.ContextualRobustnessFormal.save_counterexample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the counterexample for an image</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_index</strong> (<em>[</em><em>int</em><em>]</em>) – index of image</p></li>
+<li><p><strong>counterexample</strong> (<em>[</em><em>np.array</em><em>]</em>) – the counterexample to save</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessFormal.technique">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">technique</span></code><a class="headerlink" href="#contextual_robustness.ContextualRobustnessFormal.technique" title="Permalink to this definition">¶</a></dt>
+<dd><p>technique property</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>verification technique (Techniques.FORMAL)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#contextual_robustness.Techniques" title="contextual_robustness.Techniques">Techniques</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessFormal.transform_name">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">transform_name</span></code><a class="headerlink" href="#contextual_robustness.ContextualRobustnessFormal.transform_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>transform_name property</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>name of transform</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="contextual_robustness.ContextualRobustnessReporting">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">contextual_robustness.</span></code><code class="sig-name descname"><span class="pre">ContextualRobustnessReporting</span></code><a class="reference internal" href="_modules/contextual_robustness.html#ContextualRobustnessReporting"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#contextual_robustness.ContextualRobustnessReporting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class containing ContextualRobustness reporting functions</p>
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessReporting.generate_accuracy_report_plot">
+<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">generate_accuracy_report_plot</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cr_objects</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">ContextualRobustness</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outfile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'./accuracy-report.png'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linestyles</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tuple</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis_fontsize</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend_fontsize</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">14</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fontfamily</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'serif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fontweight</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'ultralight'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend_loc</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'best'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usetex</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/contextual_robustness.html#ContextualRobustnessReporting.generate_accuracy_report_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#contextual_robustness.ContextualRobustnessReporting.generate_accuracy_report_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots epsilon/accuracy for a given transform on multiple models and saves as png</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cr_objects</strong> (<em>typing.Sequence</em><em>[</em><em>ContextualRobustness</em><em>]</em>) – list of ContextualRobustness objects</p></li>
+<li><p><strong>outfile</strong> (<em>str</em><em>, </em><em>optional</em>) – Output file path. Defaults to ‘./accuracy-report.png’.</p></li>
+<li><p><strong>linestyles</strong> (<em>tuple</em><em>, </em><em>optional</em>) – [description]. Defaults to ().</p></li>
+<li><p><strong>axis_fontsize</strong> (<em>int</em><em>, </em><em>optional</em>) – Fontsize for axis text. Defaults to 12.</p></li>
+<li><p><strong>legend_fontsize</strong> (<em>int</em><em>, </em><em>optional</em>) – Fontsize for axis text. Defaults to 14.</p></li>
+<li><p><strong>fontfamily</strong> (<em>str</em><em>, </em><em>optional</em>) – Fontfamily for text. Defaults to ‘serif’.</p></li>
+<li><p><strong>fontweight</strong> (<em>str</em><em>, </em><em>optional</em>) – Fontweight for text. Defaults to ‘ultralight’.</p></li>
+<li><p><strong>legend_loc</strong> (<em>str</em><em>, </em><em>optional</em>) – Location of legend. Defaults to ‘best’.</p></li>
+<li><p><strong>usetex</strong> (<em>bool</em><em>, </em><em>optional</em>) – Use latex for text. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessReporting.generate_class_accuracy_plot">
+<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">generate_class_accuracy_plot</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cr</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">ContextualRobustness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outfile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'./class-accuracy.png'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis_fontsize</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend_fontsize</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">14</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fontfamily</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'serif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fontweight</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'ultralight'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend_loc</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'best'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usetex</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/contextual_robustness.html#ContextualRobustnessReporting.generate_class_accuracy_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#contextual_robustness.ContextualRobustnessReporting.generate_class_accuracy_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots accuracy of each class at various epsilons for a model/transform and saves as png</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cr</strong> (<em>ContextualRobustness</em>) – ContextualRobustness object</p></li>
+<li><p><strong>outfile</strong> (<em>str</em><em>, </em><em>optional</em>) – Output file path. Defaults to ‘./counterexamples.png’.</p></li>
+<li><p><strong>axis_fontsize</strong> (<em>int</em><em>, </em><em>optional</em>) – Fontsize for axis text. Defaults to 12.</p></li>
+<li><p><strong>legend_fontsize</strong> (<em>int</em><em>, </em><em>optional</em>) – Fontsize for axis text. Defaults to 14.</p></li>
+<li><p><strong>fontfamily</strong> (<em>str</em><em>, </em><em>optional</em>) – Fontfamily for text. Defaults to ‘serif’.</p></li>
+<li><p><strong>fontweight</strong> (<em>str</em><em>, </em><em>optional</em>) – Fontweight for text. Defaults to ‘ultralight’.</p></li>
+<li><p><strong>legend_loc</strong> (<em>str</em><em>, </em><em>optional</em>) – Location of legend. Defaults to ‘best’.</p></li>
+<li><p><strong>usetex</strong> (<em>bool</em><em>, </em><em>optional</em>) – Use latex for text. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessReporting.generate_counterexamples_plot">
+<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">generate_counterexamples_plot</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cr</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">ContextualRobustness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outfile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'./counterexamples.png'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nrows</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ncols</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tuple</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">(10,</span> <span class="pre">10)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/contextual_robustness.html#ContextualRobustnessReporting.generate_counterexamples_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#contextual_robustness.ContextualRobustnessReporting.generate_counterexamples_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots counterexamples for a model/transform and saves as png</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cr</strong> (<em>ContextualRobustness</em>) – ContextualRobustness object</p></li>
+<li><p><strong>outfile</strong> (<em>str</em><em>, </em><em>optional</em>) – Output file path. Defaults to ‘./counterexamples.png’.</p></li>
+<li><p><strong>nrows</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of rows. Defaults to 2.</p></li>
+<li><p><strong>ncols</strong> (<em>str</em><em>, </em><em>optional</em>) – Number of columns. Defaults to ‘auto’.</p></li>
+<li><p><strong>figsize</strong> (<em>tuple</em><em>, </em><em>optional</em>) – Size of figure (w, h). Defaults to (10, 10).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessReporting.generate_epsilons_plot">
+<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">generate_epsilons_plot</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cr</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">ContextualRobustness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outfile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'epsilons.png'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'epsilon'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis_fontsize</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fontfamily</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'serif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fontweight</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'ultralight'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usetex</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/contextual_robustness.html#ContextualRobustnessReporting.generate_epsilons_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#contextual_robustness.ContextualRobustnessReporting.generate_epsilons_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots epsilons by class for a model/transform and saves as png</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cr</strong> (<em>ContextualRobustness</em>) – ContextualRobustness object</p></li>
+<li><p><strong>outfile</strong> (<em>str</em><em>, </em><em>optional</em>) – Output file path. Defaults to ‘epsilons.png’.</p></li>
+<li><p><strong>xlabel</strong> (<em>str</em><em>, </em><em>optional</em>) – x axis label. Defaults to ‘’.</p></li>
+<li><p><strong>ylabel</strong> (<em>str</em><em>, </em><em>optional</em>) – y axis label. Defaults to ‘epsilon’.</p></li>
+<li><p><strong>axis_fontsize</strong> (<em>int</em><em>, </em><em>optional</em>) – Fontsize for axis text. Defaults to 24.</p></li>
+<li><p><strong>fontfamily</strong> (<em>str</em><em>, </em><em>optional</em>) – Fontfamily for text. Defaults to ‘serif’.</p></li>
+<li><p><strong>fontweight</strong> (<em>str</em><em>, </em><em>optional</em>) – Fontfamily for text. Defaults to ‘ultralight’.</p></li>
+<li><p><strong>usetex</strong> (<em>bool</em><em>, </em><em>optional</em>) – Use latex for text. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="contextual_robustness.ContextualRobustnessTest">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">contextual_robustness.</span></code><code class="sig-name descname"><span class="pre">ContextualRobustnessTest</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">model_path:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">''</span></em>, <em class="sig-param"><span class="pre">model_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">''</span></em>, <em class="sig-param"><span class="pre">X:</span> <span class="pre">numpy.array</span> <span class="pre">=</span> <span class="pre">array([]</span></em>, <em class="sig-param"><span class="pre">dtype=float64)</span></em>, <em class="sig-param"><span class="pre">Y:</span> <span class="pre">numpy.array</span> <span class="pre">=</span> <span class="pre">array([]</span></em>, <em class="sig-param"><span class="pre">dtype=float64)</span></em>, <em class="sig-param"><span class="pre">sample_indexes:</span> <span class="pre">list</span> <span class="pre">=</span> <span class="pre">[]</span></em>, <em class="sig-param"><span class="pre">transform_fn:</span> <span class="pre">callable</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">ContextualRobustnessTest.&lt;lambda&gt;&gt;</span></em>, <em class="sig-param"><span class="pre">transform_args:</span> <span class="pre">dict</span> <span class="pre">=</span> <span class="pre">{}</span></em>, <em class="sig-param"><span class="pre">transform_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">''</span></em>, <em class="sig-param"><span class="pre">eps_lower:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.0</span></em>, <em class="sig-param"><span class="pre">eps_upper:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">1.0</span></em>, <em class="sig-param"><span class="pre">eps_interval:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.002</span></em>, <em class="sig-param"><span class="pre">verbosity:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/contextual_robustness.html#ContextualRobustnessTest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#contextual_robustness.ContextualRobustnessTest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">contextual_robustness._BaseContextualRobustness</span></code></p>
+<p>Class for ContextualRobustness ‘Test Based’ analysis</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to saved tensorflow model. Defaults to ‘’.</p></li>
+<li><p><strong>model_name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of model. Defaults to ‘’.</p></li>
+<li><p><strong>X</strong> (<em>np.array</em><em>, </em><em>optional</em>) – The images. Defaults to np.array([]).</p></li>
+<li><p><strong>Y</strong> (<em>np.array</em><em>, </em><em>optional</em>) – Labels for images (onehot encoded). Defaults to np.array([]).</p></li>
+<li><p><strong>sample_indexes</strong> (<em>list</em><em>[</em><em>int</em><em>]</em><em>, </em><em>optional</em>) – List of indexes to test from X. Defaults to [].</p></li>
+<li><p><strong>transform_fn</strong> (<em>callable</em><em>, </em><em>optional</em>) – The image transform function (required args: x, epsilon). Defaults to lambda x:x.</p></li>
+<li><p><strong>transform_args</strong> (<em>dict</em><em>, </em><em>optional</em>) – Additional arguments passed to transform_fn. Defaults to dict().</p></li>
+<li><p><strong>transform_name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of transform. Defaults to ‘’.</p></li>
+<li><p><strong>eps_lower</strong> (<em>float</em><em>, </em><em>optional</em>) – Min possible epsilon. Defaults to 0.0.</p></li>
+<li><p><strong>eps_upper</strong> (<em>float</em><em>, </em><em>optional</em>) – Max possible epsilon. Defaults to 1.0.</p></li>
+<li><p><strong>eps_interval</strong> (<em>float</em><em>, </em><em>optional</em>) – Step size between possible epsilons. Defaults to 0.002.</p></li>
+<li><p><strong>verbosity</strong> (<em>int</em><em>, </em><em>optional</em>) – Amount of logging (0-4). Defaults to 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the ContextualRobustnessTest object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ContextualRobustness</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessTest.accuracy">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">accuracy</span></code><a class="headerlink" href="#contextual_robustness.ContextualRobustnessTest.accuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the accuracy (optionally for a single class using “get_accuracy”)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>class_index</strong> (<em>int</em><em>, </em><em>optional</em>) – Index of class to get accuracy for. Defaults to None.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Accuracy of model on the samples (for a particular class if class_index is supplied)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessTest.analyze">
+<code class="sig-name descname"><span class="pre">analyze</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epsilons_outpath</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'./epsilons.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counterexamples_outpath</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'./counterexamples.p'</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">ContextualRobustness</span><a class="headerlink" href="#contextual_robustness.ContextualRobustnessTest.analyze" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run analysis on the model &amp; transform; Generates results csv and counterexamples pickle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>epsilons_outpath</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to csv file containing results. Defaults to ‘./epsilons.csv’.</p></li>
+<li><p><strong>counterexamples_outpath</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to pickle containing counterexamples. Defaults to ‘./counterexamples.p’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the object (self)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ContextualRobustness</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessTest.classes">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">classes</span></code><a class="headerlink" href="#contextual_robustness.ContextualRobustnessTest.classes" title="Permalink to this definition">¶</a></dt>
+<dd><p>classes property</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of integers representing classes in dataset</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessTest.counterexamples">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">counterexamples</span></code><a class="headerlink" href="#contextual_robustness.ContextualRobustnessTest.counterexamples" title="Permalink to this definition">¶</a></dt>
+<dd><p>counterexamples property</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>np.array]: counterexamples for each image (e.g. {‘image1’: np.array([…]), …})</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict[str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessTest.dataset">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">dataset</span></code><a class="headerlink" href="#contextual_robustness.ContextualRobustnessTest.dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>dataset property</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>tuple containing X and Y</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple[np.array, np.array]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessTest.get_accuracy">
+<code class="sig-name descname"><span class="pre">get_accuracy</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_index</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">float</span><a class="headerlink" href="#contextual_robustness.ContextualRobustnessTest.get_accuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the accuracy (optionally for a single class using “get_accuracy”)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>class_index</strong> (<em>int</em><em>, </em><em>optional</em>) – Index of class to get accuracy for. Defaults to None.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Accuracy of model on the samples (for a particular class if class_index is supplied)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessTest.get_counterexample">
+<code class="sig-name descname"><span class="pre">get_counterexample</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_index</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">numpy.array</span><a class="headerlink" href="#contextual_robustness.ContextualRobustnessTest.get_counterexample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets counterexample for an image by index</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x_index</strong> (<em>[</em><em>int</em><em>]</em>) – index of image in X</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the counterexample (or ‘None’ if does not exist)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessTest.get_num_samples">
+<code class="sig-name descname"><span class="pre">get_num_samples</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_index</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">int</span><a class="headerlink" href="#contextual_robustness.ContextualRobustnessTest.get_num_samples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the number of samples under analysis (optionally for a single class using “get_num_samples”).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>class_index</strong> (<em>int</em><em>, </em><em>optional</em>) – Index of class to get samples for. Defaults to None.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Number of samples (for a particular class if class_index is supplied)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessTest.get_results">
+<code class="sig-name descname"><span class="pre">get_results</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_index</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_by</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#contextual_robustness.ContextualRobustnessTest.get_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets result data (optionally for a single class, and optionally sorted by column using “get_results”)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>class_index</strong> (<em>int</em><em>, </em><em>optional</em>) – Index of class to get results for. Defaults to None.</p></li>
+<li><p><strong>sort_by</strong> (<em>list</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Sorts results by one or more columns. Defaults to [].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The results (for a single class if class_index is supplied, and sorted by sort_by)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessTest.image_shape">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">image_shape</span></code><a class="headerlink" href="#contextual_robustness.ContextualRobustnessTest.image_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>image_shape property</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>shape of images in X</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessTest.load_results">
+<code class="sig-name descname"><span class="pre">load_results</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epsilons_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counterexamples_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">ContextualRobustness</span><a class="headerlink" href="#contextual_robustness.ContextualRobustnessTest.load_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load previously saved results</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>epsilons_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to results csv file. Defaults to ‘’.</p></li>
+<li><p><strong>counterexamples_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to counterexamples pickle. Defaults to ‘’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the object (self)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ContextualRobustness</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessTest.model_name">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">model_name</span></code><a class="headerlink" href="#contextual_robustness.ContextualRobustnessTest.model_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>model_name property</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>name of model</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessTest.n_pixels">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">n_pixels</span></code><a class="headerlink" href="#contextual_robustness.ContextualRobustnessTest.n_pixels" title="Permalink to this definition">¶</a></dt>
+<dd><p>n_pixels property</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>number of pixels in each image.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessTest.num_samples">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">num_samples</span></code><a class="headerlink" href="#contextual_robustness.ContextualRobustnessTest.num_samples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the number of samples under analysis (optionally for a single class using “get_num_samples”).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>class_index</strong> (<em>int</em><em>, </em><em>optional</em>) – Index of class to get samples for. Defaults to None.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Number of samples (for a particular class if class_index is supplied)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessTest.results">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">results</span></code><a class="headerlink" href="#contextual_robustness.ContextualRobustnessTest.results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets result data (optionally for a single class, and optionally sorted by column using “get_results”)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>class_index</strong> (<em>int</em><em>, </em><em>optional</em>) – Index of class to get results for. Defaults to None.</p></li>
+<li><p><strong>sort_by</strong> (<em>list</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Sorts results by one or more columns. Defaults to [].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The results (for a single class if class_index is supplied, and sorted by sort_by)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessTest.save_counterexample">
+<code class="sig-name descname"><span class="pre">save_counterexample</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_index</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counterexample</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.array</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#contextual_robustness.ContextualRobustnessTest.save_counterexample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the counterexample for an image</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_index</strong> (<em>[</em><em>int</em><em>]</em>) – index of image</p></li>
+<li><p><strong>counterexample</strong> (<em>[</em><em>np.array</em><em>]</em>) – the counterexample to save</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessTest.technique">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">technique</span></code><a class="headerlink" href="#contextual_robustness.ContextualRobustnessTest.technique" title="Permalink to this definition">¶</a></dt>
+<dd><p>technique property</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>verification technique (Techniques.TEST)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#contextual_robustness.Techniques" title="contextual_robustness.Techniques">Techniques</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessTest.transform_image">
+<code class="sig-name descname"><span class="pre">transform_image</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">numpy.array</span><a class="reference internal" href="_modules/contextual_robustness.html#ContextualRobustnessTest.transform_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#contextual_robustness.ContextualRobustnessTest.transform_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transforms an image using transform_fn</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>np.array</em>) – The image</p></li>
+<li><p><strong>epsilon</strong> (<em>float</em>) – amount of transform</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The transformed image</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.ContextualRobustnessTest.transform_name">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">transform_name</span></code><a class="headerlink" href="#contextual_robustness.ContextualRobustnessTest.transform_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>transform_name property</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>name of transform</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="contextual_robustness.Techniques">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">contextual_robustness.</span></code><code class="sig-name descname"><span class="pre">Techniques</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/contextual_robustness.html#Techniques"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#contextual_robustness.Techniques" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>Verification techniques enum</p>
+<dl class="py attribute">
+<dt id="contextual_robustness.Techniques.FORMAL">
+<code class="sig-name descname"><span class="pre">FORMAL</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'formal'</span></em><a class="headerlink" href="#contextual_robustness.Techniques.FORMAL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="contextual_robustness.Techniques.TEST">
+<code class="sig-name descname"><span class="pre">TEST</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'test'</span></em><a class="headerlink" href="#contextual_robustness.Techniques.TEST" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, DeepCert.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

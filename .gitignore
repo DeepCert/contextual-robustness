@@ -24,7 +24,7 @@ venv
 /.python-version
 
 # documentation
-/docs/build
+#/docs/build
 
 # sandbox files (for playing around)
 /sandbox
