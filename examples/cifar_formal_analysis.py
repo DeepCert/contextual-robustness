@@ -1,13 +1,9 @@
 #!./venv/bin/python
-import os, sys
-import tensorflow as tf
+import os
 from contextual_robustness import ContextualRobustnessFormal
-from transforms import formal_transforms as transforms
-from load_data import load_cifar
-from utils import remove_softmax_activation, parse_indexes
-
-sys.path.append('./marabou')
-from maraboupy import Marabou
+from contextual_robustness.transforms import formal_transforms as transforms
+from contextual_robustness.datasets import load_cifar
+from contextual_robustness.utils import remove_softmax_activation, parse_indexes
 
 # reduce tensorflow log level
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'

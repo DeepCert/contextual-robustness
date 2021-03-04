@@ -1,9 +1,9 @@
 #!./venv/bin/python
 import os
 from contextual_robustness import ContextualRobustnessFormal, ContextualRobustnessReporting
-from transforms import formal_transforms as transforms
-from load_data import load_cifar
-from utils import parse_indexes, remove_softmax_activation
+from contextual_robustness.transforms import formal_transforms as transforms
+from contextual_robustness.load_data import load_cifar
+from contextual_robustness.utils import parse_indexes, remove_softmax_activation
 
 # reduce tensorflow log level
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'

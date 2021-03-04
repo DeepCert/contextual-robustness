@@ -1,19 +1,12 @@
-import pickle
+import os, sys, pickle
 import pandas as pd
 import numpy as np
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.datasets import cifar10
+from contextual_robustness.utils import normalize
 
-def normalize(X:np.array) -> np.array:
-    '''normalizes image values between 0.0 and 1.0
-
-    Args:
-        X (np.array): array of images
-
-    Returns:
-        np.array: normalized images
-    '''
-    return X / 255.0
+DATA_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '../data'))
+GTSRB_PATH = os.path.join(DATA_PATH, 'gtsb')
 
 def _fix_gtsrb_labels(labels:list) -> list:
     '''fixes the GTRSB labels after eliminating a subset of classes
@@ -36,16 +29,20 @@ def load_gtsrb() -> tuple:
     Returns:
         tuple: (X_train, Y_train, X_test, Y_test, labels)
     '''
-    with open('data/gtsb/train.p', 'rb') as f:
+    train_path = os.path.join(GTSRB_PATH, 'train.p')
+    test_path = os.path.join(GTSRB_PATH, 'train.p')
+    labels_path = os.path.join(GTSRB_PATH, 'signnames.csv')
+
+    with open(train_path, 'rb') as f:
         train_data = pickle.load(f)
 
-    with open('data/gtsb/test.p', 'rb') as f:
+    with open(test_path, 'rb') as f:
         test_data = pickle.load(f)
 
     X_train, y_train = train_data['features'], train_data['labels']
     X_test,  y_test  = test_data['features'], test_data['labels']
 
-    data = pd.read_csv('data/gtsb/signnames.csv')
+    data = pd.read_csv(labels_path)
 
     X_train = normalize(X_train)
     X_test = normalize(X_test)
