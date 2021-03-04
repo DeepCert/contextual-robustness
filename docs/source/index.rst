@@ -5,6 +5,8 @@ Welcome to Contextual-Robustness's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   README.md
+   EXAMPLES.md
    modules
 
 Indices and tables

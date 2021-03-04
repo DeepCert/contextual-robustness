@@ -28,7 +28,8 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.todo',
     'sphinx.ext.viewcode',
-    'sphinx.ext.autodoc'
+    'sphinx.ext.autodoc',
+    'recommonmark'
     ]
 
 templates_path = ['_templates']
@@ -38,6 +39,12 @@ exclude_patterns = [
     '../../docs',
     '../../sandbox'
     ]
+
+source_suffix = {
+    '.rst': 'restructuredtext',
+    '.txt': 'markdown',
+    '.md': 'markdown',
+}
 
 # -- Options for HTML output -------------------------------------------------
 
