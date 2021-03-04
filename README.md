@@ -202,6 +202,6 @@ Example code used to analyze and generate reports for the [GTSRB models](https:/
 ## Resources
 
 * [DeepCert Website](https://deepcert.github.io)
-* [Contextual Robustness Documentation](https://contextual-robustness.readthedocs.io)
-* [Contextual Robustness Examples](https://github.com/DeepCert/contextual-robustness/tree/main/examples)
+* [Contextual Robustness API Docs](https://contextual-robustness.readthedocs.io/en/latest/modules.html)
+* [Contextual Robustness Examples](https://contextual-robustness.readthedocs.io/en/latest/EXAMPLES.html)
 * [Marabou Documentation](https://neuralnetworkverification.github.io/Marabou/)
