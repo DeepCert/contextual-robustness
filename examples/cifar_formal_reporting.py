@@ -2,7 +2,7 @@
 import os
 from contextual_robustness import ContextualRobustnessFormal, ContextualRobustnessReporting
 from contextual_robustness.transforms import formal_transforms as transforms
-from contextual_robustness.load_data import load_cifar
+from contextual_robustness.datasets import load_cifar
 from contextual_robustness.utils import parse_indexes, remove_softmax_activation
 
 # reduce tensorflow log level
