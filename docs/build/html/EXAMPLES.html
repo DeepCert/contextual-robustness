@@ -1,0 +1,275 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Examples &mdash; contextual-robustness 0.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API Documentation" href="modules.html" />
+    <link rel="prev" title="Contextual Robustness" href="README.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> contextual-robustness
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">Contextual Robustness</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#example-script-cli-arguments">Example Script CLI Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gtsrb-test-based-example">GTSRB Test-Based Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gtsrb-formal-verification-example">GTSRB Formal Verification Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cifar-test-based-example">CIFAR Test-Based Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cifar-formal-verification-example">CIFAR Formal Verification Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">API Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">contextual-robustness</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Examples</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/EXAMPLES.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
+<p>Examples showing analysis and reporting for various GTSRB and CIFAR <a class="reference external" href="https://github.com/DeepCert/contextual-robustness/tree/main/models">models</a> from the DeepCert paper.</p>
+<div class="section" id="example-script-cli-arguments">
+<h2>Example Script CLI Arguments<a class="headerlink" href="#example-script-cli-arguments" title="Permalink to this headline">¶</a></h2>
+<p>The example scripts support a one or more CLI arguments for things such as specifying the output directory and selecting the sample indexes to test. You can view the CLI options for any of the scripts by passing the <code class="docutils literal notranslate"><span class="pre">-h</span></code> (or <code class="docutils literal notranslate"><span class="pre">--help</span></code>) argument.</p>
+</div>
+<div class="section" id="gtsrb-test-based-example">
+<h2>GTSRB Test-Based Example<a class="headerlink" href="#gtsrb-test-based-example" title="Permalink to this headline">¶</a></h2>
+<p><strong>Analysis:</strong></p>
+<p>The GTSRB test-based analysis script (<a class="reference external" href="https://github.com/DeepCert/contextual-robustness/tree/main/examples/gtsb_test_analysis.py">./examples/gtsb_test_analysis.py</a>) analyzes <a class="reference external" href="https://github.com/DeepCert/contextual-robustness/tree/main/models#gtsrb-models">GTSRB models</a> 1a, 1b, 2a, 2b, 3a, and 3b on all test samples from the GTSRB dataset and saves the results &amp; counterexamples.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>./examples/gtsb_test_analysis.py
+</pre></div>
+</div>
+<p><strong>Reporting:</strong></p>
+<p>The GTSRB test-based reporting script (<a class="reference external" href="https://github.com/DeepCert/contextual-robustness/tree/main/examples/gtsb_test_reporting.py">./examples/gtsb_test_reporting.py</a>) generates epsilon boxplots, counterexample plots, class-accuracy charts, and model-accuracy comparison charts for the results obtained from the gtsrb test-based analysis.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>./examples/gtsb_test_reporting.py
+</pre></div>
+</div>
+</div>
+<div class="section" id="gtsrb-formal-verification-example">
+<h2>GTSRB Formal Verification Example<a class="headerlink" href="#gtsrb-formal-verification-example" title="Permalink to this headline">¶</a></h2>
+<p><strong>Analysis:</strong></p>
+<p>The GTSRB formal verification analysis script (<a class="reference external" href="https://github.com/DeepCert/contextual-robustness/tree/main/examples/gtsb_formal_analysis.py">./examples/gtsb_formal_analysis.py</a>) analyzes <a class="reference external" href="https://github.com/DeepCert/contextual-robustness/tree/main/models#gtsrb-models">GTSRB models</a> 1a and 1b on 35 test samples from the GTSRB dataset against “haze” and “l-inf” transforms using formal verification and saves the results &amp; counterexamples.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>./examples/gtsb_formal_analysis.py -s <span class="m">8</span> <span class="m">38</span>-39 <span class="m">47</span> <span class="m">67</span> <span class="m">68</span> <span class="m">150</span> <span class="m">443</span> <span class="m">480</span> <span class="m">508</span> <span class="m">542</span> <span class="m">810</span> <span class="m">853</span> <span class="m">954</span> <span class="m">1117</span> <span class="m">1376</span> <span class="m">1483</span> <span class="m">1511</span> <span class="m">1948</span> <span class="m">2026</span> <span class="m">2227</span> <span class="m">2396</span> <span class="m">2559</span> <span class="m">2609</span> <span class="m">2731</span> <span class="m">2882</span> <span class="m">3005</span> <span class="m">3230</span> <span class="m">3344</span> <span class="m">3548</span> <span class="m">3749</span> <span class="m">3825</span> <span class="m">4033</span> <span class="m">4076</span> <span class="m">4090</span>
+</pre></div>
+</div>
+<p><strong>Reporting:</strong></p>
+<p>The GTSRB formal verification reporting script (<a class="reference external" href="https://github.com/DeepCert/contextual-robustness/tree/main/examples/gtsb_formal_reporting.py">./examples/gtsb_formal_reporting.py</a>) generates epsilon boxplots and counterexample plots for the results obtained from the GTSRB formal verification analysis.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>./examples/gtsb_formal_reporting.py -s <span class="m">8</span> <span class="m">38</span>-39 <span class="m">47</span> <span class="m">67</span> <span class="m">68</span> <span class="m">150</span> <span class="m">443</span> <span class="m">480</span> <span class="m">508</span> <span class="m">542</span> <span class="m">810</span> <span class="m">853</span> <span class="m">954</span> <span class="m">1117</span> <span class="m">1376</span> <span class="m">1483</span> <span class="m">1511</span> <span class="m">1948</span> <span class="m">2026</span> <span class="m">2227</span> <span class="m">2396</span> <span class="m">2559</span> <span class="m">2609</span> <span class="m">2731</span> <span class="m">2882</span> <span class="m">3005</span> <span class="m">3230</span> <span class="m">3344</span> <span class="m">3548</span> <span class="m">3749</span> <span class="m">3825</span> <span class="m">4033</span> <span class="m">4076</span> <span class="m">4090</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cifar-test-based-example">
+<h2>CIFAR Test-Based Example<a class="headerlink" href="#cifar-test-based-example" title="Permalink to this headline">¶</a></h2>
+<p><strong>Analysis:</strong></p>
+<p>The CIFAR test-based analysis script (<a class="reference external" href="https://github.com/DeepCert/contextual-robustness/tree/main/examples/cifar_test_analysis.py">./examples/cifar_test_analysis.py</a>) analyzes <a class="reference external" href="https://github.com/DeepCert/contextual-robustness/tree/main/models#cifar-models">CIFAR models</a> 4a, 4b, 5a, 5b, 6a, and 6b on all test samples from the CIFAR dataset against the “haze”, “contrast”, and “blur” transforms using the test-based technique and saves the results &amp; counterexamples.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>./examples/cifar_test_analysis.py
+</pre></div>
+</div>
+<p><strong>Reporting:</strong></p>
+<p>The CIFAR test-based reporting script (<a class="reference external" href="https://github.com/DeepCert/contextual-robustness/tree/main/examples/cifar_test_reporting.py">./examples/cifar_test_reporting.py</a>) generates epsilon boxplots, counterexample plots, class-accuracy charts, and model-accuracy comparison charts for the results obtained from the CIFAR test-based analysis.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>./examples/gtsb_test_reporting.py
+</pre></div>
+</div>
+</div>
+<div class="section" id="cifar-formal-verification-example">
+<h2>CIFAR Formal Verification Example<a class="headerlink" href="#cifar-formal-verification-example" title="Permalink to this headline">¶</a></h2>
+<p><strong>Analysis:</strong></p>
+<p>The CIFAR formal verification analysis script (<a class="reference external" href="https://github.com/DeepCert/contextual-robustness/tree/main/examples/cifar_formal_analysis.py">./examples/cifar_formal_analysis.py</a>) analyzes <a class="reference external" href="https://github.com/DeepCert/contextual-robustness/tree/main/models#cifar-models">CIFAR models</a> 4a and 4b on 50 test samples from the CIFAR dataset against the “haze” and “l-inf” transforms using formal verification and saves the results &amp; counterexamples.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>./examples/cifar_formal_analysis.py -s <span class="m">9</span> <span class="m">37</span> <span class="m">103</span> <span class="m">183</span> <span class="m">255</span> <span class="m">372</span> <span class="m">398</span> <span class="m">684</span> <span class="m">845</span> <span class="m">966</span> <span class="m">1196</span> <span class="m">1200</span> <span class="m">1878</span> <span class="m">1988</span> <span class="m">2081</span> <span class="m">2135</span> <span class="m">2246</span> <span class="m">2372</span> <span class="m">2584</span> <span class="m">2663</span> <span class="m">2954</span> <span class="m">3004</span> <span class="m">3497</span> <span class="m">3510</span> <span class="m">3858</span> <span class="m">4195</span> <span class="m">5047</span> <span class="m">5087</span> <span class="m">5195</span> <span class="m">5587</span> <span class="m">5616</span> <span class="m">5644</span> <span class="m">5858</span> <span class="m">6518</span> <span class="m">6622</span> <span class="m">6915</span> <span class="m">8213</span> <span class="m">8562</span> <span class="m">9090</span> <span class="m">9187</span> <span class="m">9198</span> <span class="m">9261</span> <span class="m">9358</span> <span class="m">9472</span> <span class="m">9605</span> <span class="m">9723</span> <span class="m">9749</span> <span class="m">9810</span> <span class="m">9941</span> <span class="m">9974</span>
+</pre></div>
+</div>
+<p><strong>Reporting:</strong></p>
+<p>The CIFAR formal verification reporting script (<a class="reference external" href="https://github.com/DeepCert/contextual-robustness/tree/main/examples/cifar_formal_reporting.py">./examples/cifar_formal_reporting.py</a>) generates epsilon boxplots and counterexample plots for the results obtained from the CIFAR formal verification analysis.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>./examples/cifar_formal_reporting.py -s <span class="m">9</span> <span class="m">37</span> <span class="m">103</span> <span class="m">183</span> <span class="m">255</span> <span class="m">372</span> <span class="m">398</span> <span class="m">684</span> <span class="m">845</span> <span class="m">966</span> <span class="m">1196</span> <span class="m">1200</span> <span class="m">1878</span> <span class="m">1988</span> <span class="m">2081</span> <span class="m">2135</span> <span class="m">2246</span> <span class="m">2372</span> <span class="m">2584</span> <span class="m">2663</span> <span class="m">2954</span> <span class="m">3004</span> <span class="m">3497</span> <span class="m">3510</span> <span class="m">3858</span> <span class="m">4195</span> <span class="m">5047</span> <span class="m">5087</span> <span class="m">5195</span> <span class="m">5587</span> <span class="m">5616</span> <span class="m">5644</span> <span class="m">5858</span> <span class="m">6518</span> <span class="m">6622</span> <span class="m">6915</span> <span class="m">8213</span> <span class="m">8562</span> <span class="m">9090</span> <span class="m">9187</span> <span class="m">9198</span> <span class="m">9261</span> <span class="m">9358</span> <span class="m">9472</span> <span class="m">9605</span> <span class="m">9723</span> <span class="m">9749</span> <span class="m">9810</span> <span class="m">9941</span> <span class="m">9974</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="modules.html" class="btn btn-neutral float-right" title="API Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="README.html" class="btn btn-neutral float-left" title="Contextual Robustness" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, DeepCert.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
