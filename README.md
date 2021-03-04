@@ -197,11 +197,11 @@ ContextualRobustnessReporting.generate_counterexamples_plot(
 
 ## Full Examples
 
-Example code used to analyze and generate reports for the [GTSRB models](https://github.com/DeepCert/contextual-robustness/tree/main/models#gtsrb-models) (1a, 1b, 2a, 2b, 3a, 3b) and [CIFAR models](https://github.com/DeepCert/contextual-robustness/tree/main/models#cifar-models) (4a, 4b, 5a, 5b, 6a, 6b) from the DeepCert paper. The models and their descriptions can be found in the [models](https://github.com/DeepCert/contextual-robustness/tree/main/models) folder, and the example analysis code can be found in the [examples](https://github.com/DeepCert/contextual-robustness/tree/main/examples) folder.
+Example code used to analyze and generate reports for the [GTSRB models](https://github.com/DeepCert/contextual-robustness/tree/main/models#gtsrb-models) and [CIFAR models](https://github.com/DeepCert/contextual-robustness/tree/main/models#cifar-models) from the DeepCert paper. The models and their descriptions can be found in the [models](https://github.com/DeepCert/contextual-robustness/tree/main/models) folder, and the example analysis code can be found in the [examples](https://github.com/DeepCert/contextual-robustness/tree/main/examples) folder.
 
 ## Resources
 
 * [DeepCert Website](https://deepcert.github.io)
-* [Contextual Robustness Documentation](https://contextual-robustness.readthedocs.io)
-* [Contextual Robustness Examples](https://github.com/DeepCert/contextual-robustness/tree/main/examples)
+* [Contextual Robustness API Docs](https://contextual-robustness.readthedocs.io/en/latest/modules.html)
+* [Contextual Robustness Examples](https://contextual-robustness.readthedocs.io/en/latest/EXAMPLES.html)
 * [Marabou Documentation](https://neuralnetworkverification.github.io/Marabou/)
