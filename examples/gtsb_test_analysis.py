@@ -1,9 +1,9 @@
 #!./venv/bin/python
 import os
 from contextual_robustness import ContextualRobustnessTest
-from transforms import test_transforms as transforms
-from load_data import load_gtsrb
-from utils import parse_indexes
+from contextual_robustness.transforms import test_transforms as transforms
+from contextual_robustness.load_data import load_gtsrb
+from contextual_robustness.utils import parse_indexes
 
 # reduce tensorflow log level
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
