@@ -80,6 +80,7 @@ modelA_haze = ContextualRobustnessTest(
 modelA_haze.load_results(
     epsilons_path='./results/modelA_haze/epsilons.csv',
     counterexamples_path='./results/modelA_haze/counterexamples.p')
+
 # Load saved CSV results from 'Haze' analysis on 'ModelB'
 modelB_haze = ContextualRobustnessTest(
     model_path='./models/modelB.h5',
