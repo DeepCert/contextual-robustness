@@ -4,7 +4,7 @@
 
 Models trained on the [German Traffic Signs Recognition Benchmark](https://benchmark.ini.rub.de/gtsrb_dataset.html) (GTSRB) dataset.
 
-## Models 1a & 1b
+### Models 1a & 1b
 
 A two-layer fully-connected feed-forward ReLU model trained on 7 classes of the GTSRB dataset. Accuracy varies between 81% and 85%.
 
@@ -16,7 +16,7 @@ Layer2  : 20 nodes, ReLU
 Output  : (7,) Softmax
 ```
 
-## Models 2a & 2b
+### Models 2a & 2b
 
 A three-layer fully-connected feed-forward ReLU model trained on 7 classes of the GTSRB dataset. Accuracy varies between 86% and 87%.
 
@@ -29,7 +29,7 @@ Layer3  : 200 nodes, ReLU
 Output  : (7,) Softmax
 ```
 
-## Models 3a & 3b
+### Models 3a & 3b
 
 A CNN trained on 7 classes of the GTSRB dataset consisting of four convolutional layers with ReLU activation, two max pooling layers, and one fully-connected layer. Accuracy varies between 98% and 99%.
 
