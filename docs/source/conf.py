@@ -4,7 +4,12 @@
 
 import os, sys
 sys.path.insert(0, os.path.abspath('../../'))
-sys.path.insert(0, os.path.abspath('../../marabou'))
+
+# -- Mock Modules (for RTD build) --------------------------------------------
+from unittest import mock
+# Mock modules unavailable in readthedocs build
+MOCK_MODULES = ['maraboupy', 'maraboupy.Marabou', 'maraboupy.MarabouNetwork', 'maraboupy.MarabouCore']
+sys.modules.update((mod_name, mock.Mock()) for mod_name in MOCK_MODULES)
 
 
 # -- Project information -----------------------------------------------------
