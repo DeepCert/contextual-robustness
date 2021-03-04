@@ -23,12 +23,11 @@ venv
 /venv.bak
 /.python-version
 
-# mkdocs documentation
-/site
+# documentation
+/docs/build
 
 # sandbox files (for playing around)
-sandbox*.ipynb
-sandbox*.py
+/sandbox
 
 # IDEs
 .vscode
