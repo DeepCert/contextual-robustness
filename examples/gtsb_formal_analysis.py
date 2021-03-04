@@ -3,7 +3,7 @@ import os, sys
 import tensorflow as tf
 from contextual_robustness import ContextualRobustnessFormal
 from transforms import formal_transforms as transforms
-from load_data import loadTraffic
+from load_data import load_gtsrb
 from utils import remove_softmax_activation, parse_indexes
 
 sys.path.append('./marabou')
@@ -14,7 +14,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 def main(outdir, sample_indexes):
     # load dataset
-    _, _, X_test, Y_test, _ = loadTraffic()
+    _, _, X_test, Y_test, _ = load_gtsrb()
 
     # define transforms & models
     models = ('1a', '1b')

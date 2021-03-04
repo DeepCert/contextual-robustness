@@ -2,7 +2,7 @@
 import os
 from contextual_robustness import ContextualRobustnessFormal, ContextualRobustnessReporting
 from transforms import formal_transforms as transforms
-from load_data import loadTraffic
+from load_data import load_gtsrb
 from utils import parse_indexes, remove_softmax_activation
 
 # reduce tensorflow log level
@@ -10,7 +10,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 def main(outdir, sample_indexes, image_formats):
     # load dataset
-    _, _, X_test, Y_test, _ = loadTraffic()
+    _, _, X_test, Y_test, _ = load_gtsrb()
 
     # define transforms & models
     models = ('4a', '4b')
