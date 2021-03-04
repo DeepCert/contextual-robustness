@@ -12,9 +12,14 @@ sys.path.append('./marabou')
 from maraboupy import Marabou
 
 class Techniques(enum.Enum):
+    '''Verification techniques enum'''
     TEST='test'
     FORMAL='formal'
 
+# Generic type to encompass different ContextualRobustness objects
+ContextualRobustness = typing.TypeVar('ContextualRobustness')
+
+# Default values
 defaults = dict(
     eps_lower=0.0,
     eps_upper=1.0,
@@ -23,6 +28,7 @@ defaults = dict(
     marabou_verbosity=0
     )
 
+# Datatypes for results DataFrame columns
 results_dtypes = {
     'image': np.int64,
     'class': np.int64,
@@ -32,21 +38,34 @@ results_dtypes = {
     'lower': np.float64
     }
 
-ContextualRobustness = typing.TypeVar('ContextualRobustness')
+# ======================================================================
+# _BaseContextualRobustness
+# ======================================================================
+class _BaseContextualRobustness(metaclass=ABCMeta):
+    '''Contains common functionality, properties, and defines abstract methods to be implemented by subclasses.
 
-# ======================================================================
-# BaseContextualRobustness
-# ======================================================================
-class BaseContextualRobustness(metaclass=ABCMeta):
-    '''
-    Base-class for ContextualRobustness subclasses; Implements common functionality, 
-    properties, and defines abstract methods.
+    Args:
+        model_path (str, optional): Path to saved tensorflow model. Defaults to ''.
+        model_name (str, optional): Name of model. Defaults to ''.
+        X (np.array, optional): The images. Defaults to np.array([]).
+        Y (np.array, optional): Labels for images (onehot encoded). Defaults to np.array([]).
+        sample_indexes (list[int], optional): List of indexes to test from X. Defaults to [].
+        transform_fn (callable, optional): The image transform function (required args: x, epsilon). Defaults to lambda x:x.
+        transform_args (dict, optional): Additional arguments passed to transform_fn. Defaults to dict().
+        transform_name (str, optional): Name of transform. Defaults to ''.
+        eps_lower (float, optional): Min possible epsilon. Defaults to 0.0.
+        eps_upper (float, optional): Max possible epsilon. Defaults to 1.0.
+        eps_interval (float, optional): Step size between possible epsilons. Defaults to 0.002.
+        verbosity (int, optional): Amount of logging (0-4). Defaults to 0.
+
+    Returns:
+        ContextualRobustness: the ContextualRobustness object
     '''
     def __init__(
         self,
         model_path='',
         model_name='',
-        transform_fn=lambda x, epsilon: x,
+        transform_fn=lambda x: x,
         transform_args=dict(),
         transform_name='',
         X=np.array([]),
@@ -86,76 +105,121 @@ class BaseContextualRobustness(metaclass=ABCMeta):
     @property
     @abstractmethod
     def technique(self) -> Techniques:
-        '''
-        Returns a property from Techniques Enum. Abstract method implemented by subclasses.
+        '''technique property
+
+        Returns:
+            Techniques: verification technique (e.g. Techniques.TEST or Techniques.FORMAL)
         '''
         return None
 
     @property
     def model_name(self) -> str:
+        '''model_name property
+
+        Returns:
+            str: name of model
+        '''        
         return self._model_name
     
     @property
     def transform_name(self) -> str:
+        '''transform_name property
+
+        Returns:
+            str: name of transform
+        '''        
         return self._transform_name
     
     @property
-    def classes(self) -> list:
-        ''' returns list of classes '''
+    def classes(self) -> typing.List[int]:
+        '''classes property
+
+        Returns:
+            list: list of integers representing classes in dataset
+        '''
         return sorted(np.unique([np.argmax(self._Y[i]) for i in range(self._Y.shape[0])]))
     
     @property
-    def dataset(self) -> tuple:
-        ''' returns tuple containing the dataset (X, Y) '''
+    def dataset(self) -> typing.Tuple[np.array, np.array]:
+        '''dataset property
+
+        Returns:
+            tuple[np.array, np.array]: tuple containing X and Y
+        '''
         return self._X, self._Y
     
     @property
-    def image_shape(self) -> tuple:
-        ''' returns shape of images '''
+    def image_shape(self) -> typing.Tuple[int]:
+        '''image_shape property
+
+        Returns:
+            tuple: shape of images in X
+        '''
         return self.dataset[0].shape[1:]
     
     @property
     def n_pixels(self) -> int:
-        ''' returns shape of images '''
+        '''n_pixels property
+
+        Returns:
+            int: number of pixels in each image.
+        '''
         prod = 1
         for dim in self.image_shape:
             prod *= dim
         return prod
 
     @property
-    def counterexamples(self) -> dict:
+    def counterexamples(self) -> typing.Dict[str, np.array]:
+        '''counterexamples property
+
+        Returns:
+            dict[str:np.array]: counterexamples for each image (e.g. {'image1': np.array([...]), ...})
+        '''        
         return self._counterexamples
 
-    def get_counterexample(self, x_index) -> np.array:
+    def get_counterexample(self, x_index:int) -> np.array:
+        '''Gets counterexample for an image by index
+
+        Args:
+            x_index ([int]): index of image in X
+
+        Returns:
+            np.array: the counterexample (or 'None' if does not exist)
+        '''        
         return self.counterexamples.get(f'image{x_index}')
     
-    def save_counterexample(self, x_index, counterexample):
+    def save_counterexample(self, x_index:int, counterexample:np.array):
+        '''Saves the counterexample for an image
+
+        Args:
+            x_index ([int]): index of image
+            counterexample ([np.array]): the counterexample to save
+        '''        
         self._counterexamples[f'image{x_index}'] = counterexample
     
-    def get_num_samples(self, class_index=None) -> int:
-        '''
-        returns number of samples in dataset (optionally for a single class).
-        
-        Parameters:
-            class_index (integer) - when specified, returns number of samples for the specified class
-        
+    def get_num_samples(self, class_index:int=None) -> int:
+        '''Gets the number of samples under analysis (optionally for a single class using "get_num_samples").
+
+        Args:
+            class_index (int, optional): Index of class to get samples for. Defaults to None.
+
         Returns:
-            integer
+            int: Number of samples (for a particular class if class_index is supplied)
         '''
         if class_index is not None:
             return len([si for si in self._sample_indexes if np.argmax(self.dataset[1][si]) == class_index])
         return len(self._sample_indexes)
     num_samples = property(get_num_samples)
 
-    def get_accuracy(self, class_index=None) -> float:
-        '''
-        returns accuracy of model (optionally for a single class)
-        
-        Parameters:
-            class_index (integer) - when specified, returns accuracy for a single class.
-        
+    def get_accuracy(self, class_index:int=None) -> float:
+        '''Gets the accuracy (optionally for a single class using "get_accuracy")
+
+        Args:
+            class_index (int, optional): Index of class to get accuracy for. Defaults to None.
+
         Returns:
-            float
+            float: Accuracy of model on the samples (for a particular class if class_index is supplied)
         '''
         if class_index is not None:
             sample_indexes = [si for si in self._sample_indexes if np.argmax(self._Y[si]) == class_index]
@@ -164,16 +228,15 @@ class BaseContextualRobustness(metaclass=ABCMeta):
         return self._accuracy
     accuracy = property(get_accuracy)
 
-    def get_results(self, class_index=None, sort_by=[]) -> pd.DataFrame:
-        '''
-        returns a dataframe containing the analysis results (optionally for a single class and/or sorted)
-        
-        Parameters:
-            class_index (integer) - when specified, returns results for a single class.
-            sort_by     (list)    - when specified, sorts results by the specified field(s)
-        
+    def get_results(self, class_index:int=None, sort_by:list=[]) -> pd.DataFrame:
+        '''Gets result data (optionally for a single class, and optionally sorted by column using "get_results")
+
+        Args:
+            class_index (int, optional): Index of class to get results for. Defaults to None.
+            sort_by (list[str], optional): Sorts results by one or more columns. Defaults to [].
+
         Returns:
-            pd.DataFrame
+            pd.DataFrame: The results (for a single class if class_index is supplied, and sorted by sort_by)
         '''
         results = self._results
         if class_index is not None:
@@ -184,50 +247,53 @@ class BaseContextualRobustness(metaclass=ABCMeta):
     results = property(get_results)
 
     @abstractmethod
-    def _find_epsilon(self, x, y, index=None) -> tuple:
-        '''
-        Finds epsilon for a given image; Abstract method which must be implemented by subclasses.
+    def _find_epsilon(self, x:np.array, y:np.array, index:int=None) -> typing.Tuple[float, float, float, int, np.array]:
+        '''Finds epsilon for a given image; Abstract method implemented by subclasses
 
-        Arguments:
-            x     (np.array) - (*required) the image
-            y     (np.array) - (*required) label for image (x)
-            index (integer)  - index of image (x)
-        
+        Args:
+            x ([np.array]): the image
+            y ([np.array]): categorical (onehot) encoded label for x
+            index ([int], optional): Index of x in X (used for reference only). Defaults to None.
+
         Returns:
-            (tuple) - lower, upper, epsilon, predicted_label, counterexample
-
-            lower           : last lower epsilon from binary search
-            upper           : last upper epsilon from binary search
-            epsilon         : last upper epsilon from binary search
-            predicted_label : upper epsilon from binary search
-            counterexample  : image at epsilon where prediction changed
+            tuple[float, float, float, int, np.array]: Tuple containing (lower, upper, epsilon, predicted_label, counterexample)
         '''
         pass
 
     @abstractmethod
-    def _find_correct_sample_indexes(self, X, Y) -> list:
-        '''
-        Returns list of indexes of correctly predicted samples; Abstract method implemented by subclasses
+    def _find_correct_sample_indexes(self, X:np.array, Y:np.array) -> typing.List[int]:
+        '''Finds list of indexes for correctly predicted samples
+
+        Args:
+            X (np.array): The images
+            Y (np.array): Labels (onehot encoded) for the images
+
+        Returns:
+            list[int]: Indexes of correctly predicted samples from dataset
         '''
         pass
     
     @abstractmethod
-    def _load_model(self, model_path):
-        '''
-        Loads a model; Abstract method implemented by subclasses
+    def _load_model(self, model_path:str) -> object:
+        '''Loads a model; Abstract method implemented by subclasses.
+
+        Args:
+            model_path (str): Path to model
+        
+        Returns:
+            object: The model (either tf.keras.Model or MarabouNetwork)
         '''
         pass
     
-    def analyze(self, epsilons_outpath='./epsilons.csv', counterexamples_outpath='./counterexamples.p') -> ContextualRobustness:
-        '''
-        Tests all correctly predicted samples, and optionally stores the results in a csv
-        
-        Parameters:
-            epsilons_outpath        (string)  - epsilons output csv file path
-            counterexamples_outpath (string)  - counterexamples pickle path
-        
+    def analyze(self, epsilons_outpath:str='./epsilons.csv', counterexamples_outpath:str='./counterexamples.p') -> ContextualRobustness:
+        '''Run analysis on the model & transform; Generates results csv and counterexamples pickle.
+
+        Args:
+            epsilons_outpath (str, optional): Path to csv file containing results. Defaults to './epsilons.csv'.
+            counterexamples_outpath (str, optional): Path to pickle containing counterexamples. Defaults to './counterexamples.p'.
+
         Returns:
-            ContextualRobustness object
+            ContextualRobustness: the object (self)
         '''
         print(f'analyzing {self.transform_name} on {len(self._correct_sample_indexes)} samples. this may take some time...')
         data = []
@@ -259,16 +325,15 @@ class BaseContextualRobustness(metaclass=ABCMeta):
                 pickle.dump(self.counterexamples, f)
         return self
     
-    def load_results(self, epsilons_path='', counterexamples_path='') -> ContextualRobustness:
-        '''
-        Loads saved results from csv file
-        
-        Parameters:
-            epsilons_path        (string) - path to the csv containing epsilons
-            counterexamples_path (string) - path to the pickle containing counterexamples
+    def load_results(self, epsilons_path:str='', counterexamples_path:str='') -> ContextualRobustness:
+        '''Load previously saved results
+
+        Args:
+            epsilons_path (str, optional): Path to results csv file. Defaults to ''.
+            counterexamples_path (str, optional): Path to counterexamples pickle. Defaults to ''.
 
         Returns:
-            ContextualRobustness object
+            ContextualRobustness: the object (self)
         '''
         if epsilons_path:
             self._results = set_df_dtypes(pd.read_csv(epsilons_path, index_col=0), results_dtypes)
@@ -281,39 +346,42 @@ class BaseContextualRobustness(metaclass=ABCMeta):
 # ======================================================================
 # ContextualRobustnessTest
 # ======================================================================
-class ContextualRobustnessTest(BaseContextualRobustness):
-    '''
-    ContextualRobustness class for test-based technique
+class ContextualRobustnessTest(_BaseContextualRobustness):
+    '''Class for ContextualRobustness 'Test Based' analysis
 
-    Parameters:
-        model_path     (path)     - (*required) path to saved model
-        model_name     (string)   - name of model
-        X              (np.array) - (*required) images
-        Y              (np.array) - (*required) labels for images
-        sample_indexes ([int])    - indexes of samples to test
-        transform_fn   (function) - (*required) transform function
-        transform_args (dict)     - extra args for transform function
-        transform_name (string)   - name of transform
-        eps_lower      (float)    - lower bound for epsilon
-        eps_upper      (float)    - upper bound for epsilon
-        eps_interval   (float)    - interval between epsilons
-        verbosity       (int)     - amount of logging (0-4)
+    Args:
+        model_path (str, optional): Path to saved tensorflow model. Defaults to ''.
+        model_name (str, optional): Name of model. Defaults to ''.
+        X (np.array, optional): The images. Defaults to np.array([]).
+        Y (np.array, optional): Labels for images (onehot encoded). Defaults to np.array([]).
+        sample_indexes (list[int], optional): List of indexes to test from X. Defaults to [].
+        transform_fn (callable, optional): The image transform function (required args: x, epsilon). Defaults to lambda x:x.
+        transform_args (dict, optional): Additional arguments passed to transform_fn. Defaults to dict().
+        transform_name (str, optional): Name of transform. Defaults to ''.
+        eps_lower (float, optional): Min possible epsilon. Defaults to 0.0.
+        eps_upper (float, optional): Max possible epsilon. Defaults to 1.0.
+        eps_interval (float, optional): Step size between possible epsilons. Defaults to 0.002.
+        verbosity (int, optional): Amount of logging (0-4). Defaults to 0.
+
+    Returns:
+        ContextualRobustness: the ContextualRobustnessTest object
     '''
     def __init__(
         self,
-        model_path = '',
-        model_name='',
-        X=np.array([]),
-        Y=np.array([]),
-        sample_indexes=[],
-        transform_fn=lambda x, epsilon: x,
-        transform_args=dict(),
-        transform_name='',
-        eps_lower=defaults['eps_lower'],
-        eps_upper=defaults['eps_upper'],
-        eps_interval=defaults['eps_interval'],
-        verbosity=defaults['verbosity']
+        model_path:str= '',
+        model_name:str='',
+        X:np.array=np.array([]),
+        Y:np.array=np.array([]),
+        sample_indexes:list=[],
+        transform_fn:callable=lambda x: x,
+        transform_args:dict=dict(),
+        transform_name:str='',
+        eps_lower:float=defaults['eps_lower'],
+        eps_upper:float=defaults['eps_upper'],
+        eps_interval:float=defaults['eps_interval'],
+        verbosity:int=defaults['verbosity']
         ) -> ContextualRobustness:
+        # Execute the superclass's constructor
         super().__init__(
             model_path=model_path,
             model_name=model_name,
@@ -330,45 +398,47 @@ class ContextualRobustnessTest(BaseContextualRobustness):
     
     @property
     def technique(self) -> Techniques:
+        '''technique property
+
+        Returns:
+            Techniques: verification technique (Techniques.TEST)
+        '''
         return Techniques.TEST
     
-    def _load_model(self, model_path) -> tf.keras.Model:
-        '''
-        loads a tensorflow model
-        
-        Parameters:
-            model_path (string) - path to tensorflow model
-        
+    def _load_model(self, model_path:str) -> tf.keras.Model:
+        '''Loads a tensorflow (keras) model
+
+        Args:
+            model_path (str): Path to the saved model
+
         Returns:
-            tensorflow model
+            tf.keras.Model: tensorflow Model object
         '''
         return tf.keras.models.load_model(model_path)
     
-    def _find_correct_sample_indexes(self, X, Y) -> list:
-        '''
-        returns list of indexes of correctly predicted samples
-        
-        Parameters:
-            X (np.array) - (*required) input images
-            Y (np.array) - (*required) labels for X
-        
+    def _find_correct_sample_indexes(self, X:np.array, Y:np.array) -> typing.List[int]:
+        '''Finds list of indexes for correctly predicted samples
+
+        Args:
+            X (np.array): The images
+            Y (np.array): Labels (onehot encoded) for the images
+
         Returns:
-            list
+            list[int]: Indexes of correctly predicted samples from dataset
         '''
         Y_p = self._model.predict(np.array([X[si] for si in self._sample_indexes]))
         return [si for i,si in enumerate(self._sample_indexes) if np.argmax(Y_p[i]) == np.argmax(Y[si])]
     
-    def _find_epsilon(self, x, y, index=None) -> tuple:
-        '''
-        finds the epsilon value of the transform_fn applied to x
-        
-        Parameters:
-            x     (np.array) - (*required) input image
-            y     (np.array) - (*required) label for x
-            index (integer)  - index of image (just for logging)
-        
+    def _find_epsilon(self, x:np.array, y:np.array, index:int=None) -> typing.Tuple[float, float, float, int, np.array]:
+        '''Finds the epsilon for an image
+
+        Args:
+            x (np.array): The image
+            y (np.array): Label for the image (onehot encoded)
+            index (int, optional): Index of x. Defaults to None.
+
         Returns:
-            tuple (lower, upper, epsilon, predicted_label)
+            tuple[float, float, float, int, np.array]: (lower, upper, epsilon, predicted_label, counterexample)
         '''
         lower = self._eps_lower
         upper = self._eps_upper
@@ -394,38 +464,50 @@ class ContextualRobustnessTest(BaseContextualRobustness):
                 counterexample = x_trans
         return lower, upper, epsilon, predicted_label, counterexample
     
-    def transform_image(self, x, epsilon) -> np.array:
+    def transform_image(self, x:np.array, epsilon:float) -> np.array:
+        '''Transforms an image using transform_fn
+
+        Args:
+            x (np.array): The image
+            epsilon (float): amount of transform
+
+        Returns:
+            np.array: The transformed image
+        '''        
         return self._transform_fn(x, epsilon=epsilon, **self._transform_args)
+
 
 # ======================================================================
 # ContextualRobustnessFormal
 # ======================================================================
-class ContextualRobustnessFormal(BaseContextualRobustness):
-    '''
-    ContextualRobustness class for formal verification technique
+class ContextualRobustnessFormal(_BaseContextualRobustness):
+    '''Class for ContextualRobustness 'Formal Verification' analysis
 
-    Parameters:
-        model_path      (string)   - (*required) path to the model loaded as MarabouNetwork
-        model_name      (string)   - name of model
-        model_args      (dict)     - args passed to Marabou.read_* when loading network (https://neuralnetworkverification.github.io/Marabou/API/0_Marabou.html)
-        X               (np.array) - (*required) images
-        Y               (np.array) - (*required) labels for images
-        sample_indexes  ([int])    - list of specific sample indexes to test
-        transform_fn    (function) - (*required) transform encoding function
-        transform_args  (dict)     - extra args for transform function
-        transform_name  (dict)     - name of the transform
-        eps_lower       (float)    - lower bound for epsilon
-        eps_upper       (float)    - upper bound for epsilon
-        eps_interval    (float)    - interval between epsilons
-        marabou_options (dict)     - options passed to Marabou's 'solve' function
-        verbosity       (int)      - amount of logging (0-4)
+    Args:
+        model_path (str, optional): Path to saved tensorflow model. Defaults to ''.
+        model_name (str, optional): Name of model. Defaults to ''.
+        model_args (dict, optional): Args passed to Marabou to load network. Defaults to dict().
+        X (np.array, optional): The images. Defaults to np.array([]).
+        Y (np.array, optional): Labels for images (onehot encoded). Defaults to np.array([]).
+        sample_indexes (list[int], optional): List of indexes to test from X. Defaults to [].
+        transform_fn (callable, optional): The image transform function (required args: x, epsilon). Defaults to lambda x:x.
+        transform_args (dict, optional): Additional arguments passed to transform_fn. Defaults to dict().
+        transform_name (str, optional): Name of transform. Defaults to ''.
+        eps_lower (float, optional): Min possible epsilon. Defaults to 0.0.
+        eps_upper (float, optional): Max possible epsilon. Defaults to 1.0.
+        eps_interval (float, optional): Step size between possible epsilons. Defaults to 0.002.
+        marabou_options (dict, optional): Additional MarabouOptions. Defaults to dict(verbosity=0).
+        verbosity (int, optional): Amount of logging (0-4). Defaults to 0.
+
+    Returns:
+        ContextualRobustness: the ContextualRobustnessFormal object
     '''
     def __init__(
         self,
         model_path='',
         model_name='',
         model_args=dict(),
-        transform_fn=lambda x, epsilon, output_index: x,
+        transform_fn=lambda x: x,
         transform_args=dict(),
         transform_name='',
         X=np.array([]),
@@ -439,6 +521,7 @@ class ContextualRobustnessFormal(BaseContextualRobustness):
         ) -> ContextualRobustness:
         self._model_args = model_args
         self._marabou_options = marabou_options
+        # Execute the superclass's constructor
         super().__init__(
             model_path=model_path,
             model_name=model_name,
@@ -456,20 +539,23 @@ class ContextualRobustnessFormal(BaseContextualRobustness):
     
     @property
     def technique(self) -> Techniques:
+        '''technique property
+
+        Returns:
+            Techniques: verification technique (Techniques.FORMAL)
+        '''
         return Techniques.FORMAL
     
-    def _load_model(self, model_path) -> Marabou.MarabouNetwork:
-        '''
-        Loads model as a MarabouNetwork object
+    def _load_model(self, model_path:str) -> Marabou.MarabouNetwork:
+        '''Loads a tensorflow, nnet, or onnx model as a MarabouNetwork
 
-        Parameters:
-            model_path (string) - model to load (NNet, Tensorflow (pb), HDF5, or ONNX)
-        
+        Args:
+            model_path (str): Path to the verification model
+
         Returns:
-            (MarabouNetwork) - the MarabouNetwork object
+            MarabouNetwork: the MarabouNetwork object
         '''
         valid_exts = ('.nnet', '', '.pb', '.h5', '.hdf5', '.onnx')
-
         ext = get_file_extension(model_path)
         assert ext in valid_exts, 'Model must be .nnet, .pb, .h5, or .onnx'
         if ext == '.nnet':
@@ -480,16 +566,15 @@ class ContextualRobustnessFormal(BaseContextualRobustness):
             return Marabou.read_onnx(model_path, **self._model_args)
         return None
     
-    def _find_correct_sample_indexes(self, X, Y) -> list:
-        '''
-        returns list of indexes of correctly predicted samples
-        
-        Parameters:
-            X (np.array) - (*required) input images
-            Y (np.array) - (*required) labels for X
-        
+    def _find_correct_sample_indexes(self, X:np.array, Y:np.array) -> typing.List[int]:
+        '''Finds list of indexes for correctly predicted samples
+
+        Args:
+            X (np.array): The images
+            Y (np.array): Labels (onehot encoded) for the images
+
         Returns:
-            list
+            list[int]: Indexes of correctly predicted samples from dataset
         '''
         ext = get_file_extension(self._model_path)
         if ext == '.nnet' or ext == '.onnx':
@@ -502,18 +587,16 @@ class ContextualRobustnessFormal(BaseContextualRobustness):
             return [si for i,si in enumerate(self._sample_indexes) if np.argmax(softargmax(Y_p[i])) == np.argmax(Y[si])]
         return None
     
-    def _find_epsilon(self, x, y, index=None) -> tuple:
-        '''
-        Finds the epsilon value of the transform_fn applied to x using formal verification,
-        and saves counterexamples returned by Marabou.
-        
-        Parameters:
-            x     (np.array) - (*required) input image
-            y     (np.array) - (*required) label for image (x)
-            index (integer)  - index of image (x)
-        
+    def _find_epsilon(self, x:np.array, y:np.array, index:int=None) -> typing.Tuple[float, float, float, int, np.array]:
+        '''Finds the epsilon for an image
+
+        Args:
+            x (np.array): The image
+            y (np.array): Label for the image (onehot encoded)
+            index (int, optional): Index of x. Defaults to None.
+
         Returns:
-            tuple (lower, upper, epsilon, predicted_label)
+            tuple[float, float, float, int, np.array]: (lower, upper, epsilon, predicted_label, counterexample)
         '''
         lower = self._eps_lower
         upper = self._eps_upper
@@ -538,19 +621,17 @@ class ContextualRobustnessFormal(BaseContextualRobustness):
                 counterexample = cex
         return lower, upper, epsilon, predicted_label, counterexample
     
-    def _find_counterexample(self, x, y, epsilon, x_index=None) -> tuple:
-        '''
-        Finds counterexample by generating and solving a marabou input query for a given 
-        image, epsilon, and transform_fn.
+    def _find_counterexample(self, x:np.array, y:np.array, epsilon:float, x_index:int=None) -> typing.Tuple[bool, int, np.array]:
+        '''Finds the the counterexample for an image at a given epsilon
 
-        Parameters:
-            x       (np.array) - the image
-            y       (np.array) - label for image (x)
-            epsilon (float)    - amount of transform
-            x_index (int)      - index of x
-        
+        Args:
+            x (np.array): The image
+            y (np.array): Label for the image (onehot encoded)
+            epsilon (float): the epsilon value
+            x_index (int, optional): Index of x (for reference only). Defaults to None.
+
         Returns:
-            tuple (verified, predicted_label, counterexample)
+            tuple[bool, int, np.array]: (verified, predicted_label, counterexample)
         '''
         actual_label = np.argmax(y)
         predicted_label = actual_label
@@ -587,38 +668,29 @@ class ContextualRobustnessFormal(BaseContextualRobustness):
 # ContextualRobustnessReporting
 # ======================================================================
 class ContextualRobustnessReporting:
-    '''
-    Report generating functions for ContextualRobustness results objects.
-
-    Functions:
-        generate_epsilons_plot(cr, outfile)            - plots epsilons by class for a model/transform
-        generate_counterexamples_plot(cr, outfile)     - plots counterexamples by class for a model/transform
-        generate_class_accuracy_plot(cr, outfile)      - plots epsilon/accuracy for a single model/transform
-        generate_accuracy_report_plot(crobjs, outfile) - plots epsilon/accuracy for multiple models/transforms
-    '''
+    '''Class containing ContextualRobustness reporting functions'''
     @staticmethod
     def generate_epsilons_plot(
             cr: ContextualRobustness,
-            outfile='epsilons.png',
-            xlabel='',
-            ylabel='epsilon',
-            axis_fontsize=24,
-            fontfamily='serif',
-            fontweight='ultralight',
-            usetex=True
+            outfile:str='epsilons.png',
+            xlabel:str='',
+            ylabel:str='epsilon',
+            axis_fontsize:int=24,
+            fontfamily:str='serif',
+            fontweight:str='ultralight',
+            usetex:bool=True
             ):
-        '''
-        plots epsilons by class for a model/transform and saves as png
+        '''Plots epsilons by class for a model/transform and saves as png
 
-        Parameters:
-            cr            (ContextualRobustness) - (*required) ContextualRobustness object
-            outfile       (string)                - output file path
-            xlabel        (string)                - x axis label
-            ylabel        (string)                - y axis label
-            axis_fontsize (integer)               - fontsize for axis text
-            fontweight    (string)                - fontweight for plot text
-            fontfamily    (string)                - fontfamily for plot text
-            usetex        (bool)                  - use latex for text
+        Args:
+            cr (ContextualRobustness): ContextualRobustness object
+            outfile (str, optional): Output file path. Defaults to 'epsilons.png'.
+            xlabel (str, optional): x axis label. Defaults to ''.
+            ylabel (str, optional): y axis label. Defaults to 'epsilon'.
+            axis_fontsize (int, optional): Fontsize for axis text. Defaults to 24.
+            fontfamily (str, optional): Fontfamily for text. Defaults to 'serif'.
+            fontweight (str, optional): Fontfamily for text. Defaults to 'ultralight'.
+            usetex (bool, optional): Use latex for text. Defaults to True.
         '''
         plt.rc('text', usetex=usetex)
         plt.rc('font', family=fontfamily, weight=fontweight)
@@ -638,20 +710,19 @@ class ContextualRobustnessReporting:
     @staticmethod
     def generate_counterexamples_plot(
             cr: ContextualRobustness,
-            outfile='./counterexamples.png',
-            nrows=2,
-            ncols='auto',
-            figsize=(10, 10)
+            outfile:str='./counterexamples.png',
+            nrows:int=2,
+            ncols:str='auto',
+            figsize:tuple=(10, 10)
             ):
-        '''
-        plots counterexamples for a model/transform and saves as png
+        '''Plots counterexamples for a model/transform and saves as png
 
-        Parameters:
-            cr      (ContextualRobustness) - (*required) ContextualRobustness object
-            outfile (string)                - output file path
-            nrows   (integer)               - number of rows
-            ncols   (integer)               - number of columns (default='auto')
-            figsize (tuple)                 - size of figure (w, h)
+        Args:
+            cr (ContextualRobustness): ContextualRobustness object
+            outfile (str, optional): Output file path. Defaults to './counterexamples.png'.
+            nrows (int, optional): Number of rows. Defaults to 2.
+            ncols (str, optional): Number of columns. Defaults to 'auto'.
+            figsize (tuple, optional): Size of figure (w, h). Defaults to (10, 10).
         '''
         fig = plt.figure(figsize=figsize)
         ncols = len(cr.classes) if ncols == 'auto' else ncols
@@ -694,27 +765,26 @@ class ContextualRobustnessReporting:
     
     @staticmethod
     def generate_class_accuracy_plot(
-            cr: ContextualRobustness,
-            outfile='./class-accuracy.png',
-            axis_fontsize=12,
-            legend_fontsize=14,
-            fontfamily='serif',
-            fontweight='ultralight',
-            legend_loc='best',
-            usetex=True
+            cr:ContextualRobustness,
+            outfile:str='./class-accuracy.png',
+            axis_fontsize:int=12,
+            legend_fontsize:int=14,
+            fontfamily:str='serif',
+            fontweight:str='ultralight',
+            legend_loc:str='best',
+            usetex:bool=True
             ):
-        '''
-        plots accuracy of each class at various epsilons for a model/transform and saves as png
+        '''Plots accuracy of each class at various epsilons for a model/transform and saves as png
 
-        Parameters:
-            cr              (ContextualRobustness) - (*required) ContextualRobustness object
-            outfile         (string)                - output file path
-            axis_fontsize   (integer)               - fontsize for axis text
-            legend_fontsize (integer)               - fontsize for legend text
-            fontweight      (string)                - fontweight for plot text
-            fontfamily      (string)                - fontfamily for plot text
-            legend_loc      (string)                - location of legend (best, lower left, upper right, ...)
-            usetex          (bool)                  - use latex for text
+        Args:
+            cr (ContextualRobustness): ContextualRobustness object
+            outfile (str, optional): Output file path. Defaults to './counterexamples.png'.
+            axis_fontsize (int, optional): Fontsize for axis text. Defaults to 12.
+            legend_fontsize (int, optional): Fontsize for axis text. Defaults to 14.
+            fontfamily (str, optional): Fontfamily for text. Defaults to 'serif'.
+            fontweight (str, optional): Fontweight for text. Defaults to 'ultralight'.
+            legend_loc (str, optional): Location of legend. Defaults to 'best'.
+            usetex (bool, optional): Use latex for text. Defaults to True.
         '''
         plt.rc('text', usetex=usetex)
         plt.rc('font', family=fontfamily, weight=fontweight)
@@ -759,29 +829,28 @@ class ContextualRobustnessReporting:
     
     @staticmethod
     def generate_accuracy_report_plot(
-            cr_objects: typing.Sequence[ContextualRobustness],
-            outfile='./accuracy-report.png',
-            linestyles=(),
-            axis_fontsize=12,
-            legend_fontsize=14,
-            fontfamily='serif',
-            fontweight='ultralight',
-            legend_loc='best',
-            usetex=True
+            cr_objects:typing.Sequence[ContextualRobustness],
+            outfile:str='./accuracy-report.png',
+            linestyles:tuple=(),
+            axis_fontsize:int=12,
+            legend_fontsize:int=14,
+            fontfamily:str='serif',
+            fontweight:str='ultralight',
+            legend_loc:str='best',
+            usetex:bool=True
             ):
-        '''
-        plots epsilon/accuracy for a given transform on multiple models and saves as png
+        '''Plots epsilon/accuracy for a given transform on multiple models and saves as png
 
-        Parameters:
-            cr_objects      ([ContextualRobustness]) - (*required) list of ContextualRobustness objects
-            outfile         (string)                  - output file path
-            axis_fontsize   (integer)                 - fontsize for axis text
-            legend_fontsize (integer)                 - fontsize for legend text
-            fontweight      (string)                  - fontweight for plot text
-            fontfamily      (string)                  - fontfamily for plot text
-            linestyles      (tuple)                   - linestyle for each model (matplotlib syntax)
-            legend_loc      (string)                  - location of legend (best, lower left, upper right, ...)
-            usetex          (bool)                    - use latex for text
+        Args:
+            cr_objects (typing.Sequence[ContextualRobustness]): list of ContextualRobustness objects
+            outfile (str, optional): Output file path. Defaults to './accuracy-report.png'.
+            linestyles (tuple, optional): [description]. Defaults to ().
+            axis_fontsize (int, optional): Fontsize for axis text. Defaults to 12.
+            legend_fontsize (int, optional): Fontsize for axis text. Defaults to 14.
+            fontfamily (str, optional): Fontfamily for text. Defaults to 'serif'.
+            fontweight (str, optional): Fontweight for text. Defaults to 'ultralight'.
+            legend_loc (str, optional): Location of legend. Defaults to 'best'.
+            usetex (bool, optional): Use latex for text. Defaults to True.
         '''
         plt.rc('text', usetex=usetex)
         plt.rc('font', family=fontfamily, weight=fontweight)

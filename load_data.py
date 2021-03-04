@@ -4,17 +4,38 @@ import numpy as np
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.datasets import cifar10
 
-def normalize(X):
+def normalize(X:np.array) -> np.array:
+    '''normalizes image values between 0.0 and 1.0
+
+    Args:
+        X (np.array): array of images
+
+    Returns:
+        np.array: normalized images
+    '''
     return X / 255.0
 
-def fix_labels(labels):
+def _fix_gtsrb_labels(labels:list) -> list:
+    '''fixes the GTRSB labels after eliminating a subset of classes
+
+    Args:
+        labels (list): list
+
+    Returns:
+        list: list of fixed labels
+    '''
     labels = labels -1
     for i in range(labels.shape[0]):
         if (labels[i] >5 ):
             labels[i] -= 1
     return labels
 
-def loadTraffic():
+def load_gtsrb() -> tuple:
+    '''Loads the GTSRB dataset
+
+    Returns:
+        tuple: (X_train, Y_train, X_test, Y_test, labels)
+    '''
     with open('data/gtsb/train.p', 'rb') as f:
         train_data = pickle.load(f)
 
@@ -39,7 +60,7 @@ def loadTraffic():
     X_train = X_train[mask]
     y_train = y_train[mask]
 
-    y_train = fix_labels(y_train)
+    y_train = _fix_gtsrb_labels(y_train)
     y_train = to_categorical(y_train)
 
 
@@ -50,12 +71,17 @@ def loadTraffic():
     X_test = X_test[mask]
     y_test = y_test[mask]
 
-    y_test = fix_labels(y_test)
+    y_test = _fix_gtsrb_labels(y_test)
     y_test = to_categorical(y_test)
 
     return X_train, y_train, X_test, y_test, labels
 
 def load_cifar():
+    '''Loads the CIFAR dataset
+
+    Returns:
+        tuple: (X_train, Y_train, X_test, Y_test, labels)
+    '''
     labels = ('airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
     (X_train, Y_train), (X_test, Y_test) = cifar10.load_data()
     # normalize inputs between 0.0 and 1.0
