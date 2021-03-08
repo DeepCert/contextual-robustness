@@ -31,7 +31,7 @@ __Analysis:__
 The GTSRB formal verification analysis script ([./examples/gtsb_formal_analysis.py](https://github.com/DeepCert/contextual-robustness/tree/main/examples/gtsb_formal_analysis.py)) analyzes [GTSRB models](https://github.com/DeepCert/contextual-robustness/tree/main/models#gtsrb-models) 1a and 1b on 35 test samples from the GTSRB dataset against "haze" and "l-inf" transforms using formal verification and saves the results & counterexamples.
 
 ```sh
-./examples/gtsb_formal_analysis.py -s 8 38-39 47 67 68 150 443 480 508 542 810 853 954 1117 1376 1483 1511 1948 2026 2227 2396 2559 2609 2731 2882 3005 3230 3344 3548 3749 3825 4033 4076 4090
+./examples/gtsb_formal_analysis.py -s 78 457 839 1042 1947 2897 2934 3063 3102 3142 3329 3606 3856 4657 4754 5105 5847 6150 6221 6531 6879 6900 7045 7273 7442 7945 8092 8345 8578 9011 9760 9823 9956 10192 11132
 ```
 
 __Reporting:__
@@ -39,7 +39,7 @@ __Reporting:__
 The GTSRB formal verification reporting script ([./examples/gtsb_formal_reporting.py](https://github.com/DeepCert/contextual-robustness/tree/main/examples/gtsb_formal_reporting.py)) generates epsilon boxplots and counterexample plots for the results obtained from the GTSRB formal verification analysis.
 
 ```sh
-./examples/gtsb_formal_reporting.py -s 8 38-39 47 67 68 150 443 480 508 542 810 853 954 1117 1376 1483 1511 1948 2026 2227 2396 2559 2609 2731 2882 3005 3230 3344 3548 3749 3825 4033 4076 4090
+./examples/gtsb_formal_reporting.py -s 78 457 839 1042 1947 2897 2934 3063 3102 3142 3329 3606 3856 4657 4754 5105 5847 6150 6221 6531 6879 6900 7045 7273 7442 7945 8092 8345 8578 9011 9760 9823 9956 10192 11132
 ```
 
 ## CIFAR Test-Based Example
@@ -67,7 +67,7 @@ __Analysis:__
 The CIFAR formal verification analysis script ([./examples/cifar_formal_analysis.py](https://github.com/DeepCert/contextual-robustness/tree/main/examples/cifar_formal_analysis.py)) analyzes [CIFAR models](https://github.com/DeepCert/contextual-robustness/tree/main/models#cifar-models) 4a and 4b on 50 test samples from the CIFAR dataset against the "haze" and "l-inf" transforms using formal verification and saves the results & counterexamples.
 
 ```sh
-./examples/cifar_formal_analysis.py -s 9 37 103 183 255 372 398 684 845 966 1196 1200 1878 1988 2081 2135 2246 2372 2584 2663 2954 3004 3497 3510 3858 4195 5047 5087 5195 5587 5616 5644 5858 6518 6622 6915 8213 8562 9090 9187 9198 9261 9358 9472 9605 9723 9749 9810 9941 9974
+./examples/cifar_formal_analysis.py -s 64 150 621 698 997 1535 1658 1724 1988 2018 2135 2194 2370 2793 3000 3017 3130 3141 3328 3634 3829 4076 4131 4714 4770 4905 4937 5435 5526 5714 5785 5947 6046 6372 6487 6544 7113 7581 7629 7718 8039 8059 8190 8343 8588 8829 8988 9155 9941 9981
 ```
 
 __Reporting:__
@@ -75,5 +75,5 @@ __Reporting:__
 The CIFAR formal verification reporting script ([./examples/cifar_formal_reporting.py](https://github.com/DeepCert/contextual-robustness/tree/main/examples/cifar_formal_reporting.py)) generates epsilon boxplots and counterexample plots for the results obtained from the CIFAR formal verification analysis.
 
 ```sh
-./examples/cifar_formal_reporting.py -s 9 37 103 183 255 372 398 684 845 966 1196 1200 1878 1988 2081 2135 2246 2372 2584 2663 2954 3004 3497 3510 3858 4195 5047 5087 5195 5587 5616 5644 5858 6518 6622 6915 8213 8562 9090 9187 9198 9261 9358 9472 9605 9723 9749 9810 9941 9974
+./examples/cifar_formal_reporting.py -s 64 150 621 698 997 1535 1658 1724 1988 2018 2135 2194 2370 2793 3000 3017 3130 3141 3328 3634 3829 4076 4131 4714 4770 4905 4937 5435 5526 5714 5785 5947 6046 6372 6487 6544 7113 7581 7629 7718 8039 8059 8190 8343 8588 8829 8988 9155 9941 9981
 ```
