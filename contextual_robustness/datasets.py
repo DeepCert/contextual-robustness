@@ -60,7 +60,6 @@ def load_gtsrb() -> tuple:
     y_train = _fix_gtsrb_labels(y_train)
     y_train = to_categorical(y_train)
 
-
     mask = np.zeros_like(y_test)
     for i in classes:
         mask = np.logical_or(mask, y_test == i)

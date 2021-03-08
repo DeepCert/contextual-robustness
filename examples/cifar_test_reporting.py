@@ -8,16 +8,13 @@ from contextual_robustness.utils import parse_indexes
 # reduce tensorflow log level
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-def main(outdir, sample_indexes, image_formats):
+def main(models, transform_names, outdir, sample_indexes, image_formats):
     # load dataset
     _, _, X_test, Y_test, _ = load_cifar()
 
-    # define models
-    models = ('4a', '4b', '5a', '5b', '6a', '6b')
-
     # generate plots for each model/transform combo
     cr_objects = []
-    for transform in transforms.keys():
+    for transform in transform_names:
         transform_name = transform.capitalize()
         for m in models:
             model_name = f'Model {m}'
@@ -61,7 +58,7 @@ def main(outdir, sample_indexes, image_formats):
 
     # generate accuracy reports comparing all models on each transform
     linestyles = ('--','--', '-', '-', ':', ':')
-    for transform in transforms.keys():
+    for transform in transform_names:
         transform_name = transform.capitalize()
         transform_cr_objects = [cr for cr in cr_objects if cr.transform_name.lower() == transform]
         print(f'{("-"*80)}\nGenerating {transform_name} accuracy report for models {", ".join(models)}\n{("-"*80)}')
@@ -79,6 +76,14 @@ if __name__ == '__main__':
     from argparse import ArgumentParser
 
     parser = ArgumentParser()
+    parser.add_argument('-m', '--models',
+        nargs='+',
+        default=['4a', '4b', '5a', '5b', '6a', '6b'],
+        help='model(s) to analyze')
+    parser.add_argument('-t', '--transforms',
+        nargs='+',
+        default=['haze', 'contrast', 'blur'],
+        help='image transform(s) to test')
     parser.add_argument('-o', '--outdir',
         default='./results/cifar/test/images',
         help='output directory')
@@ -92,4 +97,4 @@ if __name__ == '__main__':
         help='image format(s) (png and/or pdf)')
     args = parser.parse_args()
     
-    main(args.outdir, parse_indexes(args.sampleindexes), args.formats)
+    main(args.models, args.transforms, args.outdir, parse_indexes(args.sampleindexes), args.formats)

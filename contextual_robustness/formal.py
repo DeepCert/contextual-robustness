@@ -141,7 +141,7 @@ class ContextualRobustnessFormal(_BaseContextualRobustness):
             guess = lower + (upper - lower) / 2.0
             verified, pred, cex = self._find_counterexample(x, y, guess, x_index=index)
             if self._verbosity > 1:
-                print(f'evaluating image:{index}@epsilon:{guess}, label:{actual_label}, pred:{pred}')
+                print(f'evaluated image:{index}@epsilon:{guess}, label:{actual_label}, pred:{pred}')
             if verified:
                 # correct prediction
                 lower = guess

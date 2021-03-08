@@ -8,15 +8,12 @@ from contextual_robustness.utils import parse_indexes, remove_softmax_activation
 # reduce tensorflow log level
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-def main(outdir, sample_indexes, image_formats):
+def main(models, transform_names, outdir, sample_indexes, image_formats):
     # load dataset
     _, _, X_test, Y_test, _ = load_cifar()
 
-    # define transforms & models
-    models = ('4a', '4b')
-
     # analyze each model on each transform
-    for transform in transforms.keys():
+    for transform in transform_names:
         transform_name = transform.capitalize()
         for m in models:
             model_name = f'Model{m}'
@@ -61,6 +58,14 @@ if __name__ == '__main__':
     from argparse import ArgumentParser
 
     parser = ArgumentParser()
+    parser.add_argument('-m', '--models',
+        nargs='+',
+        default=['4a', '4b'],
+        help='model(s) to analyze')
+    parser.add_argument('-t', '--transforms',
+        nargs='+',
+        default=['encode_haze', 'linf'],
+        help='image transform(s) to test')
     parser.add_argument('-o', '--outdir',
         default='./results/cifar/formal/images',
         help='output directory')
@@ -74,4 +79,4 @@ if __name__ == '__main__':
         help='image format(s) (png and/or pdf)')
     args = parser.parse_args()
     
-    main(args.outdir, parse_indexes(args.sampleindexes), args.formats)
+    main(args.models, args.transforms, args.outdir, parse_indexes(args.sampleindexes), args.formats)
