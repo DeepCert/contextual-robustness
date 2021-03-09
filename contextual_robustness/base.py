@@ -145,14 +145,23 @@ class _BaseContextualRobustness(metaclass=ABCMeta):
         return self._X, self._Y
     
     @property
-    def image_shape(self) -> typing.Tuple[int]:
+    def image_shape(self) -> typing.Tuple[int, int, int]:
         '''image_shape property
 
         Returns:
-            tuple: shape of images in X
+            tuple[int, int, int]: shape of images in X
         '''
         return self.dataset[0].shape[1:]
     
+    @property
+    def image_size(self) -> typing.Tuple[int, int]:
+        '''image_size property
+
+        Returns:
+            tuple[int, int]: size of images (width, height)
+        '''
+        return self.image_shape[0:2]
+
     @property
     def n_pixels(self) -> int:
         '''n_pixels property
