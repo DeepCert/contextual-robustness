@@ -18,9 +18,9 @@ def _fix_gtsrb_labels(labels:list) -> list:
     Returns:
         list: list of fixed labels
     '''
-    labels = labels -1
+    labels = labels - 1
     for i in range(labels.shape[0]):
-        if (labels[i] >5 ):
+        if labels[i] > 5:
             labels[i] -= 1
     return labels
 
