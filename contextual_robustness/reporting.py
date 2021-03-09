@@ -4,7 +4,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import ImageGrid
 from contextual_robustness.base import ContextualRobustness
-from contextual_robustness.utils import create_output_path
+from contextual_robustness.utils import create_output_path, resize_image
+from contextual_robustness.datasets import load_nocex_image
+
+no_cex_image = load_nocex_image()
 
 # ======================================================================
 # ContextualRobustnessReporting
@@ -91,6 +94,7 @@ class ContextualRobustnessReporting:
                 mean_epsilon = np.mean(sorted_df.epsilon)
                 upper_df = sorted_df[sorted_df.epsilon >= mean_epsilon]
                 x_orig = X[upper_df['image'].iloc[0]]
+                x_cex = resize_image(no_cex_image, cr.image_size)
                 for idx in upper_df['image']:
                     if cr.get_counterexample(idx) is not None:
                         x_orig = X[idx]
