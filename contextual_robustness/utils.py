@@ -1,4 +1,4 @@
-import os, typing, time
+import os, typing, time, cv2
 import tensorflow as tf
 import numpy as np
 import pandas as pd
@@ -60,6 +60,18 @@ def normalize(X:np.array) -> np.array:
         np.array: normalized images
     '''
     return X / 255.0
+
+def resize_image(image:np.array, size:typing.Tuple[int, int]) -> np.array:
+    '''resizes an image
+
+    Args:
+        image (np.array): the original image
+        size (typing.Tuple[int, int]): size of resized image (width, height)
+
+    Returns:
+        np.array: resized image
+    '''
+    return cv2.resize(image, dsize=size, interpolation=cv2.INTER_CUBIC)
 
 def softargmax(y:np.array) -> np.array:
     '''Applies softmax & argmax to emulate the softmax output layer of a tensorflow model
