@@ -2,7 +2,7 @@ import typing
 import numpy as np
 import pandas as pd
 import tensorflow as tf
-from contextual_robustness.base import _BaseContextualRobustness, ContextualRobustness, Techniques, defaults
+from contextual_robustness.base import _BaseContextualRobustness, ContextualRobustness, Techniques, DEFAULTS
 
 # ======================================================================
 # ContextualRobustnessTest
@@ -37,10 +37,10 @@ class ContextualRobustnessTest(_BaseContextualRobustness):
         transform_fn:callable=lambda x: x,
         transform_args:dict=dict(),
         transform_name:str='',
-        eps_lower:float=defaults['eps_lower'],
-        eps_upper:float=defaults['eps_upper'],
-        eps_interval:float=defaults['eps_interval'],
-        verbosity:int=defaults['verbosity']
+        eps_lower:float=DEFAULTS['eps_lower'],
+        eps_upper:float=DEFAULTS['eps_upper'],
+        eps_interval:float=DEFAULTS['eps_interval'],
+        verbosity:int=DEFAULTS['verbosity']
         ) -> ContextualRobustness:
         # Execute the superclass's constructor
         super().__init__(
