@@ -59,18 +59,18 @@ class _BaseContextualRobustness(metaclass=ABCMeta):
     '''
     def __init__(
         self,
-        model_path='',
-        model_name='',
-        transform_fn=lambda x: x,
-        transform_args=dict(),
-        transform_name='',
-        X=np.array([]),
-        Y=np.array([]),
-        sample_indexes=[],
-        eps_lower=DEFAULTS['eps_lower'],
-        eps_upper=DEFAULTS['eps_upper'],
-        eps_interval=DEFAULTS['eps_interval'],
-        verbosity=DEFAULTS['verbosity'],
+        model_path:str='',
+        model_name:str='',
+        transform_fn:callable=lambda x: x,
+        transform_args:dict=dict(),
+        transform_name:str='',
+        X:np.array=np.array([]),
+        Y:np.array=np.array([]),
+        sample_indexes:list=[],
+        eps_lower:float=DEFAULTS['eps_lower'],
+        eps_upper:float=DEFAULTS['eps_upper'],
+        eps_interval:float=DEFAULTS['eps_interval'],
+        verbosity:int=DEFAULTS['verbosity'],
         ) -> ContextualRobustness:
         assert bool(model_path), 'model_path is required'
         assert X.shape[0] == Y.shape[0], 'X and Y must have equal number of items'

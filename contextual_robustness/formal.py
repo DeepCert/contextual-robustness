@@ -36,20 +36,20 @@ class ContextualRobustnessFormal(_BaseContextualRobustness):
     '''
     def __init__(
         self,
-        model_path='',
-        model_name='',
-        model_args=dict(),
-        transform_fn=lambda x: x,
-        transform_args=dict(),
-        transform_name='',
-        X=np.array([]),
-        Y=np.array([]),
-        sample_indexes=[],
-        eps_lower=DEFAULTS['eps_lower'],
-        eps_upper=DEFAULTS['eps_upper'],
-        eps_interval=DEFAULTS['eps_interval'],
-        marabou_options=dict(verbosity=DEFAULTS['marabou_verbosity']),
-        verbosity=DEFAULTS['verbosity']
+        model_path:str='',
+        model_name:str='',
+        model_args:dict=dict(),
+        transform_fn:callable=lambda x: x,
+        transform_args:dict=dict(),
+        transform_name:str='',
+        X:np.array=np.array([]),
+        Y:np.array=np.array([]),
+        sample_indexes:list=[],
+        eps_lower:float=DEFAULTS['eps_lower'],
+        eps_upper:float=DEFAULTS['eps_upper'],
+        eps_interval:float=DEFAULTS['eps_interval'],
+        marabou_options:dict=dict(verbosity=DEFAULTS['marabou_verbosity']),
+        verbosity:int=DEFAULTS['verbosity']
         ) -> ContextualRobustness:
         self._model_args = model_args
         self._marabou_options = marabou_options
