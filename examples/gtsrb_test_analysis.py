@@ -17,7 +17,7 @@ def main(models, transform_names, outdir, sample_indexes):
         transform_name = transform.capitalize()
         for m in models:
             model_name = f'Model{m}'
-            model_path = f'./models/gtsb/model{m}.h5'
+            model_path = f'./models/gtsrb/model{m}.h5'
             print(f'{("-"*80)}\nAnalyzing {model_name} {transform_name}\n{("-"*80)}')
             cr = ContextualRobustnessTest(
                 model_path=model_path,
@@ -47,7 +47,7 @@ if __name__ == '__main__':
         default=['haze', 'contrast', 'blur'],
         help='image transform(s) to test')
     parser.add_argument('-o', '--outdir',
-        default='./results/gtsb/test/data',
+        default='./results/gtsrb/test/data',
         help='output directory')
     parser.add_argument('-s', '--sampleindexes',
         nargs='*',

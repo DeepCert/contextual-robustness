@@ -1,9 +1,9 @@
 #!./venv/bin/python
 import os
-from contextual_robustness import ContextualRobustnessFormal, ContextualRobustnessReporting
-from contextual_robustness.transforms import formal_transforms as transforms
+from contextual_robustness import ContextualRobustnessTest, ContextualRobustnessReporting
 from contextual_robustness.datasets import load_gtsrb
-from contextual_robustness.utils import parse_indexes, remove_softmax_activation
+from contextual_robustness.transforms import test_transforms as transforms
+from contextual_robustness.utils import parse_indexes
 
 # reduce tensorflow log level
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
@@ -12,24 +12,17 @@ def main(models, transform_names, outdir, sample_indexes, image_formats):
     # load dataset
     _, _, X_test, Y_test, _ = load_gtsrb()
 
-    # analyze each model on each transform
+    # generate plots for each model/transform combo
+    cr_objects = []
     for transform in transform_names:
         transform_name = transform.capitalize()
         for m in models:
-            model_name = f'Model{m}'
-            model_path = f'./models/gtsb/model{m}-verification'
-
-            # create a copy of the h5 model without softmax activation
-            remove_softmax_activation(
-                f'./models/gtsb/model{m}.h5',
-                save_path=model_path
-                )
-
+            model_name = f'Model {m}'
             print(f'{("-"*80)}\nGenerating plots for {model_name} {transform_name}\n{("-"*80)}')
-            cr = ContextualRobustnessFormal(
-                model_path=model_path,
+            # instantiate ContextualRobustness object
+            cr = ContextualRobustnessTest(
+                model_path=f'./models/gtsrb/model{m}.h5',
                 model_name=model_name,
-                model_args=dict(modelType='savedModel_v2'),
                 X=X_test,
                 Y=Y_test,
                 transform_fn=transforms[transform]['fn'],
@@ -37,10 +30,12 @@ def main(models, transform_names, outdir, sample_indexes, image_formats):
                 transform_name=transform_name,
                 sample_indexes=sample_indexes
                 )
+            # load results from csv
             cr.load_results(
-                epsilons_path=os.path.join('./results/gtsb/formal/data', f'model{m}-{transform}.csv'),
-                counterexamples_path=os.path.join('./results/gtsb/formal/data', f'model{m}-{transform}-counterexamples.p')
+                epsilons_path=os.path.join('./results/gtsrb/test/data', f'model{m}-{transform}.csv'),
+                counterexamples_path=os.path.join('./results/gtsrb/test/data', f'model{m}-{transform}-counterexamples.p')
                 )
+            cr_objects.append(cr)
             
             # generate plots for the model/transform
             for image_format in image_formats:
@@ -53,6 +48,29 @@ def main(models, transform_names, outdir, sample_indexes, image_formats):
                     cr,
                     outfile=os.path.join(out_dir, f'model{m}-{transform}_counterexamples.{image_format}')
                     )
+                ContextualRobustnessReporting.generate_class_accuracy_plot(
+                    cr,
+                    outfile=os.path.join(out_dir, f'model{m}-{transform}_class-accuracy.{image_format}'),
+                    legend_fontsize=16,
+                    axis_fontsize=20,
+                    legend_loc='lower left'
+                    )
+
+    # generate accuracy reports comparing all models on each transform
+    linestyles = ('--','--', '-', '-', ':', ':')
+    for transform in transform_names:
+        transform_name = transform.capitalize()
+        transform_cr_objects = [cr for cr in cr_objects if cr.transform_name.lower() == transform]
+        print(f'{("-"*80)}\nGenerating {transform_name} accuracy report for models {", ".join(models)}\n{("-"*80)}')
+        for image_format in image_formats:
+            out_dir = os.path.join(outdir, f'{image_format}')
+            ContextualRobustnessReporting.generate_accuracy_report_plot(
+                transform_cr_objects,
+                outfile=os.path.join(out_dir, f'gtsrb-{transform}_accuracy.{image_format}'),
+                linestyles=linestyles,
+                legend_fontsize=16,
+                axis_fontsize=20
+                )
 
 if __name__ == '__main__':
     from argparse import ArgumentParser
@@ -60,14 +78,14 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('-m', '--models',
         nargs='+',
-        default=['1a', '1b'],
+        default=['1a', '1b', '2a', '2b', '3a', '3b'],
         help='model(s) to analyze')
     parser.add_argument('-t', '--transforms',
         nargs='+',
-        default=['encode_haze', 'linf'],
+        default=['haze', 'contrast', 'blur'],
         help='image transform(s) to test')
     parser.add_argument('-o', '--outdir',
-        default='./results/gtsb/formal/images',
+        default='./results/gtsrb/test/images',
         help='output directory')
     parser.add_argument('-s', '--sampleindexes',
         nargs='*',
