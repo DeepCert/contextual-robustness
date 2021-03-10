@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import ImageGrid
 from contextual_robustness.base import ContextualRobustness
-from contextual_robustness.utils import create_output_path, resize_image
+from contextual_robustness.utils import _create_output_path, resize_image
 from contextual_robustness.datasets import _load_placeholder_images
 
 PLACEHOLDERS = _load_placeholder_images()
@@ -49,7 +49,7 @@ class ContextualRobustnessReporting:
         plt.ylabel(ylabel, fontsize=axis_fontsize, weight=fontweight)
         ax.tick_params(axis='both', labelsize=axis_fontsize)
 
-        create_output_path(outfile)
+        _create_output_path(outfile)
         plt.savefig(outfile, bbox_inches='tight')
         plt.close()
         print(f'saved epsilons plot to {outfile}')
@@ -105,7 +105,7 @@ class ContextualRobustnessReporting:
             gridImage[c + ncols].imshow(x_cex)
 
         plt.axis('off')
-        create_output_path(outfile)
+        _create_output_path(outfile)
         fig.savefig(outfile, bbox_inches='tight')
         plt.close()
         print(f'saved counterexamples plot to {outfile}')
@@ -169,7 +169,7 @@ class ContextualRobustnessReporting:
         plt.xlabel('Epsilon', fontsize=axis_fontsize)
         plt.ylabel('Accuracy', fontsize=axis_fontsize)
 
-        create_output_path(outfile)
+        _create_output_path(outfile)
         plt.savefig(outfile, bbox_inches='tight')
         plt.close()
         print(f'saved class accuracy report plot to {outfile}')
@@ -230,7 +230,7 @@ class ContextualRobustnessReporting:
         plt.tick_params(axis='both', labelsize=axis_fontsize)
         plt.xlabel('Epsilon', fontsize=axis_fontsize)
         plt.ylabel('Accuracy', fontsize=axis_fontsize)
-        create_output_path(outfile)
+        _create_output_path(outfile)
         plt.savefig(outfile, bbox_inches='tight')
         plt.close()
         print(f'saved accuracy report plot to {outfile}')

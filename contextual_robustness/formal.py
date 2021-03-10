@@ -2,7 +2,7 @@ import os, sys, typing
 import numpy as np
 import pandas as pd
 import tensorflow as tf
-from contextual_robustness.utils import create_output_path, softargmax, get_file_extension
+from contextual_robustness.utils import softargmax, _get_file_extension
 from contextual_robustness.base import _BaseContextualRobustness, Techniques, ContextualRobustness, defaults
 
 # TODO: remove sys.path.append after maraboupy pip package is available.
@@ -88,7 +88,7 @@ class ContextualRobustnessFormal(_BaseContextualRobustness):
             MarabouNetwork: the MarabouNetwork object
         '''
         valid_exts = ('.nnet', '', '.pb', '.h5', '.hdf5', '.onnx')
-        ext = get_file_extension(model_path)
+        ext = _get_file_extension(model_path)
         assert ext in valid_exts, 'Model must be .nnet, .pb, .h5, or .onnx'
         if ext == '.nnet':
             return Marabou.read_nnet(model_path, **self._model_args)
@@ -108,7 +108,7 @@ class ContextualRobustnessFormal(_BaseContextualRobustness):
         Returns:
             list[int]: Indexes of correctly predicted samples from dataset
         '''
-        ext = get_file_extension(self._model_path)
+        ext = _get_file_extension(self._model_path)
         if ext == '.nnet' or ext == '.onnx':
             # For NNet & ONNX models, use Marabou's 'evaluate' to make predictions
             return [i for i in self._sample_indexes if np.argmax(softargmax(self._model.evaluate(X[i])[0])) == np.argmax(Y[i])]

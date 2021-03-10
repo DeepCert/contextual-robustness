@@ -1,7 +1,7 @@
 import enum, pickle, typing
 import numpy as np
 import pandas as pd
-from contextual_robustness.utils import set_df_dtypes, create_output_path, _set_tf_log_level, Timer, ms_to_human
+from contextual_robustness.utils import set_df_dtypes, _create_output_path, _set_tf_log_level, Timer, _ms_to_human
 from abc import ABCMeta, abstractmethod
 
 _set_tf_log_level()
@@ -324,13 +324,13 @@ class _BaseContextualRobustness(metaclass=ABCMeta):
         df = pd.DataFrame(data, columns=('image', 'class', 'predicted', 'epsilon', 'lower', 'upper', 'time'))
         self._results = set_df_dtypes(df, results_dtypes)
         if epsilons_outpath:
-            create_output_path(epsilons_outpath)
+            _create_output_path(epsilons_outpath)
             self._results.to_csv(epsilons_outpath)
         if counterexamples_outpath:
-            create_output_path(counterexamples_outpath)
+            _create_output_path(counterexamples_outpath)
             with open(counterexamples_outpath, 'wb') as f:
                 pickle.dump(self.counterexamples, f)
-        print(f'completed analysis of {df.shape[0]} samples in {ms_to_human(df["time"].sum())}.')
+        print(f'completed analysis of {df.shape[0]} samples in {_ms_to_human(df["time"].sum())}.')
         return self
     
     def load_results(self, epsilons_path:str='', counterexamples_path:str='') -> ContextualRobustness:

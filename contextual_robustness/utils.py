@@ -15,7 +15,7 @@ def _set_tf_log_level(level:int=1):
     assert level in log_levels.keys(), f'unsupported TF log level. supported:{log_levels.keys()}'
     tf.get_logger().setLevel(log_levels.get(level))
 
-def create_output_path(outpath:str):
+def _create_output_path(outpath:str):
     '''Creates any non-existent folder(s) in the outpath
 
     Args:
@@ -24,7 +24,7 @@ def create_output_path(outpath:str):
     dirpath, _ = os.path.split(outpath)
     Path(dirpath).mkdir(parents=True, exist_ok=True)
 
-def get_file_extension(filepath:str) -> str:
+def _get_file_extension(filepath:str) -> str:
     '''Gets the extension from a filepath.
 
     Args:
@@ -34,6 +34,26 @@ def get_file_extension(filepath:str) -> str:
         str: The file's extension (e.g. '.txt')
     '''
     return Path(filepath).suffix
+
+def _ms_to_human(ms:int) -> str:
+    '''converts milliseconds to human-readable string
+
+    Args:
+        ms (int): number of milliseconds
+
+    Returns:
+        str: human-readable string in format "[h hours], [m minutes], [s seconds]" OR "[ms milliseconds]"
+    '''
+    if ms < 1000:
+        return f'{ms} milliseconds'
+    seconds = int((ms / 1000) % 60)
+    minutes = int((ms / (1000 * 60)) % 60)
+    hours = int((ms / (1000 * 60 * 60)) % 24)
+    output = f'{seconds} seconds'
+    output = f'{minutes} minutes, {output}' if minutes or hours else output
+    output = f'{hours} hours, {output}' if hours else output
+    return output
+
 
 def remove_softmax_activation(model_path:str, save_path:str='') -> tf.keras.Model:
     '''Prepares a classifier with softmax activation for verification by 
@@ -147,25 +167,6 @@ def set_df_dtypes(df:pd.DataFrame, dtypes:dict) -> pd.DataFrame:
         if df.get(k) is not None:
             df[k] = df[k].astype(v)
     return df
-
-def ms_to_human(ms:int) -> str:
-    '''converts milliseconds to human-readable string
-
-    Args:
-        ms (int): number of milliseconds
-
-    Returns:
-        str: human-readable string in format "[h hours], [m minutes], [s seconds]" OR "[ms milliseconds]"
-    '''
-    if ms < 1000:
-        return f'{ms} milliseconds'
-    seconds = int((ms / 1000) % 60)
-    minutes = int((ms / (1000 * 60)) % 60)
-    hours = int((ms / (1000 * 60 * 60)) % 24)
-    output = f'{seconds} seconds'
-    output = f'{minutes} minutes, {output}' if minutes or hours else output
-    output = f'{hours} hours, {output}' if hours else output
-    return output
 
 class Timer:
     '''A simple timer class'''
