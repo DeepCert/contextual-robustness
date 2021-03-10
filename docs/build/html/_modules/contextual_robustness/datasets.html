@@ -153,15 +153,17 @@
            <div itemprop="articleBody">
             
   <h1>Source code for contextual_robustness.datasets</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">pickle</span>
+<span></span><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">pickle</span><span class="o">,</span> <span class="nn">typing</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">tensorflow.keras.utils</span> <span class="kn">import</span> <span class="n">to_categorical</span>
 <span class="kn">from</span> <span class="nn">tensorflow.keras.datasets</span> <span class="kn">import</span> <span class="n">cifar10</span>
 <span class="kn">from</span> <span class="nn">contextual_robustness.utils</span> <span class="kn">import</span> <span class="n">normalize</span>
 
 <span class="n">DATA_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;../data&#39;</span><span class="p">))</span>
 <span class="n">GTSRB_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">,</span> <span class="s1">&#39;gtsb&#39;</span><span class="p">)</span>
+<span class="n">PLACEHOLDERS_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">,</span> <span class="s1">&#39;placeholders&#39;</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">_fix_gtsrb_labels</span><span class="p">(</span><span class="n">labels</span><span class="p">:</span><span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
     <span class="sd">&#39;&#39;&#39;fixes the GTRSB labels after eliminating a subset of classes</span>
@@ -172,20 +174,20 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        list: list of fixed labels</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">labels</span> <span class="o">=</span> <span class="n">labels</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">labels</span> <span class="o">-</span> <span class="mi">1</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">labels</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span><span class="mi">5</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
             <span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
     <span class="k">return</span> <span class="n">labels</span>
 
-<div class="viewcode-block" id="load_gtsrb"><a class="viewcode-back" href="../../contextual_robustness.html#contextual_robustness.datasets.load_gtsrb">[docs]</a><span class="k">def</span> <span class="nf">load_gtsrb</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
-    <span class="sd">&#39;&#39;&#39;Loads the GTSRB dataset</span>
+<div class="viewcode-block" id="load_gtsrb"><a class="viewcode-back" href="../../contextual_robustness.html#contextual_robustness.datasets.load_gtsrb">[docs]</a><span class="k">def</span> <span class="nf">load_gtsrb</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+    <span class="sd">&#39;&#39;&#39;Loads a subset of classes from the GTSRB dataset (classes = 1,2,3,4,5,7,8)</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        tuple: (X_train, Y_train, X_test, Y_test, labels)</span>
+<span class="sd">        tuple[np.array, np.array, np.array, np.array, pd.DataFrame]: (X_train, Y_train, X_test, Y_test, labels)</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">train_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">GTSRB_PATH</span><span class="p">,</span> <span class="s1">&#39;train.p&#39;</span><span class="p">)</span>
-    <span class="n">test_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">GTSRB_PATH</span><span class="p">,</span> <span class="s1">&#39;train.p&#39;</span><span class="p">)</span>
+    <span class="n">test_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">GTSRB_PATH</span><span class="p">,</span> <span class="s1">&#39;test.p&#39;</span><span class="p">)</span>
     <span class="n">labels_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">GTSRB_PATH</span><span class="p">,</span> <span class="s1">&#39;signnames.csv&#39;</span><span class="p">)</span>
 
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">train_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -197,17 +199,15 @@
     <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <span class="n">train_data</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">],</span> <span class="n">train_data</span><span class="p">[</span><span class="s1">&#39;labels&#39;</span><span class="p">]</span>
     <span class="n">X_test</span><span class="p">,</span>  <span class="n">y_test</span>  <span class="o">=</span> <span class="n">test_data</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">],</span> <span class="n">test_data</span><span class="p">[</span><span class="s1">&#39;labels&#39;</span><span class="p">]</span>
 
-    <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">labels_path</span><span class="p">)</span>
-
-    <span class="n">X_train</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
-    <span class="n">X_test</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+    <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">X_train</span><span class="p">),</span> <span class="n">normalize</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 
     <span class="n">classes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">labels_path</span><span class="p">)</span>
     <span class="n">labels</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;ClassId&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">classes</span><span class="p">)]</span>
 
     <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">y_train</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
-        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">==</span> <span class="n">i</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">==</span> <span class="n">c</span><span class="p">)</span>
 
     <span class="n">X_train</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
     <span class="n">y_train</span> <span class="o">=</span> <span class="n">y_train</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
@@ -215,10 +215,9 @@
     <span class="n">y_train</span> <span class="o">=</span> <span class="n">_fix_gtsrb_labels</span><span class="p">(</span><span class="n">y_train</span><span class="p">)</span>
     <span class="n">y_train</span> <span class="o">=</span> <span class="n">to_categorical</span><span class="p">(</span><span class="n">y_train</span><span class="p">)</span>
 
-
     <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">y_test</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
-        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">==</span> <span class="n">i</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">==</span> <span class="n">c</span><span class="p">)</span>
 
     <span class="n">X_test</span> <span class="o">=</span> <span class="n">X_test</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
     <span class="n">y_test</span> <span class="o">=</span> <span class="n">y_test</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
@@ -228,11 +227,11 @@
 
     <span class="k">return</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">labels</span></div>
 
-<div class="viewcode-block" id="load_cifar"><a class="viewcode-back" href="../../contextual_robustness.html#contextual_robustness.datasets.load_cifar">[docs]</a><span class="k">def</span> <span class="nf">load_cifar</span><span class="p">():</span>
+<div class="viewcode-block" id="load_cifar"><a class="viewcode-back" href="../../contextual_robustness.html#contextual_robustness.datasets.load_cifar">[docs]</a><span class="k">def</span> <span class="nf">load_cifar</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
     <span class="sd">&#39;&#39;&#39;Loads the CIFAR dataset</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        tuple: (X_train, Y_train, X_test, Y_test, labels)</span>
+<span class="sd">        typing.Tuple[np.array, np.array, np.array, np.array, pd.DataFrame]: (X_train, Y_train, X_test, Y_test, labels)</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">labels</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;airplane&#39;</span><span class="p">,</span> <span class="s1">&#39;automobile&#39;</span><span class="p">,</span> <span class="s1">&#39;bird&#39;</span><span class="p">,</span> <span class="s1">&#39;cat&#39;</span><span class="p">,</span> <span class="s1">&#39;deer&#39;</span><span class="p">,</span> <span class="s1">&#39;dog&#39;</span><span class="p">,</span> <span class="s1">&#39;frog&#39;</span><span class="p">,</span> <span class="s1">&#39;horse&#39;</span><span class="p">,</span> <span class="s1">&#39;ship&#39;</span><span class="p">,</span> <span class="s1">&#39;truck&#39;</span><span class="p">)</span>
     <span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">),</span> <span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">)</span> <span class="o">=</span> <span class="n">cifar10</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
@@ -241,6 +240,19 @@
     <span class="c1"># one-hot encode labels</span>
     <span class="n">Y_train</span><span class="p">,</span> <span class="n">Y_test</span> <span class="o">=</span> <span class="n">to_categorical</span><span class="p">(</span><span class="n">Y_train</span><span class="p">),</span> <span class="n">to_categorical</span><span class="p">(</span><span class="n">Y_test</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">,</span> <span class="n">labels</span></div>
+
+<span class="k">def</span> <span class="nf">_load_placeholder_images</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">]:</span>
+    <span class="sd">&#39;&#39;&#39;Loads full-sized placeholder images (500x500)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict[str, np.array]: dict of placeholder images</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">no_cex</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PLACEHOLDERS_PATH</span><span class="p">,</span> <span class="s1">&#39;no-cex_500x500.png&#39;</span><span class="p">))[:,:,:</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">no_image</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PLACEHOLDERS_PATH</span><span class="p">,</span> <span class="s1">&#39;no-image_500x500.png&#39;</span><span class="p">))[:,:,:</span><span class="mi">3</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">no_cex</span><span class="o">=</span><span class="n">no_cex</span><span class="p">,</span>
+        <span class="n">no_image</span><span class="o">=</span><span class="n">no_image</span>
+        <span class="p">)</span>
 </pre></div>
 
            </div>

@@ -156,9 +156,10 @@
 <span></span><span class="kn">import</span> <span class="nn">enum</span><span class="o">,</span> <span class="nn">pickle</span><span class="o">,</span> <span class="nn">typing</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
-<span class="kn">from</span> <span class="nn">contextual_robustness.utils</span> <span class="kn">import</span> <span class="n">set_df_dtypes</span><span class="p">,</span> <span class="n">create_output_path</span>
+<span class="kn">from</span> <span class="nn">contextual_robustness.utils</span> <span class="kn">import</span> <span class="n">set_df_dtypes</span><span class="p">,</span> <span class="n">_create_output_path</span><span class="p">,</span> <span class="n">_set_tf_log_level</span><span class="p">,</span> <span class="n">Timer</span><span class="p">,</span> <span class="n">_ms_to_human</span>
 <span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
+
+<span class="n">_set_tf_log_level</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Techniques"><a class="viewcode-back" href="../../contextual_robustness.html#contextual_robustness.base.Techniques">[docs]</a><span class="k">class</span> <span class="nc">Techniques</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Verification techniques enum&#39;&#39;&#39;</span>
@@ -184,7 +185,8 @@
     <span class="s1">&#39;predicted&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">,</span>
     <span class="s1">&#39;epsilon&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
     <span class="s1">&#39;upper&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
-    <span class="s1">&#39;lower&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span>
+    <span class="s1">&#39;lower&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+    <span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span>
     <span class="p">}</span>
 
 <span class="c1"># ======================================================================</span>
@@ -298,14 +300,23 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_Y</span>
     
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">image_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">image_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="sd">&#39;&#39;&#39;image_shape property</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            tuple: shape of images in X</span>
+<span class="sd">            tuple[int, int, int]: shape of images in X</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
     
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">image_size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+        <span class="sd">&#39;&#39;&#39;image_size property</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple[int, int]: size of images (width, height)</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">n_pixels</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">&#39;&#39;&#39;n_pixels property</span>
@@ -449,6 +460,7 @@
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_correct_sample_indexes</span><span class="p">:</span>
             <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_Y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
             <span class="n">actual_label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+            <span class="n">timer</span> <span class="o">=</span> <span class="n">Timer</span><span class="p">(</span><span class="n">autostart</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">,</span> <span class="n">predicted_label</span><span class="p">,</span> <span class="n">counterexample</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_epsilon</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
             <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
                 <span class="s1">&#39;image&#39;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span>
@@ -456,22 +468,24 @@
                 <span class="s1">&#39;predicted&#39;</span><span class="p">:</span> <span class="n">predicted_label</span><span class="p">,</span>
                 <span class="s1">&#39;epsilon&#39;</span><span class="p">:</span> <span class="n">epsilon</span><span class="p">,</span>
                 <span class="s1">&#39;lower&#39;</span><span class="p">:</span> <span class="n">lower</span><span class="p">,</span>
-                <span class="s1">&#39;upper&#39;</span><span class="p">:</span> <span class="n">upper</span>
+                <span class="s1">&#39;upper&#39;</span><span class="p">:</span> <span class="n">upper</span><span class="p">,</span>
+                <span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="n">timer</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
                 <span class="p">})</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">save_counterexample</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">counterexample</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_verbosity</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;image:</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">, class:</span><span class="si">{</span><span class="n">actual_label</span><span class="si">}</span><span class="s1">, predcited:</span><span class="si">{</span><span class="n">predicted_label</span><span class="si">}</span><span class="s1">, epsilon:</span><span class="si">{</span><span class="n">epsilon</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;image:</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">, class:</span><span class="si">{</span><span class="n">actual_label</span><span class="si">}</span><span class="s1">, predcited:</span><span class="si">{</span><span class="n">predicted_label</span><span class="si">}</span><span class="s1">, epsilon:</span><span class="si">{</span><span class="n">epsilon</span><span class="si">}</span><span class="s1">, time:</span><span class="si">{</span><span class="n">timer</span><span class="o">.</span><span class="n">get_elapsed</span><span class="p">(</span><span class="n">as_string</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         
         <span class="c1"># generate dataframe and optionally save results to csv</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;image&#39;</span><span class="p">,</span> <span class="s1">&#39;class&#39;</span><span class="p">,</span> <span class="s1">&#39;predicted&#39;</span><span class="p">,</span> <span class="s1">&#39;epsilon&#39;</span><span class="p">,</span> <span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="s1">&#39;upper&#39;</span><span class="p">))</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;image&#39;</span><span class="p">,</span> <span class="s1">&#39;class&#39;</span><span class="p">,</span> <span class="s1">&#39;predicted&#39;</span><span class="p">,</span> <span class="s1">&#39;epsilon&#39;</span><span class="p">,</span> <span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="s1">&#39;upper&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_results</span> <span class="o">=</span> <span class="n">set_df_dtypes</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">results_dtypes</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">epsilons_outpath</span><span class="p">:</span>
-            <span class="n">create_output_path</span><span class="p">(</span><span class="n">epsilons_outpath</span><span class="p">)</span>
+            <span class="n">_create_output_path</span><span class="p">(</span><span class="n">epsilons_outpath</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_results</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">epsilons_outpath</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">counterexamples_outpath</span><span class="p">:</span>
-            <span class="n">create_output_path</span><span class="p">(</span><span class="n">counterexamples_outpath</span><span class="p">)</span>
+            <span class="n">_create_output_path</span><span class="p">(</span><span class="n">counterexamples_outpath</span><span class="p">)</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">counterexamples_outpath</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">counterexamples</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;completed analysis of </span><span class="si">{</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1"> samples in </span><span class="si">{</span><span class="n">_ms_to_human</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span>
     
     <span class="k">def</span> <span class="nf">load_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epsilons_path</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">counterexamples_path</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ContextualRobustness</span><span class="p">:</span>
