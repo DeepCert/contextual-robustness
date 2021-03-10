@@ -162,11 +162,11 @@
 <span class="kn">from</span> <span class="nn">contextual_robustness.utils</span> <span class="kn">import</span> <span class="n">normalize</span>
 
 <span class="n">DATA_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;../data&#39;</span><span class="p">))</span>
-<span class="n">GTSRB_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">,</span> <span class="s1">&#39;gtsb&#39;</span><span class="p">)</span>
+<span class="n">GTSRB_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">,</span> <span class="s1">&#39;gtsrb&#39;</span><span class="p">)</span>
 <span class="n">PLACEHOLDERS_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">,</span> <span class="s1">&#39;placeholders&#39;</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">_fix_gtsrb_labels</span><span class="p">(</span><span class="n">labels</span><span class="p">:</span><span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
-    <span class="sd">&#39;&#39;&#39;fixes the GTRSB labels after eliminating a subset of classes</span>
+    <span class="sd">&#39;&#39;&#39;fixes the GTSRB labels after eliminating a subset of classes</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        labels (list): list</span>
