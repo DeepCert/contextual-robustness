@@ -7,11 +7,11 @@ from tensorflow.keras.datasets import cifar10
 from contextual_robustness.utils import normalize
 
 DATA_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '../data'))
-GTSRB_PATH = os.path.join(DATA_PATH, 'gtsb')
+GTSRB_PATH = os.path.join(DATA_PATH, 'gtsrb')
 PLACEHOLDERS_PATH = os.path.join(DATA_PATH, 'placeholders')
 
 def _fix_gtsrb_labels(labels:list) -> list:
-    '''fixes the GTRSB labels after eliminating a subset of classes
+    '''fixes the GTSRB labels after eliminating a subset of classes
 
     Args:
         labels (list): list

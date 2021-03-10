@@ -2,10 +2,10 @@
 
 # Usage: ./scripts/setup_datasets.sh
 
-# unzip GTSB dataset
-if [[ ! -f ./data/gtsb/train.p || ! -f ./data/gtsb/test.p ]]; then
-    echo "Decompressing GTSB dataset"
-    cd ./data/gtsb
+# unzip GTSRB dataset
+if [[ ! -f ./data/gtsrb/train.p || ! -f ./data/gtsrb/test.p ]]; then
+    echo "Decompressing GTSRB dataset"
+    cd ./data/gtsrb
     tar -xzf ./train.p.tar.gz
     tar -xzf ./test.p.tar.gz
     cd -

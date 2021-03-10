@@ -20,8 +20,8 @@ def main(models, transform_names, outdir, sample_indexes):
             print(f'{("-"*80)}\nAnalyzing {model_name} {transform_name}\n{("-"*80)}')
             
             # create a copy of the h5 model without softmax activation
-            model_path = f'./models/gtsb/model{m}-verification'
-            remove_softmax_activation(f'./models/gtsb/model{m}.h5', save_path=model_path)
+            model_path = f'./models/gtsrb/model{m}-verification'
+            remove_softmax_activation(f'./models/gtsrb/model{m}.h5', save_path=model_path)
             
             # run analysis on modified model
             cr = ContextualRobustnessFormal(
@@ -54,7 +54,7 @@ if __name__ == '__main__':
         default=['encode_haze', 'encode_linf'],
         help='image transform(s) to test')
     parser.add_argument('-o', '--outdir',
-        default='./results/gtsb/formal/data',
+        default='./results/gtsrb/formal/data',
         help='output directory')
     parser.add_argument('-s', '--sampleindexes',
         nargs='*',

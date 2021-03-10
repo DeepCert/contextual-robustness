@@ -10,36 +10,36 @@ The example scripts support a one or more CLI arguments for things such as speci
 
 __Analysis:__
 
-The GTSRB test-based analysis script ([./examples/gtsb_test_analysis.py](https://github.com/DeepCert/contextual-robustness/tree/main/examples/gtsb_test_analysis.py)) analyzes [GTSRB models](https://github.com/DeepCert/contextual-robustness/tree/main/models#gtsrb-models) 1a, 1b, 2a, 2b, 3a, and 3b on all test samples from the GTSRB dataset and saves the results & counterexamples.
+The GTSRB test-based analysis script ([./examples/gtsrb_test_analysis.py](https://github.com/DeepCert/contextual-robustness/tree/main/examples/gtsrb_test_analysis.py)) analyzes [GTSRB models](https://github.com/DeepCert/contextual-robustness/tree/main/models#gtsrb-models) 1a, 1b, 2a, 2b, 3a, and 3b on all test samples from the GTSRB dataset and saves the results & counterexamples.
 
 ```sh
-./examples/gtsb_test_analysis.py
+./examples/gtsrb_test_analysis.py
 ```
 
 __Reporting:__
 
-The GTSRB test-based reporting script ([./examples/gtsb_test_reporting.py](https://github.com/DeepCert/contextual-robustness/tree/main/examples/gtsb_test_reporting.py)) generates epsilon boxplots, counterexample plots, class-accuracy charts, and model-accuracy comparison charts for the results obtained from the gtsrb test-based analysis.
+The GTSRB test-based reporting script ([./examples/gtsrb_test_reporting.py](https://github.com/DeepCert/contextual-robustness/tree/main/examples/gtsrb_test_reporting.py)) generates epsilon boxplots, counterexample plots, class-accuracy charts, and model-accuracy comparison charts for the results obtained from the gtsrb test-based analysis.
 
 ```sh
-./examples/gtsb_test_reporting.py
+./examples/gtsrb_test_reporting.py
 ```
 
 ## GTSRB Formal Verification Example
 
 __Analysis:__
 
-The GTSRB formal verification analysis script ([./examples/gtsb_formal_analysis.py](https://github.com/DeepCert/contextual-robustness/tree/main/examples/gtsb_formal_analysis.py)) analyzes [GTSRB models](https://github.com/DeepCert/contextual-robustness/tree/main/models#gtsrb-models) 1a and 1b on 35 test samples from the GTSRB dataset against "haze" and "l-inf" transforms using formal verification and saves the results & counterexamples.
+The GTSRB formal verification analysis script ([./examples/gtsrb_formal_analysis.py](https://github.com/DeepCert/contextual-robustness/tree/main/examples/gtsrb_formal_analysis.py)) analyzes [GTSRB models](https://github.com/DeepCert/contextual-robustness/tree/main/models#gtsrb-models) 1a and 1b on 35 test samples from the GTSRB dataset against "haze" and "l-inf" transforms using formal verification and saves the results & counterexamples.
 
 ```sh
-./examples/gtsb_formal_analysis.py -s 78 457 839 1042 1947 2897 2934 3063 3102 3142 3329 3606 3856 4657 4754 5105 5847 6150 6221 6531 6879 6900 7045 7273 7442 7945 8092 8345 8578 9011 9760 9823 9956 10192 11132
+./examples/gtsrb_formal_analysis.py -s 78 457 839 1042 1947 2897 2934 3063 3102 3142 3329 3606 3856 4657 4754 5105 5847 6150 6221 6531 6879 6900 7045 7273 7442 7945 8092 8345 8578 9011 9760 9823 9956 10192 11132
 ```
 
 __Reporting:__
 
-The GTSRB formal verification reporting script ([./examples/gtsb_formal_reporting.py](https://github.com/DeepCert/contextual-robustness/tree/main/examples/gtsb_formal_reporting.py)) generates epsilon boxplots and counterexample plots for the results obtained from the GTSRB formal verification analysis.
+The GTSRB formal verification reporting script ([./examples/gtsrb_formal_reporting.py](https://github.com/DeepCert/contextual-robustness/tree/main/examples/gtsrb_formal_reporting.py)) generates epsilon boxplots and counterexample plots for the results obtained from the GTSRB formal verification analysis.
 
 ```sh
-./examples/gtsb_formal_reporting.py -s 78 457 839 1042 1947 2897 2934 3063 3102 3142 3329 3606 3856 4657 4754 5105 5847 6150 6221 6531 6879 6900 7045 7273 7442 7945 8092 8345 8578 9011 9760 9823 9956 10192 11132
+./examples/gtsrb_formal_reporting.py -s 78 457 839 1042 1947 2897 2934 3063 3102 3142 3329 3606 3856 4657 4754 5105 5847 6150 6221 6531 6879 6900 7045 7273 7442 7945 8092 8345 8578 9011 9760 9823 9956 10192 11132
 ```
 
 ## CIFAR Test-Based Example
@@ -57,7 +57,7 @@ __Reporting:__
 The CIFAR test-based reporting script ([./examples/cifar_test_reporting.py](https://github.com/DeepCert/contextual-robustness/tree/main/examples/cifar_test_reporting.py)) generates epsilon boxplots, counterexample plots, class-accuracy charts, and model-accuracy comparison charts for the results obtained from the CIFAR test-based analysis.
 
 ```sh
-./examples/gtsb_test_reporting.py
+./examples/cifar_test_reporting.py
 ```
 
 ## CIFAR Formal Verification Example
