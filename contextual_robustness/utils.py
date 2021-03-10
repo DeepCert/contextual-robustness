@@ -5,7 +5,12 @@ import pandas as pd
 from pathlib import Path
 from scipy.special import softmax
 
-def set_tf_log_level(level:int=1):
+def _set_tf_log_level(level:int=1):
+    '''sets the tensorflow log level (0=FATAL, 1=ERROR, 2=WARN, 3=INFO, 4=DEBUG)
+
+    Args:
+        level (int, optional): integer for log level. Defaults to 1 (ERROR).
+    '''
     log_levels = {0: 'FATAL', 1: 'ERROR', 2: 'WARN', 3: 'INFO', 4: 'DEBUG'}
     assert level in log_levels.keys(), f'unsupported TF log level. supported:{log_levels.keys()}'
     tf.get_logger().setLevel(log_levels.get(level))

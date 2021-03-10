@@ -1,10 +1,10 @@
 import enum, pickle, typing
 import numpy as np
 import pandas as pd
-from contextual_robustness.utils import set_df_dtypes, create_output_path, set_tf_log_level, Timer, ms_to_human
+from contextual_robustness.utils import set_df_dtypes, create_output_path, _set_tf_log_level, Timer, ms_to_human
 from abc import ABCMeta, abstractmethod
 
-set_tf_log_level()
+_set_tf_log_level()
 
 class Techniques(enum.Enum):
     '''Verification techniques enum'''
