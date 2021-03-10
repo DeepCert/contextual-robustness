@@ -8,15 +8,12 @@ from contextual_robustness.utils import parse_indexes
 # reduce tensorflow log level
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-def main(outdir, sample_indexes):
+def main(models, transform_names, outdir, sample_indexes):
     # load dataset
     _, _, X_test, Y_test, _ = load_gtsrb()
 
-    # define models
-    models = ('1a', '1b', '2a', '2b', '3a', '3b')
-
     # analyze each model on each transform
-    for transform in transforms.keys():
+    for transform in transform_names:
         transform_name = transform.capitalize()
         for m in models:
             model_name = f'Model{m}'
@@ -41,6 +38,14 @@ if __name__ == '__main__':
     from argparse import ArgumentParser
 
     parser = ArgumentParser()
+    parser.add_argument('-m', '--models',
+        nargs='+',
+        default=['1a', '1b', '2a', '2b', '3a', '3b'],
+        help='model(s) to analyze')
+    parser.add_argument('-t', '--transforms',
+        nargs='+',
+        default=['haze', 'contrast', 'blur'],
+        help='image transform(s) to test')
     parser.add_argument('-o', '--outdir',
         default='./results/gtsb/test/data',
         help='output directory')
@@ -50,4 +55,4 @@ if __name__ == '__main__':
         help='list of indexes and/or ranges of samples to test (e.g. 1 2 10-20 100-110)')
     args = parser.parse_args()
     
-    main(args.outdir, parse_indexes(args.sampleindexes))
+    main(args.models, args.transforms, args.outdir, parse_indexes(args.sampleindexes))

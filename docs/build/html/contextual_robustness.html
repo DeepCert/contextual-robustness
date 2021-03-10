@@ -199,28 +199,28 @@
 <span id="contextual-robustness-datasets-module"></span><h2>contextual_robustness.datasets module<a class="headerlink" href="#module-contextual_robustness.datasets" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="contextual_robustness.datasets.load_cifar">
-<code class="sig-prename descclassname"><span class="pre">contextual_robustness.datasets.</span></code><code class="sig-name descname"><span class="pre">load_cifar</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/contextual_robustness/datasets.html#load_cifar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#contextual_robustness.datasets.load_cifar" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">contextual_robustness.datasets.</span></code><code class="sig-name descname"><span class="pre">load_cifar</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.array</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.array</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.array</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.array</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/contextual_robustness/datasets.html#load_cifar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#contextual_robustness.datasets.load_cifar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads the CIFAR dataset</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>(X_train, Y_train, X_test, Y_test, labels)</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>tuple</p>
+<dd class="field-even"><p>typing.Tuple[np.array, np.array, np.array, np.array, pd.DataFrame]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt id="contextual_robustness.datasets.load_gtsrb">
-<code class="sig-prename descclassname"><span class="pre">contextual_robustness.datasets.</span></code><code class="sig-name descname"><span class="pre">load_gtsrb</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">tuple</span><a class="reference internal" href="_modules/contextual_robustness/datasets.html#load_gtsrb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#contextual_robustness.datasets.load_gtsrb" title="Permalink to this definition">¶</a></dt>
-<dd><p>Loads the GTSRB dataset</p>
+<code class="sig-prename descclassname"><span class="pre">contextual_robustness.datasets.</span></code><code class="sig-name descname"><span class="pre">load_gtsrb</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.array</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.array</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.array</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.array</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/contextual_robustness/datasets.html#load_gtsrb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#contextual_robustness.datasets.load_gtsrb" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads a subset of classes from the GTSRB dataset (classes = 1,2,3,4,5,7,8)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>(X_train, Y_train, X_test, Y_test, labels)</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>tuple</p>
+<dd class="field-even"><p>tuple[np.array, np.array, np.array, np.array, pd.DataFrame]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -418,7 +418,21 @@
 <dd class="field-odd"><p>shape of images in X</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>tuple</p>
+<dd class="field-even"><p>tuple[int, int, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.formal.ContextualRobustnessFormal.image_size">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">image_size</span></code><a class="headerlink" href="#contextual_robustness.formal.ContextualRobustnessFormal.image_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>image_size property</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>size of images (width, height)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple[int, int]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -831,7 +845,21 @@
 <dd class="field-odd"><p>shape of images in X</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>tuple</p>
+<dd class="field-even"><p>tuple[int, int, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.test.ContextualRobustnessTest.image_size">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">image_size</span></code><a class="headerlink" href="#contextual_robustness.test.ContextualRobustnessTest.image_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>image_size property</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>size of images (width, height)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple[int, int]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -990,7 +1018,7 @@
 <span id="contextual-robustness-transforms-module"></span><h2>contextual_robustness.transforms module<a class="headerlink" href="#module-contextual_robustness.transforms" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="contextual_robustness.transforms.encode_haze">
-<code class="sig-prename descclassname"><span class="pre">contextual_robustness.transforms.</span></code><code class="sig-name descname"><span class="pre">encode_haze</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">network:</span> <span class="pre">&lt;Mock</span> <span class="pre">name='mock.MarabouNetwork'</span> <span class="pre">id='5923416672'&gt;</span></em>, <em class="sig-param"><span class="pre">image:</span> <span class="pre">numpy.array</span></em>, <em class="sig-param"><span class="pre">epsilon:</span> <span class="pre">float</span></em>, <em class="sig-param"><span class="pre">output_index:</span> <span class="pre">int</span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">&lt;Mock</span> <span class="pre">name=’mock.MarabouNetwork’</span> <span class="pre">id=’5923416672’&gt;</span><a class="reference internal" href="_modules/contextual_robustness/transforms.html#encode_haze"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#contextual_robustness.transforms.encode_haze" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">contextual_robustness.transforms.</span></code><code class="sig-name descname"><span class="pre">encode_haze</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">network:</span> <span class="pre">&lt;Mock</span> <span class="pre">name='mock.MarabouNetwork'</span> <span class="pre">id='6098659024'&gt;</span></em>, <em class="sig-param"><span class="pre">image:</span> <span class="pre">numpy.array</span></em>, <em class="sig-param"><span class="pre">epsilon:</span> <span class="pre">float</span></em>, <em class="sig-param"><span class="pre">output_index:</span> <span class="pre">int</span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">&lt;Mock</span> <span class="pre">name=’mock.MarabouNetwork’</span> <span class="pre">id=’6098659024’&gt;</span><a class="reference internal" href="_modules/contextual_robustness/transforms.html#encode_haze"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#contextual_robustness.transforms.encode_haze" title="Permalink to this definition">¶</a></dt>
 <dd><p>Encodes a haze transformation as a Marabou input query</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1012,7 +1040,7 @@
 
 <dl class="py function">
 <dt id="contextual_robustness.transforms.encode_linf">
-<code class="sig-prename descclassname"><span class="pre">contextual_robustness.transforms.</span></code><code class="sig-name descname"><span class="pre">encode_linf</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">network:</span> <span class="pre">&lt;Mock</span> <span class="pre">name='mock.MarabouNetwork'</span> <span class="pre">id='5923416672'&gt;</span></em>, <em class="sig-param"><span class="pre">image:</span> <span class="pre">numpy.array</span></em>, <em class="sig-param"><span class="pre">epsilon:</span> <span class="pre">float</span></em>, <em class="sig-param"><span class="pre">output_index:</span> <span class="pre">int</span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">&lt;Mock</span> <span class="pre">name=’mock.MarabouNetwork’</span> <span class="pre">id=’5923416672’&gt;</span><a class="reference internal" href="_modules/contextual_robustness/transforms.html#encode_linf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#contextual_robustness.transforms.encode_linf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">contextual_robustness.transforms.</span></code><code class="sig-name descname"><span class="pre">encode_linf</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">network:</span> <span class="pre">&lt;Mock</span> <span class="pre">name='mock.MarabouNetwork'</span> <span class="pre">id='6098659024'&gt;</span></em>, <em class="sig-param"><span class="pre">image:</span> <span class="pre">numpy.array</span></em>, <em class="sig-param"><span class="pre">epsilon:</span> <span class="pre">float</span></em>, <em class="sig-param"><span class="pre">output_index:</span> <span class="pre">int</span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">&lt;Mock</span> <span class="pre">name=’mock.MarabouNetwork’</span> <span class="pre">id=’6098659024’&gt;</span><a class="reference internal" href="_modules/contextual_robustness/transforms.html#encode_linf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#contextual_robustness.transforms.encode_linf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Encodes a linear perturbation as a Marabou input query</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1075,8 +1103,8 @@
 </dd></dl>
 
 <dl class="py function">
-<dt id="contextual_robustness.transforms.increaseContrast">
-<code class="sig-prename descclassname"><span class="pre">contextual_robustness.transforms.</span></code><code class="sig-name descname"><span class="pre">increaseContrast</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tg_min</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tg_max</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">numpy.array</span><a class="reference internal" href="_modules/contextual_robustness/transforms.html#increaseContrast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#contextual_robustness.transforms.increaseContrast" title="Permalink to this definition">¶</a></dt>
+<dt id="contextual_robustness.transforms.increase_contrast">
+<code class="sig-prename descclassname"><span class="pre">contextual_robustness.transforms.</span></code><code class="sig-name descname"><span class="pre">increase_contrast</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tg_min</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tg_max</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">numpy.array</span><a class="reference internal" href="_modules/contextual_robustness/transforms.html#increase_contrast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#contextual_robustness.transforms.increase_contrast" title="Permalink to this definition">¶</a></dt>
 <dd><p>Increases the contrast of the input image</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1099,32 +1127,101 @@
 </div>
 <div class="section" id="module-contextual_robustness.utils">
 <span id="contextual-robustness-utils-module"></span><h2>contextual_robustness.utils module<a class="headerlink" href="#module-contextual_robustness.utils" title="Permalink to this headline">¶</a></h2>
-<dl class="py function">
-<dt id="contextual_robustness.utils.create_output_path">
-<code class="sig-prename descclassname"><span class="pre">contextual_robustness.utils.</span></code><code class="sig-name descname"><span class="pre">create_output_path</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outpath</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/contextual_robustness/utils.html#create_output_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#contextual_robustness.utils.create_output_path" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates any non-existent folder(s) in the outpath</p>
+<dl class="py class">
+<dt id="contextual_robustness.utils.Timer">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">contextual_robustness.utils.</span></code><code class="sig-name descname"><span class="pre">Timer</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">autostart</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/contextual_robustness/utils.html#Timer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#contextual_robustness.utils.Timer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A simple timer class</p>
+<dl class="py method">
+<dt id="contextual_robustness.utils.Timer.elapsed">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">elapsed</span></code><a class="headerlink" href="#contextual_robustness.utils.Timer.elapsed" title="Permalink to this definition">¶</a></dt>
+<dd><p>elapsed time property (as string using get_elapsed(as_string=True))</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>outpath</strong> (<em>str</em>) – Path to a file or directory</p>
+<dd class="field-odd"><p><strong>as_string</strong> (<em>bool</em><em>, </em><em>optional</em>) – returns as string with unit (ms). Defaults to False.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>milliseconds between start_time and end_time</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="py function">
-<dt id="contextual_robustness.utils.get_file_extension">
-<code class="sig-prename descclassname"><span class="pre">contextual_robustness.utils.</span></code><code class="sig-name descname"><span class="pre">get_file_extension</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="reference internal" href="_modules/contextual_robustness/utils.html#get_file_extension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#contextual_robustness.utils.get_file_extension" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the extension from a filepath.</p>
+<dl class="py method">
+<dt id="contextual_robustness.utils.Timer.end">
+<code class="sig-name descname"><span class="pre">end</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">int</span><a class="reference internal" href="_modules/contextual_robustness/utils.html#Timer.end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#contextual_robustness.utils.Timer.end" title="Permalink to this definition">¶</a></dt>
+<dd><p>stops the timer</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filepath</strong> (<em>str</em>) – Path to the file</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>elapsed time (ms)</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The file’s extension (e.g. ‘.txt’)</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.utils.Timer.end_time">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">end_time</span></code><a class="headerlink" href="#contextual_robustness.utils.Timer.end_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>end_time property</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the end_time (ms since 1970)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.utils.Timer.get_elapsed">
+<code class="sig-name descname"><span class="pre">get_elapsed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">as_string</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">int</span><a class="reference internal" href="_modules/contextual_robustness/utils.html#Timer.get_elapsed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#contextual_robustness.utils.Timer.get_elapsed" title="Permalink to this definition">¶</a></dt>
+<dd><p>elapsed time property (as string using get_elapsed(as_string=True))</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>as_string</strong> (<em>bool</em><em>, </em><em>optional</em>) – returns as string with unit (ms). Defaults to False.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>milliseconds between start_time and end_time</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.utils.Timer.start">
+<code class="sig-name descname"><span class="pre">start</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">object</span><a class="reference internal" href="_modules/contextual_robustness/utils.html#Timer.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#contextual_robustness.utils.Timer.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>start the timer</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the Timer object</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="contextual_robustness.utils.Timer.start_time">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">start_time</span></code><a class="headerlink" href="#contextual_robustness.utils.Timer.start_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>start_time property</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the start_time (ms since 1970)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py function">
@@ -1146,7 +1243,7 @@
 
 <dl class="py function">
 <dt id="contextual_robustness.utils.parse_indexes">
-<code class="sig-prename descclassname"><span class="pre">contextual_robustness.utils.</span></code><code class="sig-name descname"><span class="pre">parse_indexes</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indexes_list</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">list</span><a class="reference internal" href="_modules/contextual_robustness/utils.html#parse_indexes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#contextual_robustness.utils.parse_indexes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">contextual_robustness.utils.</span></code><code class="sig-name descname"><span class="pre">parse_indexes</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indexes_list</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/contextual_robustness/utils.html#parse_indexes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#contextual_robustness.utils.parse_indexes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parses mixed list of integers and ranges from CLI into a discret list of integers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1156,7 +1253,7 @@
 <dd class="field-even"><p>Discret list of unique integers</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list</p>
+<dd class="field-odd"><p>list[int]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1178,6 +1275,26 @@ removing the softmax activation function from the output layer.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>tf.keras.Model</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="contextual_robustness.utils.resize_image">
+<code class="sig-prename descclassname"><span class="pre">contextual_robustness.utils.</span></code><code class="sig-name descname"><span class="pre">resize_image</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">numpy.array</span><a class="reference internal" href="_modules/contextual_robustness/utils.html#resize_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#contextual_robustness.utils.resize_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>resizes an image</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image</strong> (<em>np.array</em>) – the original image</p></li>
+<li><p><strong>size</strong> (<em>typing.Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em>) – size of resized image (width, height)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>resized image</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
 </dd>
 </dl>
 </dd></dl>

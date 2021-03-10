@@ -4,7 +4,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import ImageGrid
 from contextual_robustness.base import ContextualRobustness
-from contextual_robustness.utils import create_output_path
+from contextual_robustness.utils import _create_output_path, resize_image
+from contextual_robustness.datasets import _load_placeholder_images
+
+PLACEHOLDERS = _load_placeholder_images()
+NO_CEX_IMG = PLACEHOLDERS.get('no_cex')
+NO_IMAGE_IMG = PLACEHOLDERS.get('no_image')
 
 # ======================================================================
 # ContextualRobustnessReporting
@@ -44,7 +49,7 @@ class ContextualRobustnessReporting:
         plt.ylabel(ylabel, fontsize=axis_fontsize, weight=fontweight)
         ax.tick_params(axis='both', labelsize=axis_fontsize)
 
-        create_output_path(outfile)
+        _create_output_path(outfile)
         plt.savefig(outfile, bbox_inches='tight')
         plt.close()
         print(f'saved epsilons plot to {outfile}')
@@ -79,11 +84,11 @@ class ContextualRobustnessReporting:
         gridImage[0].get_xaxis().set_ticks([])
         X, _ = cr.dataset
         for c in cr.classes:
-            # Placeholder (black square) used for classes where no results are present, 
-            # or where no counterexample was found.
-            x_orig, x_cex = np.zeros(cr.image_shape), np.zeros(cr.image_shape)
+            # no_image placeholder used for classes where no images/results are present.
+            # no_cex placeholder used for classes where image was present, but no counterexample found.
+            x_orig, x_cex = resize_image(NO_IMAGE_IMG, cr.image_size), resize_image(NO_CEX_IMG, cr.image_size)
             sorted_df = cr.get_results(class_index=c, sort_by=['epsilon'])
-            if sorted_df.shape[0] > 1:    
+            if sorted_df.shape[0] > 1:
                 # The 'test-based technique will always have a counterexample, however 
                 # the formal technique may not. Find first sample with a counterexample 
                 # nearest to the mean, and show placeholders for classes where no sample 
@@ -100,7 +105,7 @@ class ContextualRobustnessReporting:
             gridImage[c + ncols].imshow(x_cex)
 
         plt.axis('off')
-        create_output_path(outfile)
+        _create_output_path(outfile)
         fig.savefig(outfile, bbox_inches='tight')
         plt.close()
         print(f'saved counterexamples plot to {outfile}')
@@ -164,7 +169,7 @@ class ContextualRobustnessReporting:
         plt.xlabel('Epsilon', fontsize=axis_fontsize)
         plt.ylabel('Accuracy', fontsize=axis_fontsize)
 
-        create_output_path(outfile)
+        _create_output_path(outfile)
         plt.savefig(outfile, bbox_inches='tight')
         plt.close()
         print(f'saved class accuracy report plot to {outfile}')
@@ -225,7 +230,7 @@ class ContextualRobustnessReporting:
         plt.tick_params(axis='both', labelsize=axis_fontsize)
         plt.xlabel('Epsilon', fontsize=axis_fontsize)
         plt.ylabel('Accuracy', fontsize=axis_fontsize)
-        create_output_path(outfile)
+        _create_output_path(outfile)
         plt.savefig(outfile, bbox_inches='tight')
         plt.close()
         print(f'saved accuracy report plot to {outfile}')

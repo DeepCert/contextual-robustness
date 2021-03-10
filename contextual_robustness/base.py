@@ -1,9 +1,10 @@
 import enum, pickle, typing
 import numpy as np
 import pandas as pd
-import tensorflow as tf
-from contextual_robustness.utils import set_df_dtypes, create_output_path
+from contextual_robustness.utils import set_df_dtypes, _create_output_path, _set_tf_log_level, Timer, _ms_to_human
 from abc import ABCMeta, abstractmethod
+
+_set_tf_log_level()
 
 class Techniques(enum.Enum):
     '''Verification techniques enum'''
@@ -29,7 +30,8 @@ results_dtypes = {
     'predicted': np.int64,
     'epsilon': np.float64,
     'upper': np.float64,
-    'lower': np.float64
+    'lower': np.float64,
+    'time': np.int64
     }
 
 # ======================================================================
@@ -143,14 +145,23 @@ class _BaseContextualRobustness(metaclass=ABCMeta):
         return self._X, self._Y
     
     @property
-    def image_shape(self) -> typing.Tuple[int]:
+    def image_shape(self) -> typing.Tuple[int, int, int]:
         '''image_shape property
 
         Returns:
-            tuple: shape of images in X
+            tuple[int, int, int]: shape of images in X
         '''
         return self.dataset[0].shape[1:]
     
+    @property
+    def image_size(self) -> typing.Tuple[int, int]:
+        '''image_size property
+
+        Returns:
+            tuple[int, int]: size of images (width, height)
+        '''
+        return self.image_shape[0:2]
+
     @property
     def n_pixels(self) -> int:
         '''n_pixels property
@@ -294,6 +305,7 @@ class _BaseContextualRobustness(metaclass=ABCMeta):
         for i in self._correct_sample_indexes:
             x, y = self._X[i], self._Y[i]
             actual_label = np.argmax(y)
+            timer = Timer(autostart=True)
             lower, upper, epsilon, predicted_label, counterexample = self._find_epsilon(x, y, index=i)
             data.append({
                 'image': i,
@@ -301,22 +313,24 @@ class _BaseContextualRobustness(metaclass=ABCMeta):
                 'predicted': predicted_label,
                 'epsilon': epsilon,
                 'lower': lower,
-                'upper': upper
+                'upper': upper,
+                'time': timer.end()
                 })
             self.save_counterexample(i, counterexample)
             if self._verbosity > 0:
-                print(f'image:{i}, class:{actual_label}, predcited:{predicted_label}, epsilon:{epsilon}')
+                print(f'image:{i}, class:{actual_label}, predcited:{predicted_label}, epsilon:{epsilon}, time:{timer.get_elapsed(as_string=True)}')
         
         # generate dataframe and optionally save results to csv
-        df = pd.DataFrame(data, columns=('image', 'class', 'predicted', 'epsilon', 'lower', 'upper'))
+        df = pd.DataFrame(data, columns=('image', 'class', 'predicted', 'epsilon', 'lower', 'upper', 'time'))
         self._results = set_df_dtypes(df, results_dtypes)
         if epsilons_outpath:
-            create_output_path(epsilons_outpath)
+            _create_output_path(epsilons_outpath)
             self._results.to_csv(epsilons_outpath)
         if counterexamples_outpath:
-            create_output_path(counterexamples_outpath)
+            _create_output_path(counterexamples_outpath)
             with open(counterexamples_outpath, 'wb') as f:
                 pickle.dump(self.counterexamples, f)
+        print(f'completed analysis of {df.shape[0]} samples in {_ms_to_human(df["time"].sum())}.')
         return self
     
     def load_results(self, epsilons_path:str='', counterexamples_path:str='') -> ContextualRobustness:

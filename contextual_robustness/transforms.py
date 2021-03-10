@@ -37,7 +37,7 @@ def haze(image:np.array, epsilon:float) -> np.array:
     fog[:, :, 2] *= 1.0  # blue
     return (1-epsilon) * image[:, :, :] + epsilon * fog[:, :, :]
 
-def increaseContrast(image:np.array, epsilon:float, tg_min:float=0.0, tg_max:float=1.0) -> np.array:
+def increase_contrast(image:np.array, epsilon:float, tg_min:float=0.0, tg_max:float=1.0) -> np.array:
     '''Increases the contrast of the input image
 
     Args:
@@ -83,7 +83,7 @@ def gaussianblureps(image:np.array, epsilon:float, kernelSize:int=17, scaling:in
 
 test_transforms = {
     'haze': {'fn': haze, 'args': dict()},
-    'contrast': {'fn': increaseContrast, 'args': dict()},
+    'contrast': {'fn': increase_contrast, 'args': dict()},
     'blur': {'fn': gaussianblureps, 'args': dict(kernelSize=17, scaling=20)}
     }
 

@@ -153,23 +153,33 @@
            <div itemprop="articleBody">
             
   <h1>Source code for contextual_robustness.utils</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">types</span>
+<span></span><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">typing</span><span class="o">,</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">cv2</span>
 <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">softmax</span>
 
-<div class="viewcode-block" id="create_output_path"><a class="viewcode-back" href="../../contextual_robustness.html#contextual_robustness.utils.create_output_path">[docs]</a><span class="k">def</span> <span class="nf">create_output_path</span><span class="p">(</span><span class="n">outpath</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_set_tf_log_level</span><span class="p">(</span><span class="n">level</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;sets the tensorflow log level (0=FATAL, 1=ERROR, 2=WARN, 3=INFO, 4=DEBUG)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        level (int, optional): integer for log level. Defaults to 1 (ERROR).</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">log_levels</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;FATAL&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39;WARN&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s1">&#39;INFO&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">:</span> <span class="s1">&#39;DEBUG&#39;</span><span class="p">}</span>
+    <span class="k">assert</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">log_levels</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="sa">f</span><span class="s1">&#39;unsupported TF log level. supported:</span><span class="si">{</span><span class="n">log_levels</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">log_levels</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">level</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">_create_output_path</span><span class="p">(</span><span class="n">outpath</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Creates any non-existent folder(s) in the outpath</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        outpath (str): Path to a file or directory</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">dirpath</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">outpath</span><span class="p">)</span>
-    <span class="n">Path</span><span class="p">(</span><span class="n">dirpath</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+    <span class="n">Path</span><span class="p">(</span><span class="n">dirpath</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<div class="viewcode-block" id="get_file_extension"><a class="viewcode-back" href="../../contextual_robustness.html#contextual_robustness.utils.get_file_extension">[docs]</a><span class="k">def</span> <span class="nf">get_file_extension</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span><span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">_get_file_extension</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span><span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&#39;&#39;&#39;Gets the extension from a filepath.</span>
 
 <span class="sd">    Args:</span>
@@ -178,7 +188,27 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        str: The file&#39;s extension (e.g. &#39;.txt&#39;)</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span><span class="o">.</span><span class="n">suffix</span></div>
+    <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span><span class="o">.</span><span class="n">suffix</span>
+
+<span class="k">def</span> <span class="nf">_ms_to_human</span><span class="p">(</span><span class="n">ms</span><span class="p">:</span><span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;converts milliseconds to human-readable string</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ms (int): number of milliseconds</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: human-readable string in format &quot;[h hours], [m minutes], [s seconds]&quot; OR &quot;[ms milliseconds]&quot;</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">ms</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ms</span><span class="si">}</span><span class="s1"> milliseconds&#39;</span>
+    <span class="n">seconds</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">ms</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">%</span> <span class="mi">60</span><span class="p">)</span>
+    <span class="n">minutes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">ms</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1000</span> <span class="o">*</span> <span class="mi">60</span><span class="p">))</span> <span class="o">%</span> <span class="mi">60</span><span class="p">)</span>
+    <span class="n">hours</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">ms</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1000</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span><span class="p">))</span> <span class="o">%</span> <span class="mi">24</span><span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">seconds</span><span class="si">}</span><span class="s1"> seconds&#39;</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">minutes</span><span class="si">}</span><span class="s1"> minutes, </span><span class="si">{</span><span class="n">output</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">if</span> <span class="n">minutes</span> <span class="ow">or</span> <span class="n">hours</span> <span class="k">else</span> <span class="n">output</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hours</span><span class="si">}</span><span class="s1"> hours, </span><span class="si">{</span><span class="n">output</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">if</span> <span class="n">hours</span> <span class="k">else</span> <span class="n">output</span>
+    <span class="k">return</span> <span class="n">output</span>
+
 
 <div class="viewcode-block" id="remove_softmax_activation"><a class="viewcode-back" href="../../contextual_robustness.html#contextual_robustness.utils.remove_softmax_activation">[docs]</a><span class="k">def</span> <span class="nf">remove_softmax_activation</span><span class="p">(</span><span class="n">model_path</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">save_path</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">:</span>
     <span class="sd">&#39;&#39;&#39;Prepares a classifier with softmax activation for verification by </span>
@@ -211,6 +241,37 @@
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="n">X</span> <span class="o">/</span> <span class="mf">255.0</span></div>
 
+<div class="viewcode-block" id="resize_image"><a class="viewcode-back" href="../../contextual_robustness.html#contextual_robustness.utils.resize_image">[docs]</a><span class="k">def</span> <span class="nf">resize_image</span><span class="p">(</span><span class="n">image</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;resizes an image</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        image (np.array): the original image</span>
+<span class="sd">        size (typing.Tuple[int, int]): size of resized image (width, height)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        np.array: resized image</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="k">else</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">h</span> <span class="o">==</span> <span class="n">w</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">INTER_AREA</span><span class="p">)</span>
+
+    <span class="n">dif</span> <span class="o">=</span> <span class="n">h</span> <span class="k">if</span> <span class="n">h</span> <span class="o">&gt;</span> <span class="n">w</span> <span class="k">else</span> <span class="n">w</span>
+    <span class="n">interpolation</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">INTER_AREA</span> <span class="k">if</span> <span class="n">dif</span> <span class="o">&gt;</span> <span class="nb">sum</span><span class="p">(</span><span class="n">size</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span> <span class="k">else</span> <span class="n">cv2</span><span class="o">.</span><span class="n">INTER_CUBIC</span>
+    <span class="n">x_pos</span> <span class="o">=</span> <span class="p">(</span><span class="n">dif</span> <span class="o">-</span> <span class="n">w</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="n">y_pos</span> <span class="o">=</span> <span class="p">(</span><span class="n">dif</span> <span class="o">-</span> <span class="n">h</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">dif</span><span class="p">,</span> <span class="n">dif</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">image</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="n">mask</span><span class="p">[</span><span class="n">y_pos</span><span class="p">:</span><span class="n">y_pos</span> <span class="o">+</span> <span class="n">h</span><span class="p">,</span> <span class="n">x_pos</span><span class="p">:</span><span class="n">x_pos</span> <span class="o">+</span> <span class="n">w</span><span class="p">]</span> <span class="o">=</span> <span class="n">image</span><span class="p">[:</span><span class="n">h</span><span class="p">,</span> <span class="p">:</span><span class="n">w</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">dif</span><span class="p">,</span> <span class="n">dif</span><span class="p">,</span> <span class="n">c</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">image</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="n">mask</span><span class="p">[</span><span class="n">y_pos</span><span class="p">:</span><span class="n">y_pos</span> <span class="o">+</span> <span class="n">h</span><span class="p">,</span> <span class="n">x_pos</span><span class="p">:</span><span class="n">x_pos</span> <span class="o">+</span> <span class="n">w</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">image</span><span class="p">[:</span><span class="n">h</span><span class="p">,</span> <span class="p">:</span><span class="n">w</span><span class="p">,</span> <span class="p">:]</span>
+
+    <span class="k">return</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">interpolation</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="softargmax"><a class="viewcode-back" href="../../contextual_robustness.html#contextual_robustness.utils.softargmax">[docs]</a><span class="k">def</span> <span class="nf">softargmax</span><span class="p">(</span><span class="n">y</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
     <span class="sd">&#39;&#39;&#39;Applies softmax &amp; argmax to emulate the softmax output layer of a tensorflow model</span>
 
@@ -224,14 +285,14 @@
     <span class="n">out</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">softmax</span><span class="p">(</span><span class="n">y</span><span class="p">))]</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="k">return</span> <span class="n">out</span></div>
 
-<div class="viewcode-block" id="parse_indexes"><a class="viewcode-back" href="../../contextual_robustness.html#contextual_robustness.utils.parse_indexes">[docs]</a><span class="k">def</span> <span class="nf">parse_indexes</span><span class="p">(</span><span class="n">indexes_list</span><span class="p">:</span><span class="nb">list</span><span class="o">=</span><span class="p">[])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<div class="viewcode-block" id="parse_indexes"><a class="viewcode-back" href="../../contextual_robustness.html#contextual_robustness.utils.parse_indexes">[docs]</a><span class="k">def</span> <span class="nf">parse_indexes</span><span class="p">(</span><span class="n">indexes_list</span><span class="p">:</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
     <span class="sd">&#39;&#39;&#39;Parses mixed list of integers and ranges from CLI into a discret list of integers.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        indexes_list (list, optional): List of strings of mixed ints and/or ranges (e.g. [&#39;1&#39;, &#39;2&#39;, &#39;5-7&#39;, &#39;10-15&#39;]). Defaults to [].</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        list: Discret list of unique integers</span>
+<span class="sd">        list[int]: Discret list of unique integers</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">indexes</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">indexes_list</span><span class="p">:</span>
@@ -244,7 +305,8 @@
             <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">pieces</span>
         <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">start</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">end</span><span class="p">)</span>
         <span class="n">indexes</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
-    <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">indexes</span><span class="p">)</span></div>
+    <span class="c1"># remove any duplicates and sort if necessary</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">indexes</span><span class="p">)))</span> <span class="k">if</span> <span class="n">sort</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">indexes</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="set_df_dtypes"><a class="viewcode-back" href="../../contextual_robustness.html#contextual_robustness.utils.set_df_dtypes">[docs]</a><span class="k">def</span> <span class="nf">set_df_dtypes</span><span class="p">(</span><span class="n">df</span><span class="p">:</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">dtypes</span><span class="p">:</span><span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&#39;&#39;&#39;Sets datatypes for specified columns of DataFrame</span>
@@ -257,8 +319,99 @@
 <span class="sd">        pd.DataFrame: The updated DataFrame</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">dtypes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">df</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">df</span></div>
+
+<div class="viewcode-block" id="Timer"><a class="viewcode-back" href="../../contextual_robustness.html#contextual_robustness.utils.Timer">[docs]</a><span class="k">class</span> <span class="nc">Timer</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;A simple timer class&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">autostart</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Constructor for Timer class</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            autostart (bool): auto-start the timer</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            object: Timer object</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_end_time</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">autostart</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">start_time</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;start_time property</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: the start_time (ms since 1970)</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">end_time</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;end_time property</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: the end_time (ms since 1970)</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_end_time</span>
+
+<div class="viewcode-block" id="Timer.get_elapsed"><a class="viewcode-back" href="../../contextual_robustness.html#contextual_robustness.utils.Timer.get_elapsed">[docs]</a>    <span class="k">def</span> <span class="nf">get_elapsed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">as_string</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;elapsed time property (as string using get_elapsed(as_string=True))</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            as_string (bool, optional): returns as string with unit (ms). Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: milliseconds between start_time and end_time</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">elapsed</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end_time</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">as_string</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">elapsed</span><span class="si">}</span><span class="s1">ms&#39;</span>
+        <span class="k">return</span> <span class="n">elapsed</span></div>
+    <span class="n">elapsed</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_elapsed</span><span class="p">)</span>
+
+    <span class="nd">@start_time</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">start_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span><span class="nb">int</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;start_time property setter</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            t (int): start_time (ms since 1970)</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span> <span class="o">=</span> <span class="n">t</span>
+
+    <span class="nd">@end_time</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">end_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span><span class="nb">int</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;end_time property setter</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            t (int): end_time (ms since 1970)</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_end_time</span> <span class="o">=</span> <span class="n">t</span>
+
+    <span class="k">def</span> <span class="nf">_timestamp_ms</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;gets current timestamp (ms since 1970)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: current timestamp (ms since 1970)</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span>
+
+<div class="viewcode-block" id="Timer.start"><a class="viewcode-back" href="../../contextual_robustness.html#contextual_robustness.utils.Timer.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;start the timer</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            object: the Timer object</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timestamp_ms</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Timer.end"><a class="viewcode-back" href="../../contextual_robustness.html#contextual_robustness.utils.Timer.end">[docs]</a>    <span class="k">def</span> <span class="nf">end</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;stops the timer</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: elapsed time (ms)</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timestamp_ms</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">elapsed</span></div></div>
 </pre></div>
 
            </div>
