@@ -1,13 +1,14 @@
 import os, sys, pickle, typing
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.datasets import cifar10
 from contextual_robustness.utils import normalize
 
 DATA_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '../data'))
 GTSRB_PATH = os.path.join(DATA_PATH, 'gtsb')
-OTHER_PATH = os.path.join(DATA_PATH, 'other')
+PLACEHOLDERS_PATH = os.path.join(DATA_PATH, 'placeholders')
 
 def _fix_gtsrb_labels(labels:list) -> list:
     '''fixes the GTRSB labels after eliminating a subset of classes
@@ -85,13 +86,15 @@ def load_cifar() -> typing.Tuple[np.array, np.array, np.array, np.array, pd.Data
     Y_train, Y_test = to_categorical(Y_train), to_categorical(Y_test)
     return X_train, Y_train, X_test, Y_test, labels
 
-def load_nocex_image() -> np.array:
-    '''Loads 'no counterexample' placeholder image
+def load_placeholder_images() -> typing.Dict[str, np.array]:
+    '''Loads full-sized placeholder images (500x500)
 
     Returns:
-        np.array: placeholder image (width=256, height=256)
+        dict[str, np.array]: dict of placeholder images
     '''
-    image = None
-    with open(os.path.join(OTHER_PATH, 'no-cex_256x256.p'), 'rb') as f:
-        image = pickle.load(f)
-    return image
+    no_cex = plt.imread(os.path.join(PLACEHOLDERS_PATH, 'no-cex_500x500.png'))[:,:,:3]
+    no_image = plt.imread(os.path.join(PLACEHOLDERS_PATH, 'no-image_500x500.png'))[:,:,:3]
+    return dict(
+        no_cex=no_cex,
+        no_image=no_image
+        )

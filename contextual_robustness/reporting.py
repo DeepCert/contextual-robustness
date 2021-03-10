@@ -5,9 +5,11 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import ImageGrid
 from contextual_robustness.base import ContextualRobustness
 from contextual_robustness.utils import create_output_path, resize_image
-from contextual_robustness.datasets import load_nocex_image
+from contextual_robustness.datasets import load_placeholder_images
 
-no_cex_image = load_nocex_image()
+PLACEHOLDERS = load_placeholder_images()
+NO_CEX_IMG = PLACEHOLDERS.get('no_cex')
+NO_IMAGE_IMG = PLACEHOLDERS.get('no_image')
 
 # ======================================================================
 # ContextualRobustnessReporting
@@ -82,11 +84,11 @@ class ContextualRobustnessReporting:
         gridImage[0].get_xaxis().set_ticks([])
         X, _ = cr.dataset
         for c in cr.classes:
-            # Placeholder (black square) used for classes where no results are present, 
-            # or where no counterexample was found.
-            x_orig, x_cex = np.zeros(cr.image_shape), np.zeros(cr.image_shape)
+            # no_image placeholder used for classes where no images/results are present.
+            # no_cex placeholder used for classes where image was present, but no counterexample found.
+            x_orig, x_cex = resize_image(NO_IMAGE_IMG, cr.image_size), resize_image(NO_CEX_IMG, cr.image_size)
             sorted_df = cr.get_results(class_index=c, sort_by=['epsilon'])
-            if sorted_df.shape[0] > 1:    
+            if sorted_df.shape[0] > 1:
                 # The 'test-based technique will always have a counterexample, however 
                 # the formal technique may not. Find first sample with a counterexample 
                 # nearest to the mean, and show placeholders for classes where no sample 
@@ -94,7 +96,6 @@ class ContextualRobustnessReporting:
                 mean_epsilon = np.mean(sorted_df.epsilon)
                 upper_df = sorted_df[sorted_df.epsilon >= mean_epsilon]
                 x_orig = X[upper_df['image'].iloc[0]]
-                x_cex = resize_image(no_cex_image, cr.image_size)
                 for idx in upper_df['image']:
                     if cr.get_counterexample(idx) is not None:
                         x_orig = X[idx]

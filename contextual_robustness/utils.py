@@ -71,7 +71,26 @@ def resize_image(image:np.array, size:typing.Tuple[int, int]) -> np.array:
     Returns:
         np.array: resized image
     '''
-    return cv2.resize(image, dsize=size, interpolation=cv2.INTER_CUBIC)
+    h, w = image.shape[:2]
+    c = image.shape[2] if len(image.shape) > 2 else 1
+
+    if h == w:
+        return cv2.resize(image, size, cv2.INTER_AREA)
+
+    dif = h if h > w else w
+    interpolation = cv2.INTER_AREA if dif > sum(size) // 2 else cv2.INTER_CUBIC
+    x_pos = (dif - w) // 2
+    y_pos = (dif - h) // 2
+
+    if len(image.shape) == 2:
+        mask = np.zeros((dif, dif), dtype=image.dtype)
+        mask[y_pos:y_pos + h, x_pos:x_pos + w] = image[:h, :w]
+    else:
+        mask = np.zeros((dif, dif, c), dtype=image.dtype)
+        mask[y_pos:y_pos + h, x_pos:x_pos + w, :] = image[:h, :w, :]
+
+    return cv2.resize(mask, size, interpolation)
+
 
 def softargmax(y:np.array) -> np.array:
     '''Applies softmax & argmax to emulate the softmax output layer of a tensorflow model
@@ -120,7 +139,8 @@ def set_df_dtypes(df:pd.DataFrame, dtypes:dict) -> pd.DataFrame:
         pd.DataFrame: The updated DataFrame
     '''
     for k,v in dtypes.items():
-        df[k] = df[k].astype(v)
+        if df.get(k) is not None:
+            df[k] = df[k].astype(v)
     return df
 
 def ms_to_human(ms:int) -> str:
