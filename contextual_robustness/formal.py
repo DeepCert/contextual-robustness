@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 from contextual_robustness.utils import softargmax, _get_file_extension
-from contextual_robustness.base import _BaseContextualRobustness, Techniques, ContextualRobustness, defaults
+from contextual_robustness.base import _BaseContextualRobustness, Techniques, ContextualRobustness, DEFAULTS
 
 # TODO: remove sys.path.append after maraboupy pip package is available.
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../marabou')))
@@ -36,20 +36,20 @@ class ContextualRobustnessFormal(_BaseContextualRobustness):
     '''
     def __init__(
         self,
-        model_path='',
-        model_name='',
-        model_args=dict(),
-        transform_fn=lambda x: x,
-        transform_args=dict(),
-        transform_name='',
-        X=np.array([]),
-        Y=np.array([]),
-        sample_indexes=[],
-        eps_lower=defaults['eps_lower'],
-        eps_upper=defaults['eps_upper'],
-        eps_interval=defaults['eps_interval'],
-        marabou_options=dict(verbosity=defaults['marabou_verbosity']),
-        verbosity=defaults['verbosity']
+        model_path:str='',
+        model_name:str='',
+        model_args:dict=dict(),
+        transform_fn:callable=lambda x: x,
+        transform_args:dict=dict(),
+        transform_name:str='',
+        X:np.array=np.array([]),
+        Y:np.array=np.array([]),
+        sample_indexes:list=[],
+        eps_lower:float=DEFAULTS['eps_lower'],
+        eps_upper:float=DEFAULTS['eps_upper'],
+        eps_interval:float=DEFAULTS['eps_interval'],
+        marabou_options:dict=dict(verbosity=DEFAULTS['marabou_verbosity']),
+        verbosity:int=DEFAULTS['verbosity']
         ) -> ContextualRobustness:
         self._model_args = model_args
         self._marabou_options = marabou_options

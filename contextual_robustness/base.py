@@ -6,16 +6,8 @@ from abc import ABCMeta, abstractmethod
 
 _set_tf_log_level()
 
-class Techniques(enum.Enum):
-    '''Verification techniques enum'''
-    TEST='test'
-    FORMAL='formal'
-
-# Generic type to encompass different ContextualRobustness objects
-ContextualRobustness = typing.TypeVar('ContextualRobustness')
-
 # Default values
-defaults = dict(
+DEFAULTS = dict(
     eps_lower=0.0,
     eps_upper=1.0,
     eps_interval=0.002,
@@ -24,7 +16,7 @@ defaults = dict(
     )
 
 # Datatypes for results DataFrame columns
-results_dtypes = {
+RESULTS_DTYPES = {
     'image': np.int64,
     'class': np.int64,
     'predicted': np.int64,
@@ -33,6 +25,14 @@ results_dtypes = {
     'lower': np.float64,
     'time': np.int64
     }
+
+class Techniques(enum.Enum):
+    '''Verification techniques enum'''
+    TEST='test'
+    FORMAL='formal'
+
+# Generic type to encompass different ContextualRobustness objects
+ContextualRobustness = typing.TypeVar('ContextualRobustness')
 
 # ======================================================================
 # _BaseContextualRobustness
@@ -59,18 +59,18 @@ class _BaseContextualRobustness(metaclass=ABCMeta):
     '''
     def __init__(
         self,
-        model_path='',
-        model_name='',
-        transform_fn=lambda x: x,
-        transform_args=dict(),
-        transform_name='',
-        X=np.array([]),
-        Y=np.array([]),
-        sample_indexes=[],
-        eps_lower=defaults['eps_lower'],
-        eps_upper=defaults['eps_upper'],
-        eps_interval=defaults['eps_interval'],
-        verbosity=defaults['verbosity'],
+        model_path:str='',
+        model_name:str='',
+        transform_fn:callable=lambda x: x,
+        transform_args:dict=dict(),
+        transform_name:str='',
+        X:np.array=np.array([]),
+        Y:np.array=np.array([]),
+        sample_indexes:list=[],
+        eps_lower:float=DEFAULTS['eps_lower'],
+        eps_upper:float=DEFAULTS['eps_upper'],
+        eps_interval:float=DEFAULTS['eps_interval'],
+        verbosity:int=DEFAULTS['verbosity'],
         ) -> ContextualRobustness:
         assert bool(model_path), 'model_path is required'
         assert X.shape[0] == Y.shape[0], 'X and Y must have equal number of items'
@@ -322,7 +322,7 @@ class _BaseContextualRobustness(metaclass=ABCMeta):
         
         # generate dataframe and optionally save results to csv
         df = pd.DataFrame(data, columns=('image', 'class', 'predicted', 'epsilon', 'lower', 'upper', 'time'))
-        self._results = set_df_dtypes(df, results_dtypes)
+        self._results = set_df_dtypes(df, RESULTS_DTYPES)
         if epsilons_outpath:
             _create_output_path(epsilons_outpath)
             self._results.to_csv(epsilons_outpath)
@@ -344,7 +344,7 @@ class _BaseContextualRobustness(metaclass=ABCMeta):
             ContextualRobustness: the object (self)
         '''
         if epsilons_path:
-            self._results = set_df_dtypes(pd.read_csv(epsilons_path, index_col=0), results_dtypes)
+            self._results = set_df_dtypes(pd.read_csv(epsilons_path, index_col=0), RESULTS_DTYPES)
 
         if counterexamples_path:
             with open(counterexamples_path, 'rb') as f:

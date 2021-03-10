@@ -157,7 +157,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
-<span class="kn">from</span> <span class="nn">contextual_robustness.base</span> <span class="kn">import</span> <span class="n">_BaseContextualRobustness</span><span class="p">,</span> <span class="n">ContextualRobustness</span><span class="p">,</span> <span class="n">Techniques</span><span class="p">,</span> <span class="n">defaults</span>
+<span class="kn">from</span> <span class="nn">contextual_robustness.base</span> <span class="kn">import</span> <span class="n">_BaseContextualRobustness</span><span class="p">,</span> <span class="n">ContextualRobustness</span><span class="p">,</span> <span class="n">Techniques</span><span class="p">,</span> <span class="n">DEFAULTS</span>
 
 <span class="c1"># ======================================================================</span>
 <span class="c1"># ContextualRobustnessTest</span>
@@ -192,10 +192,10 @@
         <span class="n">transform_fn</span><span class="p">:</span><span class="n">callable</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
         <span class="n">transform_args</span><span class="p">:</span><span class="nb">dict</span><span class="o">=</span><span class="nb">dict</span><span class="p">(),</span>
         <span class="n">transform_name</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
-        <span class="n">eps_lower</span><span class="p">:</span><span class="nb">float</span><span class="o">=</span><span class="n">defaults</span><span class="p">[</span><span class="s1">&#39;eps_lower&#39;</span><span class="p">],</span>
-        <span class="n">eps_upper</span><span class="p">:</span><span class="nb">float</span><span class="o">=</span><span class="n">defaults</span><span class="p">[</span><span class="s1">&#39;eps_upper&#39;</span><span class="p">],</span>
-        <span class="n">eps_interval</span><span class="p">:</span><span class="nb">float</span><span class="o">=</span><span class="n">defaults</span><span class="p">[</span><span class="s1">&#39;eps_interval&#39;</span><span class="p">],</span>
-        <span class="n">verbosity</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="n">defaults</span><span class="p">[</span><span class="s1">&#39;verbosity&#39;</span><span class="p">]</span>
+        <span class="n">eps_lower</span><span class="p">:</span><span class="nb">float</span><span class="o">=</span><span class="n">DEFAULTS</span><span class="p">[</span><span class="s1">&#39;eps_lower&#39;</span><span class="p">],</span>
+        <span class="n">eps_upper</span><span class="p">:</span><span class="nb">float</span><span class="o">=</span><span class="n">DEFAULTS</span><span class="p">[</span><span class="s1">&#39;eps_upper&#39;</span><span class="p">],</span>
+        <span class="n">eps_interval</span><span class="p">:</span><span class="nb">float</span><span class="o">=</span><span class="n">DEFAULTS</span><span class="p">[</span><span class="s1">&#39;eps_interval&#39;</span><span class="p">],</span>
+        <span class="n">verbosity</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="n">DEFAULTS</span><span class="p">[</span><span class="s1">&#39;verbosity&#39;</span><span class="p">]</span>
         <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ContextualRobustness</span><span class="p">:</span>
         <span class="c1"># Execute the superclass&#39;s constructor</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
