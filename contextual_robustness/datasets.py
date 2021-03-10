@@ -86,7 +86,7 @@ def load_cifar() -> typing.Tuple[np.array, np.array, np.array, np.array, pd.Data
     Y_train, Y_test = to_categorical(Y_train), to_categorical(Y_test)
     return X_train, Y_train, X_test, Y_test, labels
 
-def load_placeholder_images() -> typing.Dict[str, np.array]:
+def _load_placeholder_images() -> typing.Dict[str, np.array]:
     '''Loads full-sized placeholder images (500x500)
 
     Returns:

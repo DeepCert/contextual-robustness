@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import ImageGrid
 from contextual_robustness.base import ContextualRobustness
 from contextual_robustness.utils import create_output_path, resize_image
-from contextual_robustness.datasets import load_placeholder_images
+from contextual_robustness.datasets import _load_placeholder_images
 
-PLACEHOLDERS = load_placeholder_images()
+PLACEHOLDERS = _load_placeholder_images()
 NO_CEX_IMG = PLACEHOLDERS.get('no_cex')
 NO_IMAGE_IMG = PLACEHOLDERS.get('no_image')
 
