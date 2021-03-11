@@ -191,7 +191,7 @@ class _BaseContextualRobustness(metaclass=ABCMeta):
 
         Returns:
             np.array: the counterexample (or 'None' if does not exist)
-        '''        
+        '''
         return self.counterexamples.get(f'image{x_index}')
     
     def save_counterexample(self, x_index:int, counterexample:np.array):

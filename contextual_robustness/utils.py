@@ -164,7 +164,7 @@ def set_df_dtypes(df:pd.DataFrame, dtypes:dict) -> pd.DataFrame:
         pd.DataFrame: The updated DataFrame
     '''
     for k,v in dtypes.items():
-        if df.get(k) is not None:
+        if k in df.keys():
             df[k] = df[k].astype(v)
     return df
 

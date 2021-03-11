@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import ImageGrid
-from contextual_robustness.base import ContextualRobustness
+from contextual_robustness.base import ContextualRobustness, Techniques
 from contextual_robustness.utils import _create_output_path, resize_image
 from contextual_robustness.datasets import _load_placeholder_images
 
@@ -95,12 +95,23 @@ class ContextualRobustnessReporting:
                 # with a counterexample was found.
                 mean_epsilon = np.mean(sorted_df.epsilon)
                 upper_df = sorted_df[sorted_df.epsilon >= mean_epsilon]
-                x_orig = X[upper_df['image'].iloc[0]]
-                for idx in upper_df['image']:
-                    if cr.get_counterexample(idx) is not None:
-                        x_orig = X[idx]
-                        x_cex = cr.get_counterexample(idx)
-                        break
+                row = upper_df.iloc[0]
+                x_idx = row['image'].astype(int)
+                epsilon = row['epsilon']
+                x_orig = X[x_idx]
+                if cr.technique == Techniques.TEST:
+                    # for test technique, generate counterexample if not saved
+                    if cr.get_counterexample(x_idx) is not None:
+                        x_cex = cr.get_counterexample(x_idx)
+                    else:
+                        x_cex = cr.transform_image(x_orig, epsilon)
+                elif cr.technique == Techniques.FORMAL:
+                    # for formal technique, counterexample must be read from results
+                    for idx in upper_df['image'].astype(int):
+                        if cr.get_counterexample(idx) is not None:
+                            x_orig = X[idx]
+                            x_cex = cr.get_counterexample(idx)
+                            break
             gridImage[c].imshow(x_orig)
             gridImage[c + ncols].imshow(x_cex)
 
