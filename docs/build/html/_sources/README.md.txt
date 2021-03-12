@@ -23,7 +23,11 @@ pip install -r requirements.txt
 
 ### Install Marabou
 
-You can download and compile Marabou by running `./scripts/install_marabou.sh` or following the instruction in the [Marabou repo](https://github.com/NeuralNetworkVerification/Marabou).
+You can download and compile Marabou using the `./scripts/install_marabou.sh` script or by following the instructions in the [Marabou repo](https://github.com/NeuralNetworkVerification/Marabou).
+
+#### Gurobi (optional - improves Marabou performance)
+
+Gurobi can optionally be installed to improve Marabou's performance. Gurobi can be downloaded [here](https://www.gurobi.com/downloads/gurobi-optimizer-eula/), and installation steps are [here](https://www.gurobi.com/documentation/9.0/quickstart_linux/software_installation_guid.html#section:Installation). After installing Gurobi and obtaining the license, you can install and compile marabou with Gurobi support using the install script `./scripts/install_marabou.sh -g <GUROBI_PATH>`.
 
 ### Install LaTeX
 
@@ -58,9 +62,7 @@ modelA_haze_test = ContextualRobustnessTest(
     verbosity=0                      # amount of logging
     )
 # run analysis and save to CSV
-modelA_haze_test.analyze(
-    epsilons_outpath='./results/modelA_haze/epsilons.csv',
-    counterexamples_outpath='./results/modelA_haze/counterexamples.p')
+modelA_haze_test.analyze(epsilons_outpath='./results/modelA_haze/epsilons.csv')
 ```
 
 #### Test-Based Technique: Load & Visualize Results
@@ -77,9 +79,7 @@ modelA_haze = ContextualRobustnessTest(
     Y=Y,
     transform_fn=haze,
     transform_name='Haze')
-modelA_haze.load_results(
-    epsilons_path='./results/modelA_haze/epsilons.csv',
-    counterexamples_path='./results/modelA_haze/counterexamples.p')
+modelA_haze.load_results(epsilons_path='./results/modelA_haze/epsilons.csv')
 
 # Load saved CSV results from 'Haze' analysis on 'ModelB'
 modelB_haze = ContextualRobustnessTest(
@@ -89,9 +89,7 @@ modelB_haze = ContextualRobustnessTest(
     Y=Y,
     transform_fn=haze,
     transform_name='Haze')
-modelB_haze.load_results(
-    epsilons_path='./results/modelB_haze/epsilons.csv',
-    counterexamples_path='./results/modelB_haze/counterexamples.p')
+modelB_haze.load_results(epsilons_path='./results/modelB_haze/epsilons.csv')
 
 # Generate individual 'epsilon' boxplots for each model
 ContextualRobustnessReporting.generate_epsilons_plot(
