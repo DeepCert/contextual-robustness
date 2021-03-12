@@ -205,3 +205,4 @@ Example code used to analyze and generate reports for the [GTSRB models](https:/
 * [Contextual Robustness API Docs](https://contextual-robustness.readthedocs.io/en/latest/modules.html)
 * [Contextual Robustness Examples](https://contextual-robustness.readthedocs.io/en/latest/EXAMPLES.html)
 * [Marabou Documentation](https://neuralnetworkverification.github.io/Marabou/)
+* [Gurobi Optimizer](https://www.gurobi.com/products/gurobi-optimizer/)
