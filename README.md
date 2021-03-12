@@ -153,6 +153,7 @@ modelA_haze_formal = ContextualRobustnessFormal(
     X=X,                                        # (*required) np.array of images
     Y=Y,                                        # (*required) np.array of labels
     sample_indexes=list(range(0,10)),           # list of indexes of samples to test
+    marabou_options=dict(),                     # marabou options (e.g. if Gurobi support: dict(solveWithMILP=True))
     verbosity=1                                 # amount of logging
     )
 # run analysis and save to CSV
