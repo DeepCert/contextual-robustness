@@ -29,10 +29,7 @@ def main(models, transform_names, outdir, sample_indexes):
                 transform_name=transform_name,
                 sample_indexes=sample_indexes
                 )
-            cr.analyze(
-                epsilons_outpath=os.path.join(outdir, f'model{m}-{transform}.csv'),
-                counterexamples_outpath=os.path.join(outdir, f'model{m}-{transform}-counterexamples.p')
-                )
+            cr.analyze(epsilons_outpath=os.path.join(outdir, f'model{m}-{transform}.csv'))
 
 if __name__ == '__main__':
     from argparse import ArgumentParser

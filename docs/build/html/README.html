@@ -90,7 +90,10 @@
 <li class="toctree-l2"><a class="reference internal" href="#install-setup">Install &amp; Setup</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#setup-environment-install-python-deps">Setup Environment &amp; Install Python Deps</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#install-marabou">Install Marabou</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-marabou">Install Marabou</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gurobi-optional-improves-marabou-performance">Gurobi (optional - improves Marabou performance)</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#install-latex">Install LaTeX</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#prepare-datasets">Prepare Datasets</a></li>
 </ul>
@@ -208,7 +211,11 @@ pip install -r requirements.txt
 </div>
 <div class="section" id="install-marabou">
 <h3>Install Marabou<a class="headerlink" href="#install-marabou" title="Permalink to this headline">¶</a></h3>
-<p>You can download and compile Marabou by running <code class="docutils literal notranslate"><span class="pre">./scripts/install_marabou.sh</span></code> or following the instruction in the <a class="reference external" href="https://github.com/NeuralNetworkVerification/Marabou">Marabou repo</a>.</p>
+<p>You can download and compile Marabou using the <code class="docutils literal notranslate"><span class="pre">./scripts/install_marabou.sh</span></code> script or by following the instructions in the <a class="reference external" href="https://github.com/NeuralNetworkVerification/Marabou">Marabou repo</a>.</p>
+<div class="section" id="gurobi-optional-improves-marabou-performance">
+<h4>Gurobi (optional - improves Marabou performance)<a class="headerlink" href="#gurobi-optional-improves-marabou-performance" title="Permalink to this headline">¶</a></h4>
+<p>Gurobi can optionally be installed to improve Marabou’s performance. Gurobi can be downloaded <a class="reference external" href="https://www.gurobi.com/downloads/gurobi-optimizer-eula/">here</a>, and installation steps are <a class="reference external" href="https://www.gurobi.com/documentation/9.0/quickstart_linux/software_installation_guid.html#section:Installation">here</a>. After installing Gurobi and obtaining the license, you can install and compile marabou with Gurobi support using the install script <code class="docutils literal notranslate"><span class="pre">./scripts/install_marabou.sh</span> <span class="pre">-g</span> <span class="pre">&lt;GUROBI_PATH&gt;</span></code>.</p>
+</div>
 </div>
 <div class="section" id="install-latex">
 <h3>Install LaTeX<a class="headerlink" href="#install-latex" title="Permalink to this headline">¶</a></h3>
@@ -241,9 +248,7 @@ pip install -r requirements.txt
     <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span>                      <span class="c1"># amount of logging</span>
     <span class="p">)</span>
 <span class="c1"># run analysis and save to CSV</span>
-<span class="n">modelA_haze_test</span><span class="o">.</span><span class="n">analyze</span><span class="p">(</span>
-    <span class="n">epsilons_outpath</span><span class="o">=</span><span class="s1">&#39;./results/modelA_haze/epsilons.csv&#39;</span><span class="p">,</span>
-    <span class="n">counterexamples_outpath</span><span class="o">=</span><span class="s1">&#39;./results/modelA_haze/counterexamples.p&#39;</span><span class="p">)</span>
+<span class="n">modelA_haze_test</span><span class="o">.</span><span class="n">analyze</span><span class="p">(</span><span class="n">epsilons_outpath</span><span class="o">=</span><span class="s1">&#39;./results/modelA_haze/epsilons.csv&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -260,9 +265,7 @@ pip install -r requirements.txt
     <span class="n">Y</span><span class="o">=</span><span class="n">Y</span><span class="p">,</span>
     <span class="n">transform_fn</span><span class="o">=</span><span class="n">haze</span><span class="p">,</span>
     <span class="n">transform_name</span><span class="o">=</span><span class="s1">&#39;Haze&#39;</span><span class="p">)</span>
-<span class="n">modelA_haze</span><span class="o">.</span><span class="n">load_results</span><span class="p">(</span>
-    <span class="n">epsilons_path</span><span class="o">=</span><span class="s1">&#39;./results/modelA_haze/epsilons.csv&#39;</span><span class="p">,</span>
-    <span class="n">counterexamples_path</span><span class="o">=</span><span class="s1">&#39;./results/modelA_haze/counterexamples.p&#39;</span><span class="p">)</span>
+<span class="n">modelA_haze</span><span class="o">.</span><span class="n">load_results</span><span class="p">(</span><span class="n">epsilons_path</span><span class="o">=</span><span class="s1">&#39;./results/modelA_haze/epsilons.csv&#39;</span><span class="p">)</span>
 
 <span class="c1"># Load saved CSV results from &#39;Haze&#39; analysis on &#39;ModelB&#39;</span>
 <span class="n">modelB_haze</span> <span class="o">=</span> <span class="n">ContextualRobustnessTest</span><span class="p">(</span>
@@ -272,9 +275,7 @@ pip install -r requirements.txt
     <span class="n">Y</span><span class="o">=</span><span class="n">Y</span><span class="p">,</span>
     <span class="n">transform_fn</span><span class="o">=</span><span class="n">haze</span><span class="p">,</span>
     <span class="n">transform_name</span><span class="o">=</span><span class="s1">&#39;Haze&#39;</span><span class="p">)</span>
-<span class="n">modelB_haze</span><span class="o">.</span><span class="n">load_results</span><span class="p">(</span>
-    <span class="n">epsilons_path</span><span class="o">=</span><span class="s1">&#39;./results/modelB_haze/epsilons.csv&#39;</span><span class="p">,</span>
-    <span class="n">counterexamples_path</span><span class="o">=</span><span class="s1">&#39;./results/modelB_haze/counterexamples.p&#39;</span><span class="p">)</span>
+<span class="n">modelB_haze</span><span class="o">.</span><span class="n">load_results</span><span class="p">(</span><span class="n">epsilons_path</span><span class="o">=</span><span class="s1">&#39;./results/modelB_haze/epsilons.csv&#39;</span><span class="p">)</span>
 
 <span class="c1"># Generate individual &#39;epsilon&#39; boxplots for each model</span>
 <span class="n">ContextualRobustnessReporting</span><span class="o">.</span><span class="n">generate_epsilons_plot</span><span class="p">(</span>

@@ -23,9 +23,6 @@ venv
 /venv.bak
 /.python-version
 
-# documentation
-#/docs/build
-
 # sandbox files (for playing around)
 /sandbox
 
@@ -36,3 +33,4 @@ venv
 
 # Other
 .DS_Store
+/tmp

@@ -8,7 +8,7 @@ from contextual_robustness.utils import remove_softmax_activation, parse_indexes
 # reduce tensorflow log level
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-def main(models, transform_names, outdir, sample_indexes):
+def main(models, transform_names, outdir, sample_indexes, use_gurobi):
     # load dataset
     _, _, X_test, Y_test, _ = load_gtsrb()
 
@@ -23,6 +23,9 @@ def main(models, transform_names, outdir, sample_indexes):
             model_path = f'./models/gtsrb/model{m}-verification'
             remove_softmax_activation(f'./models/gtsrb/model{m}.h5', save_path=model_path)
             
+            # setup marabou options if using Gurobi
+            marabou_opts = dict(solveWithMILP=True, milpTightening='none') if use_gurobi else dict()
+
             # run analysis on modified model
             cr = ContextualRobustnessFormal(
                 model_path=model_path,
@@ -34,6 +37,7 @@ def main(models, transform_names, outdir, sample_indexes):
                 X=X_test,
                 Y=Y_test,
                 sample_indexes=sample_indexes,
+                marabou_options=marabou_opts,
                 verbosity=1
                 )
             cr.analyze(
@@ -60,6 +64,10 @@ if __name__ == '__main__':
         nargs='*',
         default=[],
         help='list of indexes and/or ranges of samples to test (e.g. 1 2 10-20 100-110)')
+    parser.add_argument('-g', '--gurobi',
+        action='store_true',
+        default=False,
+        help='use gurobi for improved performance')
     args = parser.parse_args()
     
-    main(args.models, args.transforms, args.outdir, parse_indexes(args.sampleindexes))
+    main(args.models, args.transforms, args.outdir, parse_indexes(args.sampleindexes), args.gurobi)
