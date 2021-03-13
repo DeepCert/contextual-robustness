@@ -31,10 +31,7 @@ def main(models, transform_names, outdir, sample_indexes, image_formats):
                 sample_indexes=sample_indexes
                 )
             # load results from csv
-            cr.load_results(
-                epsilons_path=os.path.join('./results/gtsrb/test/data', f'model{m}-{transform}.csv'),
-                counterexamples_path=os.path.join('./results/gtsrb/test/data', f'model{m}-{transform}-counterexamples.p')
-                )
+            cr.load_results(epsilons_path=os.path.join('./results/gtsrb/test/data', f'model{m}-{transform}.csv'))
             cr_objects.append(cr)
             
             # generate plots for the model/transform
