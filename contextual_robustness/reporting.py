@@ -11,19 +11,6 @@ PLACEHOLDERS = _load_placeholder_images()
 NO_CEX_IMG = PLACEHOLDERS.get('no_cex')
 NO_IMAGE_IMG = PLACEHOLDERS.get('no_image')
 
-def _display_counterexamples_grid(images, rows=2, cols=1, figsize=(3, 3)):
-    _, ax = plt.subplots(nrows=rows, ncols=cols, figsize=figsize)
-    for ind, title in enumerate(images):
-        ax.ravel()[ind].imshow(images[title])
-        # only show image title (class #) on top row
-        if ind < cols:
-            ax.ravel()[ind].set_title(title)
-        # hide ticks on x & y axes
-        ax.ravel()[ind].get_xaxis().set_ticks([])
-        ax.ravel()[ind].get_yaxis().set_ticks([])
-    plt.tight_layout()
-    plt.show()
-
 class ContextualRobustnessReporting:
     '''Class containing ContextualRobustness reporting functions'''
     @staticmethod
@@ -80,7 +67,7 @@ class ContextualRobustnessReporting:
         Args:
             cr (ContextualRobustness): ContextualRobustness object
             outfile (str, optional): Output file path. Defaults to './counterexamples.png'.
-            dpi (int, optional): Dots per inch. Defaults to 100.
+            dpi (int, optional): Dots per inch. Defaults to 144.
             show_labels (bool, optional): Show the class labels? Defaults to True.
             label_fontsize (int, optional): Fontsize of class labels. Defaults to 12.
             fontfamily (str, optional): Fontfamily for text. Defaults to 'serif'.

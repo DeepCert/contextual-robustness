@@ -9,9 +9,6 @@ from contextual_robustness.base import _BaseContextualRobustness, Techniques, Co
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../marabou')))
 from maraboupy import Marabou
 
-# ======================================================================
-# ContextualRobustnessFormal
-# ======================================================================
 class ContextualRobustnessFormal(_BaseContextualRobustness):
     '''Class for ContextualRobustness 'Formal Verification' analysis
 

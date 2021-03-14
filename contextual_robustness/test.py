@@ -4,9 +4,6 @@ import pandas as pd
 import tensorflow as tf
 from contextual_robustness.base import _BaseContextualRobustness, ContextualRobustness, Techniques, DEFAULTS
 
-# ======================================================================
-# ContextualRobustnessTest
-# ======================================================================
 class ContextualRobustnessTest(_BaseContextualRobustness):
     '''Class for ContextualRobustness 'Test Based' analysis
 
