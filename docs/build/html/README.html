@@ -338,6 +338,7 @@ pip install -r requirements.txt
     <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>                                        <span class="c1"># (*required) np.array of images</span>
     <span class="n">Y</span><span class="o">=</span><span class="n">Y</span><span class="p">,</span>                                        <span class="c1"># (*required) np.array of labels</span>
     <span class="n">sample_indexes</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">)),</span>           <span class="c1"># list of indexes of samples to test</span>
+    <span class="n">marabou_options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(),</span>                     <span class="c1"># marabou options (e.g. if Gurobi support: dict(solveWithMILP=True))</span>
     <span class="n">verbosity</span><span class="o">=</span><span class="mi">1</span>                                 <span class="c1"># amount of logging</span>
     <span class="p">)</span>
 <span class="c1"># run analysis and save to CSV</span>
@@ -393,6 +394,7 @@ pip install -r requirements.txt
 <li><p><a class="reference external" href="https://contextual-robustness.readthedocs.io/en/latest/modules.html">Contextual Robustness API Docs</a></p></li>
 <li><p><a class="reference external" href="https://contextual-robustness.readthedocs.io/en/latest/EXAMPLES.html">Contextual Robustness Examples</a></p></li>
 <li><p><a class="reference external" href="https://neuralnetworkverification.github.io/Marabou/">Marabou Documentation</a></p></li>
+<li><p><a class="reference external" href="https://www.gurobi.com/products/gurobi-optimizer/">Gurobi Optimizer</a></p></li>
 </ul>
 </div>
 </div>
