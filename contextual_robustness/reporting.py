@@ -68,7 +68,7 @@ class ContextualRobustnessReporting:
     def generate_counterexamples_plot(
             cr: ContextualRobustness,
             outfile:str='./counterexamples.png',
-            dpi:int=100,
+            dpi:int=144,
             show_labels:bool=True,
             label_fontsize:int=12,
             fontfamily:str='serif',
