@@ -9,9 +9,6 @@ from contextual_robustness.base import _BaseContextualRobustness, Techniques, Co
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../marabou')))
 from maraboupy import Marabou
 
-# ======================================================================
-# ContextualRobustnessFormal
-# ======================================================================
 class ContextualRobustnessFormal(_BaseContextualRobustness):
     '''Class for ContextualRobustness 'Formal Verification' analysis
 
@@ -175,7 +172,7 @@ class ContextualRobustnessFormal(_BaseContextualRobustness):
             # load model, encode the transform as a marabou input query, and solve query
             network = self._load_model(self._model_path)
             network = self._transform_fn(network, x, epsilon, output_index, **self._transform_args)
-            vals, stats = network.solve(options=Marabou.createOptions(**self._marabou_options), verbose=(self._verbosity > 3))
+            vals, stats = network.solve(options=Marabou.createOptions({'verbosity': 0, **self._marabou_options}), verbose=(self._verbosity > 3))
             # check results
             if stats.hasTimedOut():
                 # TIMEOUT

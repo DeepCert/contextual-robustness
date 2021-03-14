@@ -64,7 +64,7 @@ if __name__ == '__main__':
         help='model(s) to analyze')
     parser.add_argument('-t', '--transforms',
         nargs='+',
-        default=['encode_haze', 'linf'],
+        default=['encode_haze', 'encode_linf'],
         help='image transform(s) to test')
     parser.add_argument('-o', '--outdir',
         default='./results/cifar/formal/images',

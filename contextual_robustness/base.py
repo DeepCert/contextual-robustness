@@ -34,9 +34,6 @@ class Techniques(enum.Enum):
 # Generic type to encompass different ContextualRobustness objects
 ContextualRobustness = typing.TypeVar('ContextualRobustness')
 
-# ======================================================================
-# _BaseContextualRobustness
-# ======================================================================
 class _BaseContextualRobustness(metaclass=ABCMeta):
     '''Contains common functionality, properties, and defines abstract methods to be implemented by subclasses.
 
