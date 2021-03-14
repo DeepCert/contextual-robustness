@@ -172,7 +172,8 @@ class ContextualRobustnessFormal(_BaseContextualRobustness):
             # load model, encode the transform as a marabou input query, and solve query
             network = self._load_model(self._model_path)
             network = self._transform_fn(network, x, epsilon, output_index, **self._transform_args)
-            vals, stats = network.solve(options=Marabou.createOptions({'verbosity': 0, **self._marabou_options}), verbose=(self._verbosity > 3))
+            marabou_options = {'verbosity':DEFAULTS['marabou_verbosity'], **self._marabou_options}
+            vals, stats = network.solve(options=Marabou.createOptions(**marabou_options), verbose=(self._verbosity > 3))
             # check results
             if stats.hasTimedOut():
                 # TIMEOUT
