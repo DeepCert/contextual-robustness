@@ -11,9 +11,19 @@ PLACEHOLDERS = _load_placeholder_images()
 NO_CEX_IMG = PLACEHOLDERS.get('no_cex')
 NO_IMAGE_IMG = PLACEHOLDERS.get('no_image')
 
-# ======================================================================
-# ContextualRobustnessReporting
-# ======================================================================
+def _display_counterexamples_grid(images, rows=2, cols=1, figsize=(3, 3)):
+    _, ax = plt.subplots(nrows=rows, ncols=cols, figsize=figsize)
+    for ind, title in enumerate(images):
+        ax.ravel()[ind].imshow(images[title])
+        # only show image title (class #) on top row
+        if ind < cols:
+            ax.ravel()[ind].set_title(title)
+        # hide ticks on x & y axes
+        ax.ravel()[ind].get_xaxis().set_ticks([])
+        ax.ravel()[ind].get_yaxis().set_ticks([])
+    plt.tight_layout()
+    plt.show()
+
 class ContextualRobustnessReporting:
     '''Class containing ContextualRobustness reporting functions'''
     @staticmethod
@@ -53,46 +63,45 @@ class ContextualRobustnessReporting:
         plt.savefig(outfile, bbox_inches='tight')
         plt.close()
         print(f'saved epsilons plot to {outfile}')
-    
+
     @staticmethod
     def generate_counterexamples_plot(
             cr: ContextualRobustness,
             outfile:str='./counterexamples.png',
-            nrows:int=2,
-            ncols:str='auto',
-            figsize:tuple=(10, 10)
+            dpi:int=100,
+            show_labels:bool=True,
+            label_fontsize:int=12,
+            fontfamily:str='serif',
+            fontweight:str='ultralight',
+            usetex:bool=True
             ):
         '''Plots counterexamples for a model/transform and saves as png
 
         Args:
             cr (ContextualRobustness): ContextualRobustness object
             outfile (str, optional): Output file path. Defaults to './counterexamples.png'.
-            nrows (int, optional): Number of rows. Defaults to 2.
-            ncols (str, optional): Number of columns. Defaults to 'auto'.
-            figsize (tuple, optional): Size of figure (w, h). Defaults to (10, 10).
+            dpi (int, optional): Dots per inch. Defaults to 100.
+            show_labels (bool, optional): Show the class labels? Defaults to True.
+            label_fontsize (int, optional): Fontsize of class labels. Defaults to 12.
+            fontfamily (str, optional): Fontfamily for text. Defaults to 'serif'.
+            fontweight (str, optional): Fontfamily for text. Defaults to 'ultralight'.
+            usetex (bool, optional): Use latex for text. Defaults to True.
         '''
-        fig = plt.figure(figsize=figsize)
-        ncols = len(cr.classes) if ncols == 'auto' else ncols
-        gridImage = ImageGrid(
-            fig,
-            111,                        # similar to subplot(111)
-            nrows_ncols=(nrows, ncols), # creates 2 x nClasses grid
-            axes_pad=0.1,               # pad between axes in inch.
-            share_all=True              # share x & y axes among subplots
-            )
-        gridImage[0].get_yaxis().set_ticks([])
-        gridImage[0].get_xaxis().set_ticks([])
+        # configure font
+        plt.rc('text', usetex=usetex)
+        plt.rc('font', family=fontfamily, weight=fontweight)
+
+        nrows, ncols = 2, len(cr.classes)
+        images = [None] * (nrows * ncols)
         X, _ = cr.dataset
+
         for c in cr.classes:
-            # no_image placeholder used for classes where no images/results are present.
-            # no_cex placeholder used for classes where image was present, but no counterexample found.
-            x_orig, x_cex = resize_image(NO_IMAGE_IMG, cr.image_size), resize_image(NO_CEX_IMG, cr.image_size)
+            # no_image placeholder for classes where images/results are not present (test or formal).
+            # no_cex placeholder for classes where no counterexample found (formal only).
+            x_orig, x_cex = NO_IMAGE_IMG, NO_CEX_IMG
             sorted_df = cr.get_results(class_index=c, sort_by=['epsilon'])
             if sorted_df.shape[0] > 1:
-                # The 'test-based technique will always have a counterexample, however 
-                # the formal technique may not. Find first sample with a counterexample 
-                # nearest to the mean, and show placeholders for classes where no sample 
-                # with a counterexample was found.
+
                 mean_epsilon = np.mean(sorted_df.epsilon)
                 upper_df = sorted_df[sorted_df.epsilon >= mean_epsilon]
                 row = upper_df.iloc[0]
@@ -112,15 +121,32 @@ class ContextualRobustnessReporting:
                             x_orig = X[idx]
                             x_cex = cr.get_counterexample(idx)
                             break
-            gridImage[c].imshow(x_orig)
-            gridImage[c + ncols].imshow(x_cex)
 
-        plt.axis('off')
+            images[c] = dict(title=f'class {c}', image=x_orig)
+            images[c + ncols] = dict(title=f'', image=x_cex)
+
+        # create the figure & add images
+        figure, ax = plt.subplots(
+            ncols=ncols,
+            nrows=nrows,
+            figsize=(ncols, nrows),
+            gridspec_kw=dict(wspace=0.06, hspace=0.03)
+            )
+        for i,image in enumerate(images):
+            ax.ravel()[i].imshow(image['image'])
+            # only show image title (class #) on top row
+            if show_labels and i < ncols:
+                ax.ravel()[i].set_title(image['title'], fontsize=label_fontsize)
+            # configure axes & hide ticks
+            plt.setp(ax.ravel()[i].spines.values(), linewidth=0.5)
+            ax.ravel()[i].get_xaxis().set_ticks([])
+            ax.ravel()[i].get_yaxis().set_ticks([])
+        # setup output path and save figure to outfile
         _create_output_path(outfile)
-        fig.savefig(outfile, bbox_inches='tight')
+        figure.savefig(outfile, bbox_inches='tight', dpi=dpi)
         plt.close()
         print(f'saved counterexamples plot to {outfile}')
-    
+
     @staticmethod
     def generate_class_accuracy_plot(
             cr:ContextualRobustness,
@@ -184,7 +210,7 @@ class ContextualRobustnessReporting:
         plt.savefig(outfile, bbox_inches='tight')
         plt.close()
         print(f'saved class accuracy report plot to {outfile}')
-    
+
     @staticmethod
     def generate_accuracy_report_plot(
             cr_objects:typing.Sequence[ContextualRobustness],
