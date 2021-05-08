@@ -53,7 +53,7 @@ from contextual_robustness.transforms import haze
 
 # instantiate ContextualRobustness object for modelA/haze
 modelA_haze_test = ContextualRobustnessTest(
-    model_name='./models/modelA.h5', # (*required) model
+    model_path='./models/modelA.h5', # (*required) model
     model_name='ModelA',             # name of model
     transform_fn=haze,               # (*required) transform function
     transform_name='Haze',           # name of transform
